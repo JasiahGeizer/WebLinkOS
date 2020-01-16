@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+		<script type="text/javascript">
+
+            function moveSelection(evt) {
+                switch (evt.keyCode) {
+                    case 38:
+                    upArrowPressed();
+                    break;
+                    case 40:
+                    downArrowPressed();
+                    break;
+                    case 87:
+                    upArrowPressed2();
+                    break;
+                    case 83:
+                    downArrowPressed2();
+                    break;
+                    }
+                };
+
+            function upArrowPressed() {
+            	if(document.getElementById("1").style.top > 10 + "%"){
+            		document.getElementById("1").style.top = parseInt(document.getElementById("1").style.top) - 10 + '%';
+            	}
+            	
+            }
+            function downArrowPressed() {
+            	if(document.getElementById("1").style.top !== 90 + "%"){
+					document.getElementById("1").style.top = parseInt(document.getElementById("1").style.top) + 10 + '%';
+				}
+				
+            }
+            function upArrowPressed2() {
+            	if(document.getElementById("2").style.top !== 10 + "%"){
+            		document.getElementById("2").style.top = parseInt(document.getElementById("2").style.top) - 10 + '%';
+            	}
+            }
+            function downArrowPressed2() {
+            	if(document.getElementById("2").style.top !== 90 + "%"){
+					document.getElementById("2").style.top = parseInt(document.getElementById("2").style.top) + 10 + '%';
+				}
+            }
+        function docReady()
+        {
+          window.addEventListener('keydown', moveSelection);
+        }
+
+		var myVar = setInterval(myTimer, 100);
+		var direction = 1;
+
+		function myTimer() {
+			var carre = document.getElementById("carre");
+			if(direction == 1){
+		  		carre.style.left = (parseInt(carre.style.left)||0) - 1 + '%';
+		  	}else if (direction == 2) {
+		  		carre.style.left = (parseInt(carre.style.left)||0) + 1 + '%';
+		  	}
+
+			if(document.getElementById("2").style.left > document.getElementById("carre").style.left){
+				if(document.getElementById("2").style.top == document.getElementById("carre").style.top){
+					direction = 2;
+				}
+			}
+			if(document.getElementById("1").style.left < document.getElementById("carre").style.left){
+				if(document.getElementById("1").style.top == document.getElementById("carre").style.top){
+					direction = 1;
+				}
+			}			
+
+			console.log(document.getElementById("1").style.left);
+			console.log(document.getElementById("carre").style.left);
+			console.log(direction);
+
+
+		  	//if(document.getElementById("carre").style.marginLeft == "-3300px"){document.getElementById("carre").style.marginLeft = "1000px"}
+		}
+
+	</script>
+
+</head>
+
+<body onload="docReady()" onkeydown="" onkeyup="">
+
+	<style>
+		body {
+			/*background-color: #270015;*/
+			background:url(images/bg.gif) repeat;
+			overflow: hidden; 
+		}
+		#carre {
+			  width: 25px;
+			  height: 25px;
+			  left: 50%;
+			  top: 50%;
+			  border-radius: 50px;
+
+
+			  position: fixed;
+			  
+			  text-align: center;
+			  line-height: 25px;
+			  font-size: 12px;
+
+			  background-color: #291831;
+			  border: 2px solid #fce04d;
+			  box-shadow: inset 0px 0px 15px 2px orange;
+
+			transition-duration: 2000ms;
+			transition-timing-function: ease-out;
+			transform: translate(-50%, -50%);
+		}
+		img {
+
+		}
+		.interacter {
+			transition-duration: 1000ms;
+			transition-timing-function: ease-out;
+			transform: translate(-50%, -50%);
+			background-color: #3b3e51;
+			height:150px;
+			width:25px;
+			border-radius: 150px;
+			vertical-align:50% !important;
+			text-align: center;
+			line-height: 75px;
+
+			background-color: #291831;
+			border: 2px solid #c14dfc;
+			box-shadow: inset 0px 0px 15px 2px purple;
+		}
+
+	</style>
+
+	
+
+	<div class="interacter" id="2" style="position:absolute;left:10%; top:50%;" height="150px" width="150px">A</div>
+
+	<div class="interacter" id="1" style="position:absolute;left:90%; top:50%;" height="150px" width="150px">B</div>
+
+	<div id="carre" style="position:absolute;left:50%; top:50%;" height="50px" width="50px">C</div>
+
+	</body>
+</html>
+
+

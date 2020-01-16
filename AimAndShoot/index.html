@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html onclick="counter()">
+	<!--
+		- Add sound effect for misses
+	-->
+	<head>
+		<style type="text/css">
+			body {
+				color:black;
+				background-color: lightskyblue;
+				font-family: monospace;
+				transition: 25s;
+			}
+			* 	{
+				   /*cursor: url('crosshair2.png') 25 25,auto;*/
+				   user-select: none; 
+				   cursor: cell;
+				}
+			.target:active {
+				background-color: orangered;
+			}
+			.target{
+				width: 100px;
+				height: 100px;
+				position:absolute;
+				top: 50%;
+				left: 50%;
+				background-color: coral;
+				color:white;
+				text-align: center;
+				line-height: 100px;
+				box-shadow: 0px 0px 5px grey;
+				border-radius: 50px;
+				transition: 0.4s;
+				/*transition: background-color 20s ease;*/
+			}
+		</style>
+
+		<script type="text/javascript">
+			var tLeft;
+			var tTop;
+			var iLeft;
+			var iTop;
+			var score=0;
+			var timer=16;
+			var audio1 = new Audio('pop.wav');
+			var audio2 = new Audio('levelup.wav');
+			var audio3 = new Audio('miss.wav');
+			var audio = audio1;
+			var turn=0;
+			var highscore=0;
+			var missesCOUNT;
+			function newPos(){
+				if (timer !== 0){
+					iTop = Math.floor((Math.random() * 80) + 1);
+					iLeft = Math.floor((Math.random() * 80) + 1);
+					
+					document.getElementById('target1').style.top = iTop + "%";
+					document.getElementById('target1').style.left = iLeft + "%";
+					
+					if (score==10 || score==20 || score==30 || score==40){
+						audio = audio2;
+					}else{
+						audio = audio1;
+					}
+					audio.play();
+
+					score=score+1;
+					document.getElementById('target1').innerHTML = "Score: " + score;
+					if (timer<5) {
+						document.body.style.backgroundColor="slateblue";
+						document.getElementById('target1').style.backgroundColor="red";
+					}
+					
+					if (score==1) {
+						if (turn==0){
+							setInterval(makeAlert, 1000);		
+						}
+					}
+				}else{
+					document.getElementById('target1').style.backgroundColor="coral";
+					document.body.style.backgroundColor="lightskyblue";
+					if (highscore<score) {
+						highscore=score;
+					}
+					missesCOUNT=hitcounter-score;
+					var r = confirm("Your Highscore: "+highscore+"\nYour score: "+score+"\nMisses: "+missesCOUNT+"\n\nTry again?");
+					if (r==true){
+						timer=16;
+						hitcounter=0;
+						score=1;
+						document.getElementById('target1').innerHTML = "Score: " + score;
+						turn=1;
+
+					iTop = Math.floor((Math.random() * 80) + 1);
+					iLeft = Math.floor((Math.random() * 80) + 1);
+					
+					document.getElementById('target1').style.top = iTop + "%";
+					document.getElementById('target1').style.left = iLeft + "%";
+					}
+				}
+			}
+			function makeAlert(){ 
+				if (timer>0) {
+					timer=timer-1;
+			    	document.getElementById('time').innerHTML = "Time: " + timer;	
+				}/*else{
+					clearInterval(makeAlert);
+					score=0;
+					document.getElementById('target1').style.top = 10+"%";
+					document.getElementById('target1').style.left = 10+"%";
+				}*/
+			}
+			var hitcounter=0;
+			function counter(){
+				hitcounter=hitcounter+1;
+			}
+		</script>
+	</head>
+	
+	<body>
+		Aim And Shoot
+		<div id="time">Time: 15</div>										
+		<div class="target" onclick="newPos()" id="target1">Start?</div>	
+	</body>
+</html>

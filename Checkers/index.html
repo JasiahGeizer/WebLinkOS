@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+
+<!-- To Do:
+	- 
+-->
+
+<html>
+	<head>
+		<script>
+			var audio = new Audio('down.mp3');
+			var audio3 = new Audio('hit.wav');
+			var before;
+			function allowDrop(ev) {
+
+			  ev.preventDefault();
+			}
+
+			function drag(ev) {
+			  ev.dataTransfer.setData("text", ev.target.id);
+			  before=document.getElementById(ev.target.id).parentNode.id;
+			}
+
+			function drop(ev) {
+			  ev.preventDefault();
+			  var data = ev.dataTransfer.getData("text");
+			  ev.target.appendChild(document.getElementById(data));
+			  audio.play();
+
+			var jumped;
+			var LorR;
+
+			if (ev.target.childNodes[0].id.replace('drag','')<13) {LorR="PiecePositionTop"}else{LorR="PiecePosition"}
+
+			switch(before-ev.target.id){
+							case 18:
+							jumped = parseInt(before)-9;
+							document.getElementsByClassName(LorR)[0].appendChild(document.getElementById(jumped).childNodes[0])
+							audio3.play();
+							break;
+							case -18:
+							jumped = parseInt(before)+9;
+							document.getElementsByClassName(LorR)[0].appendChild(document.getElementById(jumped).childNodes[0])
+							audio3.play();
+							break;
+							case 14:
+							jumped = parseInt(before)-7;
+							document.getElementsByClassName(LorR)[0].appendChild(document.getElementById(jumped).childNodes[0])
+							audio3.play();
+							break;
+							case -14:
+							jumped = parseInt(before)+7;
+							document.getElementsByClassName(LorR)[0].appendChild(document.getElementById(jumped).childNodes[0])
+							audio3.play();
+							break;
+						}
+			}
+			function king(x) {
+				if(document.getElementById(x).innerHTML !== "King"){
+					document.getElementById(x).innerHTML = "King";
+				}else{
+					document.getElementById(x).innerHTML = "";
+				}
+			}
+		</script>
+
+		<style type="text/css">
+			html, body {
+				height: 99%;
+				user-select: none;
+				-moz-user-select: none;
+				background-color: #607b8b;
+				font-family: monospace;
+				color:black;
+			}			
+			.dragStyle{
+				float: left;
+				margin:2px;
+				background-color: #443f3c;
+				width: 62px;
+				height: 62px;
+				border-radius: 50px;
+				border: 1px solid #4d4d4d;
+				box-shadow: 0px 0px 10px #424242;
+				text-align: center;
+				line-height: 62px;
+				color: grey;
+			}
+			.dragStyle:hover{
+				background-color: #2f2b2a;
+				border-color: #2f2b2a;
+			}
+			.dragStyle:active{
+				background-color: #615a54;
+				border-color: #615a54;
+				box-shadow: 0px 0px 13px 2px #424242;
+			}
+			.dragStyle2{
+				float: left;
+				margin:2px;
+				background-color: #b77c52;
+				width: 60px;
+				height: 60px;
+				border-radius: 50px;
+				border: 3px solid #b77c52;
+				box-shadow: 0px 0px 10px #424242;
+				text-align: center;
+				line-height: 62px;
+				color: #404040;
+
+			}
+			.dragStyle2:hover{
+				background-color: #90614a;
+				border-color: #90614a;
+			}
+			.dragStyle2:active{
+				background-color: #ebb38e;
+				border-color: #ebb38e;
+				box-shadow: 0px 0px 13px 2px #424242;
+			}				
+			.grouped{
+				position: absolute;
+				background-color: #5a3232;
+				width: 670px;
+				height: 675px;
+				top: 100px;
+				left: 50%;
+				margin-left: -335px;
+				border-radius: 2px;
+				box-shadow: 0px 8px 5px #301d1d;	
+				color: lightgrey;		
+			}
+			ul {
+			    margin: 0 auto;
+			    padding-top: 10px;
+			    list-style-type: none;
+			    display:block;
+
+			}	
+			p{
+				height: 25px;
+
+			}		
+			.items{
+				background-color: #f0c897 !important;
+				float: left;
+				margin:2px;
+				width: 70px;
+				height: 70px;
+
+			}
+			.items2{
+				background-color: #715142 !important;
+				float: left;
+				margin:2px;
+				width: 70px;
+				height: 70px;
+			}
+			.PiecePosition{
+				position: absolute;
+				left: 50%;
+				margin-left: -510px;
+				padding-left: 10px;
+				height: 675px;
+				margin-top:75px; 
+				width: 140px !important;
+				background-color: #5a3232;
+				box-shadow: 0px 0px 13px 2px #424242;
+			}
+			.PiecePositionTop{
+				position: absolute;
+				left: 50%;
+				margin-left: 350px;
+				padding-left: 10px;
+				height: 675px;
+				margin-top:75px; 
+				width: 140px !important;
+				background-color: #5a3232;
+				box-shadow: 0px 0px 13px 2px #424242;
+			}
+		</style>
+	</head>
+
+
+	<body >
+		<span>Draughts / Checkers</span> <br>
+
+		<div class="PiecePositionTop" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)">
+				<span></span>
+				<div class="dragStyle" id="drag1" draggable="true" ondragstart="drag(event)" ondblclick="king('drag1')"></div>
+				<div class="dragStyle" id="drag2" draggable="true" ondragstart="drag(event)" ondblclick="king('drag2')"></div>
+				<div class="dragStyle" id="drag3" draggable="true" ondragstart="drag(event)" ondblclick="king('drag3')"></div>
+				<div class="dragStyle" id="drag4" draggable="true" ondragstart="drag(event)" ondblclick="king('drag4')"></div>
+				<div class="dragStyle" id="drag5" draggable="true" ondragstart="drag(event)" ondblclick="king('drag5')"></div>
+				<div class="dragStyle" id="drag6" draggable="true" ondragstart="drag(event)" ondblclick="king('drag6')"></div>
+				<div class="dragStyle" id="drag7" draggable="true" ondragstart="drag(event)" ondblclick="king('drag7')"></div>
+				<div class="dragStyle" id="drag8" draggable="true" ondragstart="drag(event)" ondblclick="king('drag8')"></div>
+				<div class="dragStyle" id="drag9" draggable="true" ondragstart="drag(event)" ondblclick="king('drag9')"></div>
+				<div class="dragStyle" id="drag10" draggable="true" ondragstart="drag(event)" ondblclick="king('drag10')"></div>
+				<div class="dragStyle" id="drag11" draggable="true" ondragstart="drag(event)" ondblclick="king('drag11')"></div>
+				<div class="dragStyle" id="drag12" draggable="true" ondragstart="drag(event)" ondblclick="king('drag12')"></div>
+		</div>
+		<div class="PiecePosition" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)">
+				<div class="dragStyle2" id="drag13" draggable="true" ondragstart="drag(event)" ondblclick="king('drag13')"></div>
+				<div class="dragStyle2" id="drag14" draggable="true" ondragstart="drag(event)" ondblclick="king('drag14')"></div>
+				<div class="dragStyle2" id="drag15" draggable="true" ondragstart="drag(event)" ondblclick="king('drag15')"></div>
+				<div class="dragStyle2" id="drag16" draggable="true" ondragstart="drag(event)" ondblclick="king('drag16')"></div>
+				<div class="dragStyle2" id="drag17" draggable="true" ondragstart="drag(event)" ondblclick="king('drag17')"></div>
+				<div class="dragStyle2" id="drag18" draggable="true" ondragstart="drag(event)" ondblclick="king('drag18')"></div>
+				<div class="dragStyle2" id="drag19" draggable="true" ondragstart="drag(event)" ondblclick="king('drag19')"></div>
+				<div class="dragStyle2" id="drag20" draggable="true" ondragstart="drag(event)" ondblclick="king('drag20')"></div>
+				<div class="dragStyle2" id="drag21" draggable="true" ondragstart="drag(event)" ondblclick="king('drag21')"></div>
+				<div class="dragStyle2" id="drag22" draggable="true" ondragstart="drag(event)" ondblclick="king('drag22')"></div>
+				<div class="dragStyle2" id="drag23" draggable="true" ondragstart="drag(event)" ondblclick="king('drag23')"></div>
+				<div class="dragStyle2" id="drag24" draggable="true" ondragstart="drag(event)" ondblclick="king('drag24')"></div>
+
+		</div>
+
+
+
+				
+		<div class="grouped">
+			<br>
+
+			<ul>
+				<button onclick="setBoard(this)" style="margin-bottom:10px;position:relative;margin-top:0px;padding: 3px;width: 75px;">Set Board</button>	
+				<br>
+				<li class="items" id="1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li class="items2" id="2" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li class="items" id="3" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li class="items2" id="4" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li class="items" id="5" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li class="items2" id="6" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li class="items" id="7" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li class="items2" id="8" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+							
+			</ul>
+			<p></p>
+			<ul>
+				<li class="items2" id="9" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="10" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="11" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="12" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="13" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="14" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="15" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="16" ondrop="drop(event)" ondragover="allowDrop(event)"></li>		
+			</ul>
+			<p></p>
+			<ul>
+				<li  class="items" id="17" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="18" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="19" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="20" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="21" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="22" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="23" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="24" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+			</ul>
+			<p></p>
+			<ul>
+				<li  class="items2" id="25" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="26" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="27" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="28" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="29" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="30" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="31" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="32" ondrop="drop(event)" ondragover="allowDrop(event)"></li>				
+			</ul>
+			<p></p>
+			<ul>
+				<li  class="items" id="33" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="34" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="35" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="36" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="37" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="38" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="39" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="40" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+			</ul>
+			<p></p>
+			<ul>
+				<li  class="items2" id="41" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="42" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="43" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="44" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="45" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="46" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="47" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="48" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+			</ul>
+			<p></p>
+			<ul>
+				<li  class="items" id="49" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="50" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="51" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="52" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="53" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="54" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="55" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="56" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+			</ul>			
+			<p></p>
+			<ul>
+				<li  class="items2" id="57" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="58" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="59" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="60" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="61" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="62" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="63" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="64" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+
+			</ul>			
+			</div>
+		</div>
+
+				<br>
+				<div style="color: #000000b0; top: 800px; position: absolute;"><i>Double click to piece to change it to a king.</i></div>
+
+		<script type="text/javascript">
+			var audio2 = new Audio('woosh.wav');
+			function setBoard(btn){
+				audio2.play();
+				btn.remove();
+
+				document.getElementsByClassName("items2")[1].appendChild(document.getElementById("drag1")); 
+				document.getElementsByClassName("items2")[2].appendChild(document.getElementById("drag2"));
+				document.getElementsByClassName("items2")[3].appendChild(document.getElementById("drag3")); 
+				document.getElementsByClassName("items2")[4].appendChild(document.getElementById("drag4"));
+
+				document.getElementsByClassName("items2")[5].appendChild(document.getElementById("drag5")); 
+				document.getElementsByClassName("items2")[6].appendChild(document.getElementById("drag6"));
+				document.getElementsByClassName("items2")[7].appendChild(document.getElementById("drag7")); 
+				document.getElementsByClassName("items2")[8].appendChild(document.getElementById("drag8"));
+
+				document.getElementsByClassName("items2")[9].appendChild(document.getElementById("drag9")); 
+				document.getElementsByClassName("items2")[10].appendChild(document.getElementById("drag10"));
+				document.getElementsByClassName("items2")[11].appendChild(document.getElementById("drag11")); 
+				document.getElementsByClassName("items2")[0].appendChild(document.getElementById("drag12"));
+
+				document.getElementsByClassName("items2")[28].appendChild(document.getElementById("drag13"));
+				document.getElementsByClassName("items2")[29].appendChild(document.getElementById("drag14"));
+				document.getElementsByClassName("items2")[30].appendChild(document.getElementById("drag15")); 
+				document.getElementsByClassName("items2")[31].appendChild(document.getElementById("drag16"));
+				document.getElementsByClassName("items2")[20].appendChild(document.getElementById("drag17")); 
+				document.getElementsByClassName("items2")[21].appendChild(document.getElementById("drag18"));
+				document.getElementsByClassName("items2")[22].appendChild(document.getElementById("drag19")); 
+				document.getElementsByClassName("items2")[23].appendChild(document.getElementById("drag20"));
+
+				document.getElementsByClassName("items2")[24].appendChild(document.getElementById("drag21")); 
+				document.getElementsByClassName("items2")[25].appendChild(document.getElementById("drag22"));
+				document.getElementsByClassName("items2")[26].appendChild(document.getElementById("drag23")); 
+				document.getElementsByClassName("items2")[27].appendChild(document.getElementById("drag24"));
+
+			}
+			
+ 		</script>
+	</body>
+
+
+</html>

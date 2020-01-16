@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<!-- 
+	To Do:
+		- Style Drums as their instruments
+		- Position into real positions
+		- Drag to change positions
+		- animate on keypress and mouse down
+		- change from mouse up to mouse down
+
+-->
+<html>
+	<head>
+
+
+		<style type="text/css">	
+		*{
+			color: black;
+		}	
+			html, body {
+				height: 99%;
+				user-select: none;
+				background-color: burlywood;
+				font-family: monospace;
+				color:black;	
+			}			
+			.grouped{
+				position: relative;
+				background-color: #bdbdbd;
+				width: 540px;
+				height: 440px;
+				top: 60px;
+				margin: 0 auto;
+				border-radius: 20px;
+				box-shadow: 0px 2px 13px grey;	
+				color: white;		
+			}
+			#drumpad{
+				padding: 2px;
+				font-size: 18px;
+				box-shadow: 0px 3px 3px grey;
+				color: #353535;
+				width: 75px;
+				height: 75px;
+				background-color: white;
+    			border: none; 
+    			position: absolute;
+    			/*top: 50%;
+    			left: 50%;*/
+			}
+			#drumpad:active{
+				box-shadow: inset 0px 3px 3px grey;
+			}
+		</style>
+	</head>
+
+
+	<body onload="docReady()" onkeydown="" onkeyup="">
+		Drum Machine
+		<div class="grouped">
+			<div id="drumpad" style="top: 220px;left: 70%;" onclick="playBeat(clap)">clap</div>
+			<div id="drumpad" style="top: 220px;left: 50%;" onclick="playBeat(kick)">kick</div>
+			<div id="drumpad" style="top: 220px;left: 30%;" onclick="playBeat(snare)">snare</div>
+			<div id="drumpad" style="top: 220px;left: 10%;" onclick="playBeat(crash)">crash</div>
+			<div id="drumpad" style="top: 135px;left: 50%;" onclick="playBeat(hiHat)">hiHat</div>
+			<div id="drumpad" style="top: 135px;left: 30%;" onclick="playBeat(ride)">ride</div>
+			<div id="drumpad" style="top: 135px;left: 10%;" onclick="playBeat(splash)">splash</div>
+			<div id="drumpad" style="top: 135px;left: 70%;" onclick="playBeat(block)">block</div>
+			<div id="drumpad" style="top: 305px;left: 50%;" onclick="playBeat(cowbell)">cowbell</div>
+			<div id="drumpad" style="top: 305px;left: 30%;" onclick="playBeat(eggShaker)">egg shaker</div>
+			<div id="drumpad" style="top: 305px;left: 10%;" onclick="playBeat(sleighBells)">Sleigh bells</div>
+			<div id="drumpad" style="top: 305px;left: 70%;" onclick="playBeat(stickHits)">stick hit</div>
+			<div id="drumpad" style="top: 50px;left: 50%;" onclick="playBeat(floorTom)">floor tom</div>
+			<div id="drumpad" style="top: 50px;left: 30%;" onclick="playBeat(highTom)">high tom</div>
+			<div id="drumpad" style="top: 50px;left: 10%;" onclick="playBeat(midTom)">mid tom</div>
+		</div>	
+<span> Shortcuts: keys 1 to 3, q to r, a to f, & z to v.</span>
+
+<script language="Javascript" >
+	//define sounds
+	var clap = new Audio('clap.wav');
+	var kick = new Audio('kick.wav');
+	var snare = new Audio('snare.wav');
+	var crash = new Audio('crash.wav');
+	var hiHat = new Audio('hiHat.wav');
+	var ride = new Audio('ride.wav');
+	var splash = new Audio('splash.wav');
+	var block = new Audio('block.wav');
+	var cowbell = new Audio('cowbell.wav');
+	var eggShaker = new Audio('eggShaker.wav');
+	var sleighBells = new Audio('sleighBells.wav');
+	var stickHits = new Audio('stickHits.wav');
+	var floorTom = new Audio('floorTom.wav');
+	var highTom = new Audio('highTom.wav');
+	var midTom = new Audio('midTom.wav');
+
+	clap.preload = 'auto';
+	kick.preload = 'auto';
+	snare.preload = 'auto';
+	crash.preload = 'auto';
+	hiHat.preload = 'auto';
+	splash.preload = 'auto';
+	block.preload = 'auto';
+	cowbell.preload = 'auto';
+	eggShaker.preload = 'auto';
+	sleighBells.preload = 'auto';
+	stickHits.preload = 'auto';
+	floorTom.preload = 'auto';
+	highTom.preload = 'auto';
+	midTom.preload = 'auto';
+
+
+	function docReady(){ //setup key press as on down press
+        window.addEventListener('keydown', pressBeat);
+    }
+	function playBeat(beat){ //play audio
+		if (!beat.ended) {beat.currentTime = 0;}
+		beat.play();
+
+	}
+	function pressBeat(evt){ //play audio on key press
+		switch (evt.keyCode) {
+		    case 81://q
+		    	playBeat(splash);
+		    break;
+		    case 87: //w
+		    	playBeat(ride);
+		    break;
+		    case 69://e
+		    	playBeat(hiHat);
+		    break;
+		    case 82: //r
+		    	playBeat(block);
+		    break;
+		    case 65://a
+		    	playBeat(crash);
+		    break;
+		    case 83: //s
+		    	playBeat(snare);
+		    break;
+		    case 68://d
+		    	playBeat(kick);
+		    break;
+		    case 70: //f
+		    	playBeat(clap);
+		    break;
+		    case 90://z
+		    	playBeat(sleighBells);
+		    break;
+		    case 88: //x
+		    	playBeat(eggShaker);
+		    break;
+		    case 67://c
+		    	playBeat(cowbell);
+		    break;
+		    case 86: //b
+		    	playBeat(stickHits);
+		    break;
+		    case 49://1
+		    	playBeat(midTom);
+		    break;
+		    case 50: //2
+		    	playBeat(highTom);
+		    break;
+		    case 51://3
+		    	playBeat(floorTom);
+		    break;
+		    }
+	}
+
+
+</script>
+	</body>
+</html>

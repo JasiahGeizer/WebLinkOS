@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+	</head>
+
+<body>
+	<style>
+		*{
+			user-select: none; 
+		}
+		#lid{
+			width: 60px;
+			height: 5%;
+			top: 20%;
+			left: 50%;
+			background-color: lightgrey;
+			position: absolute;
+		}
+		#funnel{
+			width: 120px;
+			height: 5%;
+			top: 25%;
+			left: 50%;
+			background-color: lightblue;
+			position: absolute;
+			transform: translate(-25%);
+		}
+		#label{
+			width: 120px;
+			height: 15%;
+			top: 30%;
+			left: 50%;
+			background-color: lightgrey;
+			position: absolute;
+			transform: translate(-25%);
+			color: grey;
+			font-family: monospace;
+			text-align: center;
+			line-height: 20px;
+		}
+		#waterbottle{
+			/*transform: rotate(1deg); */
+		}
+	</style>
+		<div id="waterbottle">
+			<div id="lid"></div>
+			<div id="funnel"></div>
+			<div id="label">Fresh Water</div>
+			<div id="funnel" style="top: 44%;"></div>
+		</div>
+	</body>
+</html>
+
+

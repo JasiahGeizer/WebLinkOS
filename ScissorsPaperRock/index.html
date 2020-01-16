@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+
+<!-- To Do:
+	- Win / Loss Text
+	- Score Tally
+	- Better Design (CSS)
+	- Non-Random Computer Moves (Contextual)
+-->
+
+<html>
+	<head>
+		<script>
+			var winlossCPU;
+			var winloss;
+			var select;
+
+			function decision() {
+				
+
+				if(document.getElementById(event.target.id) == document.getElementById("scissors")){
+					cpuSelect();
+					if(select == "1"){
+						document.getElementById('CPUscissors').style.backgroundColor = "black";winloss = "draw";}
+					if(select == "2"){document.getElementById('CPUpaper').style.backgroundColor = "red";winloss = "win";}
+					if(select == "3"){document.getElementById('CPUrock').style.backgroundColor = "green";winloss = "loss";}
+				winlossID();
+				}
+				if(document.getElementById(event.target.id) == document.getElementById("paper")){
+					cpuSelect();
+					if(select == "1"){document.getElementById('CPUscissors').style.backgroundColor = "green";winloss = "loss";}
+					if(select == "2"){document.getElementById('CPUpaper').style.backgroundColor = "black";winloss = "draw";}
+					if(select == "3"){document.getElementById('CPUrock').style.backgroundColor = "red";winloss = "win";}
+				winlossID();			
+				}
+				if(document.getElementById(event.target.id) == document.getElementById("rock")){
+					cpuSelect();
+					if(select == "1"){document.getElementById('CPUscissors').style.backgroundColor = "red";winloss = "win";}
+					if(select == "2"){document.getElementById('CPUpaper').style.backgroundColor = "green";winloss = "loss";}
+					if(select == "3"){document.getElementById('CPUrock').style.backgroundColor = "black";winloss = "draw";}
+				winlossID();
+				}
+			}
+			function cpuSelect() {
+				switch(select = Math.floor(Math.random() * 3) + 1) {
+					case 0:
+						console.log(select + " None");
+						break;
+					case 1:
+						console.log(select + " scissors");
+						document.getElementById('CPUpaper').style.backgroundColor = "#4a4a4a";
+						document.getElementById('CPUrock').style.backgroundColor = "#4a4a4a";
+						break;
+					case 2:
+						console.log(select + " paper");
+						document.getElementById('CPUrock').style.backgroundColor = "#4a4a4a";
+						document.getElementById('CPUscissors').style.backgroundColor = "#4a4a4a";
+						break;
+					case 3:
+						console.log(select + " rock");
+						document.getElementById('CPUscissors').style.backgroundColor = "#4a4a4a";
+						document.getElementById('CPUpaper').style.backgroundColor = "#4a4a4a";
+						break; 
+				}
+			}
+
+			function winlossID(){
+				if (winloss == "win"){document.body.style.backgroundColor = "#80ff99"}
+				if (winloss == "loss"){document.body.style.backgroundColor = "#ff8080"}
+				if (winloss == "draw"){document.body.style.backgroundColor = "grey"}
+			}
+		</script>
+
+		<style type="text/css">
+			html, body {
+				height: 99%;
+				user-select: none;
+				-moz-user-select: none;
+				background-color: beige;
+				font-family: monospace;
+			}			
+			.items{
+				background-color: #4a4a4a;
+				width: 100px;
+				height: 75px;
+				text-align: center;
+				line-height: 75px;
+				float: left;
+				margin:10px;
+				color: white;
+				font-style: bold;
+				font-family: sans-serif;
+			}
+			.CPUitems{
+				background-color: #4a4a4a;
+				width: 100px;
+				height: 75px;
+				text-align: center;
+				line-height: 75px;
+				float: left;
+				margin:10px;
+				color: white;
+				font-style: bold;
+				font-family: sans-serif;
+			}			
+			.items:hover {
+				background-color: #787878;
+			}
+			.items:active {
+				background-color: #b5b5b5;
+			}			
+			.grouped{
+				position: relative;
+				background-color: gainsboro;
+				width: 50%;
+				height: 400px;
+				top: 100px;
+				margin: 0 auto;
+				border-radius: 10px;
+				box-shadow: 0px 2px 15px grey;			
+			}
+			.cpu{
+				
+			}
+			ul {
+				background-color: silver;
+				width: 400px;
+				height: 120px;
+			    margin: 0 auto;
+			    margin-top: 30px;
+			    padding-top: 10px;
+			    /*box-shadow: 0px 2px 10px grey;*/
+			}
+		</style>
+	</head>
+
+
+	<body>
+		Scissors Paper Rock (also known as <i>Tic Tac Toe</i>)
+		<div class="grouped">
+			<br>
+			<ul>
+				<span>User:</span> <br>
+				<div class="items" id="scissors" onclick="decision()">Scissors</div>
+				<div class="items" id="paper" onclick="decision()">Paper</div>
+				<div class="items" id="rock" onclick="decision()">Rock</div>
+			</ul>
+			<br>
+			
+			<ul class="cpu">
+				<SPAN>CPU:</SPAN> <br>
+				<div class="CPUitems" id="CPUscissors">Scissors</div>
+				<div class="CPUitems" id="CPUpaper">Paper</div>
+				<div class="CPUitems" id="CPUrock">Rock</div>
+			</div>
+		</div>
+	</body>
+
+
+</html>

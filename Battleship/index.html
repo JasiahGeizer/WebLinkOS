@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+
+<!-- To Do:
+	- listing all the ship options
+	- list the map positions on the side and top
+-->
+
+<html>
+	<head>
+		<script>
+
+			var started = false;
+			function decision(x) {
+
+				//while(	document.getElementById(t).style.backgroundColor == "red" ||
+				//		document.getElementById(t).style.backgroundColor == "yellow"){t=t-8;}
+				//document.getElementById(B).className = "items";
+				if(started == true){
+					if (x < 100) {
+						if(document.getElementById(x).style.backgroundColor == "darkslateblue"){
+							document.getElementById(x).style.backgroundColor = "white";
+						}else if(document.getElementById(x).style.backgroundColor == "white"){
+							document.getElementById(x).style.backgroundColor = "red";
+						}else if(document.getElementById(x).style.backgroundColor == "red"){
+							document.getElementById(x).style.backgroundColor = "darkslateblue";
+						}else{document.getElementById(x).style.backgroundColor = "white"}
+					}
+					if (x > 100) {
+						if(document.getElementById(x).style.backgroundColor == "grey"){
+							document.getElementById(x).style.backgroundColor = "red";
+						}else if(document.getElementById(x).style.backgroundColor == "red"){
+							document.getElementById(x).style.backgroundColor = "grey";
+						}else if(document.getElementById(x).style.backgroundColor == "white"){
+							document.getElementById(x).style.backgroundColor = "darkslateblue";
+						}else if(document.getElementById(x).style.backgroundColor == "darkslateblue"){
+							document.getElementById(x).style.backgroundColor = "white";
+						}else{document.getElementById(x).style.backgroundColor = "white"}
+					}
+				}else if (x > 100){
+					if(document.getElementById(x).style.backgroundColor == "grey"){
+						document.getElementById(x).style.backgroundColor = "darkslateblue";
+					}else{document.getElementById(x).style.backgroundColor = "grey"}
+				}
+			}
+			function start(){
+				started = true;
+				document.getElementById('startBTN').disabled=true;
+				document.getElementById('startBTN').style.display = "none";
+			}
+		</script>
+
+		<style type="text/css">
+			html, body {
+				height: 99%;
+				user-select: none;
+				-moz-user-select: none;
+				background-color: deeppink;
+				font-family: monospace;
+				color:black;
+				
+			}			
+			.items{
+				float: left;
+				/*margin:2px;*/
+				background-color: darkslateblue;
+				width: 29px;
+				height: 29px;
+				/*border-radius: 10px;*/
+				/*border: 3px solid #0053c9;*/
+				box-shadow: inset 0px 0px 0px 1px slateblue;
+			}
+			.items1{
+				float: left;
+				/*margin:2px;*/
+				background-color: darkslateblue;
+				width: 29px;
+				height: 29px;
+				/*border-radius: 10px;*/
+				/*border: 3px solid #0053c9;*/
+				box-shadow: inset 0px 0px 0px 1px steelblue;
+			}
+			.items2{
+				float: left;
+				margin:2px;
+				background-color: white;
+				width: 25px;
+				height: 25px;
+				border-radius: 2px;
+				border: 3px solid #0053c9;
+				box-shadow: inset 0px 3px 7px #424242;
+			}
+			.items:hover{
+				background-color: #fffbad;
+				border-color: #fffbad;
+				/*box-shadow: 0px -10px 1px yellow;*/
+			}
+			.items1:hover{
+				background-color: #fffbad;
+				border-color: #fffbad;
+				/*box-shadow: 0px -10px 1px yellow;*/
+			}
+			.items2:hover{
+				background-color: #ffadad;
+				border-color: #ffadad;
+				/*box-shadow: 0px -10px 1px red;*/
+			}
+			.grouped{
+				position: relative;
+				background-color: slateblue;
+				width: 350px;
+				height: 380px;
+				top: 50px;
+				margin: 0 auto;
+				border-radius: 20px;
+				box-shadow: 0px 2px 13px grey;	
+				color: white;		
+			}
+			ul {
+			    margin: 0 auto;
+			    padding-left: 25px; 
+			    padding-right: 15px; 
+			    padding-top: 10px;
+			    list-style-type: none;
+			    display:block;
+			    font-family: monospace;
+			}	
+			p{
+				height: 5px;
+			}		
+
+			.myButton {
+				box-shadow:inset 0px 1px 0px 0px #ffffff;
+				background:linear-gradient(to bottom, #ededed 5%, #dfdfdf 100%);
+				background-color:#ededed;
+				border-radius:6px;
+				border:1px solid #dcdcdc;
+				display:inline-block;
+				cursor:pointer;
+				color:#777777;
+				top: 10px;
+				font-family:Arial;
+				font-size:19px;
+				font-weight:bold;
+				padding:4px 14px;
+				text-decoration:none;
+				text-shadow:0px 1px 0px #ffffff;
+			}
+			.myButton:hover {
+				background:linear-gradient(to bottom, #dfdfdf 5%, #ededed 100%);
+				background-color:#dfdfdf;
+			}
+			.myButton:active {
+				position:relative;
+				top:11px;
+			}
+			li {
+				color: darkslateblue;
+				text-align: center;
+				line-height: 25px;
+				font-size: 0px;
+			}
+			li:hover {
+				font-size: 12px;
+				color: black;
+			}
+		</style>
+	</head>
+
+
+	<body>
+		Battleship
+		<i><br>Place your ships then press "Ready?".</i>
+		<div class="grouped" style="background-color: steelblue">
+			<br>
+			<ul>
+				<span>Their Ships</span> <br>
+
+				<li onclick="decision(1)" class="items1" id="1">A1</li>
+				<li onclick="decision(2)" class="items1" id="2">B1</li>
+				<li onclick="decision(3)" class="items1" id="3">C1</li>
+				<li onclick="decision(4)" class="items1" id="4">D1</li>
+				<li onclick="decision(5)" class="items1" id="5">E1</li>
+				<li onclick="decision(6)" class="items1" id="6">F1</li>
+				<li onclick="decision(7)" class="items1" id="7">G1</li>
+				<li onclick="decision(8)" class="items1" id="8">H1</li>
+				<li onclick="decision(9)" class="items1" id="9">I1</li>
+				<li onclick="decision(10)" class="items1" id="10">J1</li>			
+			</ul>
+			<ul>
+				<li onclick="decision(11)" class="items1" id="11">A2</li>
+				<li onclick="decision(12)" class="items1" id="12">B2</li>
+				<li onclick="decision(13)" class="items1" id="13">C2</li>
+				<li onclick="decision(14)" class="items1" id="14">D2</li>
+				<li onclick="decision(15)" class="items1" id="15">E2</li>
+				<li onclick="decision(16)" class="items1" id="16">F2</li>	
+				<li onclick="decision(17)" class="items1" id="17">G2</li>
+				<li onclick="decision(18)" class="items1" id="18">H2</li>
+				<li onclick="decision(19)" class="items1" id="19">I2</li>
+				<li onclick="decision(20)" class="items1" id="20">J2</li>	
+			</ul>
+			<ul>
+				<li onclick="decision(21)" class="items1" id="21">A3</li>
+				<li onclick="decision(22)" class="items1" id="22">B3</li>
+				<li onclick="decision(23)" class="items1" id="23">C3</li>
+				<li onclick="decision(24)" class="items1" id="24">D3</li>
+				<li onclick="decision(25)" class="items1" id="25">E3</li>
+				<li onclick="decision(26)" class="items1" id="26">F3</li>
+				<li onclick="decision(27)" class="items1" id="27">G3</li>
+				<li onclick="decision(28)" class="items1" id="28">H3</li>
+				<li onclick="decision(29)" class="items1" id="29">I3</li>
+				<li onclick="decision(30)" class="items1" id="30">J3</li>
+			</ul>
+			<ul>
+				<li onclick="decision(31)" class="items1" id="31">A4</li>
+				<li onclick="decision(32)" class="items1" id="32">B4</li>
+				<li onclick="decision(33)" class="items1" id="33">C4</li>
+				<li onclick="decision(34)" class="items1" id="34">D4</li>
+				<li onclick="decision(35)" class="items1" id="35">E4</li>
+				<li onclick="decision(36)" class="items1" id="36">F4</li>
+				<li onclick="decision(37)" class="items1" id="37">G4</li>
+				<li onclick="decision(38)" class="items1" id="38">H4</li>
+				<li onclick="decision(39)" class="items1" id="39">I4</li>
+				<li onclick="decision(40)" class="items1" id="40">J4</li>			
+			</ul>
+			<ul>
+				<li onclick="decision(41)" class="items1" id="41">A5</li>
+				<li onclick="decision(42)" class="items1" id="42">B5</li>
+				<li onclick="decision(43)" class="items1" id="43">C5</li>
+				<li onclick="decision(44)" class="items1" id="44">D5</li>
+				<li onclick="decision(45)" class="items1" id="45">E5</li>
+				<li onclick="decision(46)" class="items1" id="46">F5</li>
+				<li onclick="decision(47)" class="items1" id="47">G5</li>
+				<li onclick="decision(48)" class="items1" id="48">H5</li>
+				<li onclick="decision(49)" class="items1" id="49">I5</li>
+				<li onclick="decision(50)" class="items1" id="50">J5</li>
+			</ul>
+
+			<ul>
+				<li onclick="decision(51)" class="items1" id="51">A6</li>
+				<li onclick="decision(52)" class="items1" id="52">B6</li>
+				<li onclick="decision(53)" class="items1" id="53">C6</li>
+				<li onclick="decision(54)" class="items1" id="54">D6</li>
+				<li onclick="decision(55)" class="items1" id="55">E6</li>
+				<li onclick="decision(56)" class="items1" id="56">F6</li>
+				<li onclick="decision(57)" class="items1" id="57">G6</li>
+				<li onclick="decision(58)" class="items1" id="58">H6</li>
+				<li onclick="decision(59)" class="items1" id="59">I6</li>
+				<li onclick="decision(60)" class="items1" id="60">J6</li>			
+			</ul>
+			<ul>
+				<li onclick="decision(61)" class="items1" id="61">A7</li>
+				<li onclick="decision(62)" class="items1" id="62">B7</li>
+				<li onclick="decision(63)" class="items1" id="63">C7</li>
+				<li onclick="decision(64)" class="items1" id="64">D7</li>
+				<li onclick="decision(65)" class="items1" id="65">E7</li>
+				<li onclick="decision(66)" class="items1" id="66">F7</li>	
+				<li onclick="decision(67)" class="items1" id="67">G7</li>
+				<li onclick="decision(68)" class="items1" id="68">H7</li>
+				<li onclick="decision(69)" class="items1" id="69">I7</li>
+				<li onclick="decision(70)" class="items1" id="70">J7</li>	
+			</ul>
+			<ul>
+				<li onclick="decision(71)" class="items1" id="71">A8</li>
+				<li onclick="decision(72)" class="items1" id="72">B8</li>
+				<li onclick="decision(73)" class="items1" id="73">C8</li>
+				<li onclick="decision(74)" class="items1" id="74">D8</li>
+				<li onclick="decision(75)" class="items1" id="75">E8</li>
+				<li onclick="decision(76)" class="items1" id="76">F8</li>
+				<li onclick="decision(77)" class="items1" id="77">G8</li>
+				<li onclick="decision(78)" class="items1" id="78">H8</li>
+				<li onclick="decision(79)" class="items1" id="79">I8</li>
+				<li onclick="decision(80)" class="items1" id="80">J8</li>
+			</ul>
+			<ul>
+				<li onclick="decision(81)" class="items1" id="81">A9</li>
+				<li onclick="decision(82)" class="items1" id="82">B9</li>
+				<li onclick="decision(83)" class="items1" id="83">C9</li>
+				<li onclick="decision(84)" class="items1" id="84">D9</li>
+				<li onclick="decision(85)" class="items1" id="85">E9</li>
+				<li onclick="decision(86)" class="items1" id="86">F9</li>
+				<li onclick="decision(87)" class="items1" id="87">G9</li>
+				<li onclick="decision(88)" class="items1" id="88">H9</li>
+				<li onclick="decision(89)" class="items1" id="89">I9</li>
+				<li onclick="decision(90)" class="items1" id="90">J9</li>			
+			</ul>
+			<ul>
+				<li onclick="decision(91)" class="items1" id="91">A10</li>
+				<li onclick="decision(92)" class="items1" id="92">B10</li>
+				<li onclick="decision(93)" class="items1" id="93">C10</li>
+				<li onclick="decision(94)" class="items1" id="94">D10</li>
+				<li onclick="decision(95)" class="items1" id="95">E10</li>
+				<li onclick="decision(96)" class="items1" id="96">F10</li>
+				<li onclick="decision(97)" class="items1" id="97">G10</li>
+				<li onclick="decision(98)" class="items1" id="98">H10</li>
+				<li onclick="decision(99)" class="items1" id="99">I10</li>
+				<li onclick="decision(100)" class="items1" id="100">J10</li>
+			</ul>
+			</div>
+			
+		</div>
+		<br>
+		<div class="grouped">
+			<br>
+			<ul>
+				<span>Your Ships</span> <br>
+
+				<li onclick="decision(101)" class="items" id="101">A1</li>
+				<li onclick="decision(102)" class="items" id="102">B1</li>
+				<li onclick="decision(103)" class="items" id="103">C1</li>
+				<li onclick="decision(104)" class="items" id="104">D1</li>
+				<li onclick="decision(105)" class="items" id="105">E1</li>
+				<li onclick="decision(106)" class="items" id="106">F1</li>
+				<li onclick="decision(107)" class="items" id="107">G1</li>
+				<li onclick="decision(108)" class="items" id="108">H1</li>
+				<li onclick="decision(109)" class="items" id="109">I1</li>
+				<li onclick="decision(110)" class="items" id="110">J1</li>			
+			</ul>
+			<ul>
+				<li onclick="decision(111)" class="items" id="111">A2</li>
+				<li onclick="decision(112)" class="items" id="112">B2</li>
+				<li onclick="decision(113)" class="items" id="113">C2</li>
+				<li onclick="decision(114)" class="items" id="114">D2</li>
+				<li onclick="decision(115)" class="items" id="115">E2</li>
+				<li onclick="decision(116)" class="items" id="116">F2</li>	
+				<li onclick="decision(117)" class="items" id="117">G2</li>
+				<li onclick="decision(118)" class="items" id="118">H2</li>
+				<li onclick="decision(119)" class="items" id="119">I2</li>
+				<li onclick="decision(120)" class="items" id="120">J2</li>	
+			</ul>
+			<ul>
+				<li onclick="decision(121)" class="items" id="121">A3</li>
+				<li onclick="decision(122)" class="items" id="122">B3</li>
+				<li onclick="decision(123)" class="items" id="123">C3</li>
+				<li onclick="decision(124)" class="items" id="124">D3</li>
+				<li onclick="decision(125)" class="items" id="125">E3</li>
+				<li onclick="decision(126)" class="items" id="126">F3</li>
+				<li onclick="decision(127)" class="items" id="127">G3</li>
+				<li onclick="decision(128)" class="items" id="128">H3</li>
+				<li onclick="decision(129)" class="items" id="129">I3</li>
+				<li onclick="decision(130)" class="items" id="130">J3</li>
+			</ul>
+			<ul>
+				<li onclick="decision(131)" class="items" id="131">A4</li>
+				<li onclick="decision(132)" class="items" id="132">B4</li>
+				<li onclick="decision(133)" class="items" id="133">C4</li>
+				<li onclick="decision(134)" class="items" id="134">D4</li>
+				<li onclick="decision(135)" class="items" id="135">E4</li>
+				<li onclick="decision(136)" class="items" id="136">F4</li>
+				<li onclick="decision(137)" class="items" id="137">G4</li>
+				<li onclick="decision(138)" class="items" id="138">H4</li>
+				<li onclick="decision(139)" class="items" id="139">I4</li>
+				<li onclick="decision(140)" class="items" id="140">J4</li>			
+			</ul>
+			<ul>
+				<li onclick="decision(141)" class="items" id="141">A5</li>
+				<li onclick="decision(142)" class="items" id="142">B5</li>
+				<li onclick="decision(143)" class="items" id="143">C5</li>
+				<li onclick="decision(144)" class="items" id="144">D5</li>
+				<li onclick="decision(145)" class="items" id="145">E5</li>
+				<li onclick="decision(146)" class="items" id="146">F5</li>
+				<li onclick="decision(147)" class="items" id="147">G5</li>
+				<li onclick="decision(148)" class="items" id="148">H5</li>
+				<li onclick="decision(149)" class="items" id="149">I5</li>
+				<li onclick="decision(150)" class="items" id="150">J5</li>
+			</ul>
+
+			<ul>
+				<li onclick="decision(151)" class="items" id="151">A6</li>
+				<li onclick="decision(152)" class="items" id="152">B6</li>
+				<li onclick="decision(153)" class="items" id="153">C6</li>
+				<li onclick="decision(154)" class="items" id="154">D6</li>
+				<li onclick="decision(155)" class="items" id="155">E6</li>
+				<li onclick="decision(156)" class="items" id="156">F6</li>
+				<li onclick="decision(157)" class="items" id="157">G6</li>
+				<li onclick="decision(158)" class="items" id="158">H6</li>
+				<li onclick="decision(159)" class="items" id="159">I6</li>
+				<li onclick="decision(160)" class="items" id="160">J6</li>			
+			</ul>
+			<ul>
+				<li onclick="decision(161)" class="items" id="161">A7</li>
+				<li onclick="decision(162)" class="items" id="162">B7</li>
+				<li onclick="decision(163)" class="items" id="163">C7</li>
+				<li onclick="decision(164)" class="items" id="164">D7</li>
+				<li onclick="decision(165)" class="items" id="165">E7</li>
+				<li onclick="decision(166)" class="items" id="166">F7</li>	
+				<li onclick="decision(167)" class="items" id="167">G7</li>
+				<li onclick="decision(168)" class="items" id="168">H7</li>
+				<li onclick="decision(169)" class="items" id="169">I7</li>
+				<li onclick="decision(170)" class="items" id="170">J7</li>	
+			</ul>
+			<ul>
+				<li onclick="decision(171)" class="items" id="171">A8</li>
+				<li onclick="decision(172)" class="items" id="172">B8</li>
+				<li onclick="decision(173)" class="items" id="173">C8</li>
+				<li onclick="decision(174)" class="items" id="174">D8</li>
+				<li onclick="decision(175)" class="items" id="175">E8</li>
+				<li onclick="decision(176)" class="items" id="176">F8</li>
+				<li onclick="decision(177)" class="items" id="177">G8</li>
+				<li onclick="decision(178)" class="items" id="178">H8</li>
+				<li onclick="decision(179)" class="items" id="179">I8</li>
+				<li onclick="decision(180)" class="items" id="180">J8</li>
+			</ul>
+			<ul>
+				<li onclick="decision(181)" class="items" id="181">A9</li>
+				<li onclick="decision(182)" class="items" id="182">B9</li>
+				<li onclick="decision(183)" class="items" id="183">C9</li>
+				<li onclick="decision(184)" class="items" id="184">D9</li>
+				<li onclick="decision(185)" class="items" id="185">E9</li>
+				<li onclick="decision(186)" class="items" id="186">F9</li>
+				<li onclick="decision(187)" class="items" id="187">G9</li>
+				<li onclick="decision(188)" class="items" id="188">H9</li>
+				<li onclick="decision(189)" class="items" id="189">I9</li>
+				<li onclick="decision(190)" class="items" id="190">J9</li>			
+			</ul>
+			<ul>
+				<li onclick="decision(191)" class="items" id="191">A10</li>
+				<li onclick="decision(192)" class="items" id="192">B10</li>
+				<li onclick="decision(193)" class="items" id="193">C10</li>
+				<li onclick="decision(194)" class="items" id="194">D10</li>
+				<li onclick="decision(195)" class="items" id="195">E10</li>
+				<li onclick="decision(196)" class="items" id="196">F10</li>
+				<li onclick="decision(197)" class="items" id="197">G10</li>
+				<li onclick="decision(198)" class="items" id="198">H10</li>
+				<li onclick="decision(199)" class="items" id="199">I10</li>
+				<li onclick="decision(200)" class="items" id="200">J10</li>
+			</ul>
+			<button class="myButton" id="startBTN" style="position:relative; left: 248px;" onclick="start()">Ready?</button>
+			</div>
+		</div>
+			<ul>
+				<i><u> Ship Length: </i></u> <br>
+				Aircraft Carrier: 5 <br> 
+				Battleship: 4 <br> 
+				Cruiser: 3 <br> 
+				Submarine: 3 <br> 
+				Destroyer: 2
+			</ul>
+	</body>
+</html>

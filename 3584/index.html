@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+
+<!-- To Do:
+	- Add highscore
+	- When reached "3584" alert("You Won! Highscore: " + highscore)
+	- [Fix] When 7 7 7 in a row & they're combined, 14 keeps going on inside (...14 7), should be outside 
+	- If no mergers happen in last turn, then have to press different arrow
+
+	#Numbers: 7 14 28 56 112 224 448 896 1792 3584
+-->
+
+<html>
+	<head>
+		<script>
+			var guessed = 0;
+			function detectForNew(){
+				guessed = guessed + 1;
+				document.getElementById("guesses").innerHTML=guessed; 
+
+				var antiPos = new Array();
+				for(i = 0; i < 16; i++){
+						if(document.getElementById(a[i]).style.backgroundColor == "grey"){
+							antiPos.push(a[i]);
+						}
+						/*if(document.getElementById(a[i]).innerHTML== "14"){
+							document.getElementById(a[i]).style.backgroundColor = "pink";
+						}*/
+						switch(document.getElementById(a[i]).innerHTML){
+							case "14":
+							document.getElementById(a[i]).style.backgroundColor = "#f1dcb5";  
+							break;
+							case "28":
+							document.getElementById(a[i]).style.backgroundColor = "#f2b179";  
+							break;
+							case "56":
+							document.getElementById(a[i]).style.backgroundColor = "#f59563";  
+							break;
+							case "112":
+							document.getElementById(a[i]).style.backgroundColor = "#f67c5f";  
+							break;
+							case "224":
+							document.getElementById(a[i]).style.backgroundColor = "#f65e3b";  
+							break;
+							case "448":
+							document.getElementById(a[i]).style.backgroundColor = "#edcf72";  
+							break;
+							case "896":
+							document.getElementById(a[i]).style.backgroundColor = "#efc442";  
+							break;
+							case "3584":
+							document.getElementById(a[i]).style.backgroundColor = "#ffc000";  
+							break;
+							case "0":
+							document.getElementById(a[i]).style.backgroundColor = "grey";
+							document.getElementById(a[i]).innerHTML="";  
+							break;
+						}				
+				}
+				shuffle(antiPos);
+				document.getElementById(antiPos[0]).style.backgroundColor = "#eee4da";
+				document.getElementById(antiPos[0]).innerHTML= 7;
+			}
+
+				//random selection of 1 to 24 image numbers
+				var arr = [];
+				while(arr.length < 8){
+				    var r = Math.floor(Math.random() * 16) + 1;
+				    if(arr.indexOf(r) === -1) arr.push(r);
+				}
+			var a;
+			var b;
+			function decision(x) {
+				document.getElementById("aa").style.backgroundColor="#404040";
+				a = Array.from(Array(16).keys()).map(x => x + 1);
+				shuffle(a);
+				for(i = 0; i < 16; i++){
+					document.getElementById(a[i]).style.backgroundColor = "grey";
+					document.getElementById(a[i]).innerHTML= ""; 
+				}
+				for(i = 0; i < 2; i++){
+					document.getElementById(a[i]).style.backgroundColor = "#eee4da";
+					document.getElementById(a[i]).innerHTML= 7;
+					//document.getElementByClassNames().style.backgroundColor = "white";
+				}
+			}
+
+			function shuffle(array) {
+			  array.sort(() => Math.random() - 0.5);
+			}
+						
+			var iterate=1;
+			var iterateD;
+			var iterateU; 
+			var movable=0;
+			function leftArrowPressed() {
+				iterate = 1;
+				//alert("left");
+				posArray = [];
+				detector();
+				for(var x in posArray){switcher("1", (posArray[x]))}
+				detectForNew();
+			}
+			function rightArrowPressed() {
+				//alert("right");
+				posArray = [];
+				detector();
+				for(var x in posArray){switcher("2", (posArray[x]))}
+				detectForNew();
+			}
+			function upArrowPressed() {
+				//alert("up");
+				posArray = [];
+				detector();
+				for(var x in posArray){switcher("3", (posArray[x]))}
+				detectForNew();
+			}
+			function downArrowPressed() {
+				//alert("down");
+				posArray = [];
+				detector();
+				for(var x in posArray){switcher("4", (posArray[x]))}
+				detectForNew();
+			}
+		var posArray = new Array();
+		function detector(){
+			for(i = 0; i < 16; i++){
+					if(document.getElementById(a[i]).style.backgroundColor !== "grey"){
+						posArray.push(a[i]);
+					}	
+			}
+			//console.log(posArray);
+		}
+		function switcher(x, posArraySolo){
+				switch(posArraySolo){
+					case 0:
+					//console.log("0");     
+					break;		
+					case 1:
+						if(x==1) {mover("0",x, 1);}
+						if(x==2) {mover("3",x, 1);}
+						if(x==3) {mover("0",x, 1);}
+						if(x==4) {mover("3",x, 1);}
+					    break;
+					case 2:
+						if(x==1) {mover("1",x, 2);}
+						if(x==2) {mover("2",x, 2);}
+						if(x==3) {mover("0",x, 2);}
+						if(x==4) {mover("3",x, 2);}  
+					    break;
+					case 3:
+						if(x==1) {mover("2",x, 3);}
+						if(x==2) {mover("1",x, 3);}
+						if(x==3) {mover("0",x, 3);}
+						if(x==4) {mover("3",x, 3);}   
+					    break;
+					case 4:
+						if(x==1) {mover("3",x, 4);}
+						if(x==2) {mover("0",x, 4);}
+						if(x==3) {mover("0",x, 4);}
+						if(x==4) {mover("3",x, 4);}   
+					    break;
+					case 5:
+						if(x==1) {mover("0",x, 5);}
+						if(x==2) {mover("3",x, 5);}
+						if(x==3) {mover("1",x, 5);}
+						if(x==4) {mover("2",x, 5);}  
+					    break;
+					case 6:
+						if(x==1) {mover("1",x, 6);}
+						if(x==2) {mover("2",x, 6);}
+						if(x==3) {mover("1",x, 6);}
+						if(x==4) {mover("2",x, 6);}      
+					    break;
+					case 7:
+						if(x==1) {mover("2",x, 7);}
+						if(x==2) {mover("1",x, 7);}
+						if(x==3) {mover("1",x, 7);}
+						if(x==4) {mover("2",x, 7);}  
+					    break;
+					case 8:
+						if(x==1) {mover("3",x, 8);}
+						if(x==2) {mover("0",x, 8);}
+						if(x==3) {mover("1",x, 8);}
+						if(x==4) {mover("2",x, 8);}    
+					    break;
+					case 9:
+						if(x==1) {mover("0",x, 9);}
+						if(x==2) {mover("3",x, 9);}
+						if(x==3) {mover("2",x, 9);}
+						if(x==4) {mover("1",x, 9);}   
+					    break;
+					case 10:
+						if(x==1) {mover("1",x, 10);}
+						if(x==2) {mover("2",x, 10);}
+						if(x==3) {mover("2",x, 10);}
+						if(x==4) {mover("1",x, 10);}     
+					    break;
+					case 11:
+						if(x==1) {mover("2",x, 11);}
+						if(x==2) {mover("1",x, 11);}
+						if(x==3) {mover("2",x, 11);}
+						if(x==4) {mover("1",x, 11);}  
+					    break;
+					case 12:
+						if(x==1) {mover("3",x, 12);}
+						if(x==2) {mover("0",x, 12);}
+						if(x==3) {mover("2",x, 12);}
+						if(x==4) {mover("1",x, 12);}   
+					    break;
+					case 13:
+						if(x==1) {mover("0",x, 13);}
+						if(x==2) {mover("3",x, 13);}
+						if(x==3) {mover("3",x, 13);}
+						if(x==4) {mover("0",x, 13);}    
+					    break;
+					case 14:
+						if(x==1) {mover("1",x, 14);}
+						if(x==2) {mover("2",x, 14);}
+						if(x==3) {mover("3",x, 14);}
+						if(x==4) {mover("0",x, 14);}     
+					    break;
+					case 15:
+						if(x==1) {mover("2",x, 15);}
+						if(x==2) {mover("1",x, 15);}
+						if(x==3) {mover("3",x, 15);}
+						if(x==4) {mover("0",x, 15);}    
+					    break;
+					case 16:
+						if(x==1) {mover("3",x, 16);}
+						if(x==2) {mover("0",x, 16);}
+						if(x==3) {mover("3",x, 16);}
+						if(x==4) {mover("0",x, 16);}
+					    break;					    							        
+					}
+				}
+		var sub1;
+		var plus1;
+		var sub4;
+		var plus4;
+		var score1=1;
+		var now1=0;
+		function mover(xx, x, z){
+			//console.log("move " + xx + " spaces in direction " + x);
+			switch(x){
+				case "1":
+					//console.log("move " + xx + " spaces left");
+					//console.log("z " + z);
+					for(;xx > 0;xx--){
+							sub1 = z-1;
+							if(document.getElementById(sub1).innerHTML == document.getElementById(z).innerHTML){
+								document.getElementById(sub1).style.backgroundColor = "#eee4da";
+								document.getElementById(sub1).innerHTML=document.getElementById(sub1).innerHTML * 2;
+
+								document.getElementById(z).style.backgroundColor = "grey";
+								document.getElementById(z).innerHTML= "";
+							}else if(document.getElementById(sub1).style.backgroundColor == "grey"){
+								document.getElementById(sub1).style.backgroundColor = "#eee4da";
+								document.getElementById(sub1).innerHTML=document.getElementById(z).innerHTML;
+
+								document.getElementById(z).style.backgroundColor = "grey";
+								document.getElementById(z).innerHTML= "";
+							}
+							z=z-1;
+					}		
+						
+				    break;
+			    case "2":
+					//console.log("move " + xx + " spaces right");
+					for(;xx > 0;xx--){
+							plus1 = z+1;
+							if(document.getElementById(plus1).innerHTML == document.getElementById(z).innerHTML){
+								document.getElementById(plus1).style.backgroundColor = "#eee4da";
+								document.getElementById(plus1).innerHTML=document.getElementById(plus1).innerHTML * 2;
+								
+								document.getElementById(z).style.backgroundColor = "grey";
+								document.getElementById(z).innerHTML= "";
+							}else if(document.getElementById(plus1).style.backgroundColor == "grey"){
+								document.getElementById(plus1).style.backgroundColor = "#eee4da";
+								document.getElementById(plus1).innerHTML=document.getElementById(z).innerHTML;
+
+								document.getElementById(z).style.backgroundColor = "grey";
+								document.getElementById(z).innerHTML= "";
+							}
+							z=z+1;
+					}	
+					break;		
+				case "3":
+					//console.log("move " + xx + " spaces up");
+					for(;xx > 0;xx--){
+							sub4 = z-4;
+							if(document.getElementById(sub4).innerHTML == document.getElementById(z).innerHTML){
+								document.getElementById(sub4).style.backgroundColor = "#eee4da";
+								document.getElementById(sub4).innerHTML=document.getElementById(sub4).innerHTML * 2;
+								
+								document.getElementById(z).style.backgroundColor = "grey";
+								document.getElementById(z).innerHTML= "";
+							}else if(document.getElementById(sub4).style.backgroundColor == "grey"){
+								document.getElementById(sub4).style.backgroundColor = "#eee4da";
+								document.getElementById(sub4).innerHTML=document.getElementById(z).innerHTML;
+
+								document.getElementById(z).style.backgroundColor = "grey";
+								document.getElementById(z).innerHTML= "";
+							}
+							z=z-4;
+					}
+				    break;
+				case "4":
+					//console.log("move " + xx + " spaces down");
+					for(;xx > 0;xx--){
+							plus4 = z+4;
+							if(document.getElementById(plus4).innerHTML == document.getElementById(z).innerHTML){
+								document.getElementById(plus4).style.backgroundColor = "#eee4da";
+								document.getElementById(plus4).innerHTML=document.getElementById(plus4).innerHTML * 2;
+								
+								document.getElementById(z).style.backgroundColor = "grey";
+								document.getElementById(z).innerHTML= "";
+							}else if(document.getElementById(plus4).style.backgroundColor == "grey"){
+								document.getElementById(plus4).style.backgroundColor = "#eee4da";
+								document.getElementById(plus4).innerHTML=document.getElementById(z).innerHTML;
+
+								document.getElementById(z).style.backgroundColor = "grey";
+								document.getElementById(z).innerHTML= "";
+							}
+							z=z+4;
+					}	
+				    break;
+			}
+		}
+        function docReady()
+        {
+          window.addEventListener('keydown', moveSelection);
+        }
+
+        function moveSelection(evt) {
+                switch (evt.keyCode) {
+                    case 37:
+                    leftArrowPressed();
+                    break;
+                    case 39:
+                    rightArrowPressed();
+                    break;
+                    case 38:
+                    upArrowPressed();
+                    break;
+                    case 40:
+                    downArrowPressed();
+                    break;
+                    }
+                }
+
+		</script>
+
+		<style type="text/css">
+			html, body {
+				height: 99%;
+				user-select: none;
+				-moz-user-select: none;
+				background-color: bisque;
+				font-family: monospace;
+			}			
+			.items{
+				float: left;
+				margin:3px;
+			}
+			.grouped{
+				position: relative;
+				background-color: #404040;
+				width: 500px;
+				height: 500px;
+				top: 100px;
+				margin: 0 auto;
+				border-radius: 20px;
+				box-shadow: 0px 2px 13px grey;	
+				color: lightgrey;		
+			}
+			ul {
+			    margin: 0 auto;
+			    padding-top: 10px;
+			    font-family: sans-serif;
+			}
+			li {
+				height: 80px;
+				width:  80px;
+				padding: 10px;
+				overflow: hidden;
+				background-color: white;
+				text-align: center;
+				line-height: 80px;
+				font-size: 40px;
+				color: black;
+				border-radius: 5px;
+			}
+			span{
+				padding: 5px;
+			}
+			button{
+				margin-left: 2px;
+				border:1px solid darkgrey;
+				padding: 5px;
+				padding-left: 15px;
+				padding-right: 15px;
+			}
+		</style>
+	</head>
+
+	<body onload="docReady()" onkeydown="" onkeyup="">
+		3584 <br> <i> Reach the number 3584 by using the arrow keys to combine identical numbers.
+		<div class="grouped" id="aa">
+			<br>
+			<ul>
+				<button onclick="decision()">Start</button><span></span>
+				<!--Score: <span id="score">0</span> <span></span>-->
+				Moves: <span id="guesses"> 0 </span>				
+			<br>
+				<li class="items" id="1" draggable="false"></li>
+				<li class="items" id="2" draggable="false"></li>
+				<li class="items" id="3" draggable="false"></li>
+				<li class="items" id="4" draggable="false"></li>
+			</ul>
+			<ul>
+				<li class="items" id="5" draggable="false"></li>
+				<li class="items" id="6" draggable="false"></li>
+				<li class="items" id="7" draggable="false"></li>
+				<li class="items" id="8" draggable="false"></li>				
+			</ul>
+			<ul>
+				<li class="items" id="9" draggable="false"></li>
+				<li class="items" id="10" draggable="false"></li>
+				<li class="items" id="11" draggable="false"></li>
+				<li class="items" id="12" draggable="false"></li>
+			</ul>
+			<ul>
+				<li class="items" id="13" draggable="false"></li>
+				<li class="items" id="14" draggable="false"></li>
+				<li class="items" id="15" draggable="false"></li>
+				<li class="items" id="16" draggable="false"></li>				
+			</ul>
+			</div>
+		</div>
+	</body>
+
+
+</html>

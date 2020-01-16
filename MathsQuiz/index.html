@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<!--
+	To Do:
+		- Add Subtraction and Addition
+		- Add Highscore and restart
+		- Better graphical representation of question 
+		- List all incorrect at the end
+-->
+<html>
+	<head>
+		<style>
+			#ToSpell{
+				background-color: #4a4a4a;
+				font-size: 50px;
+				text-align: center;
+				height: 60px;
+				line-height: 60px;
+				color:white;
+			}
+			#score{
+				font-size: 25px;
+				/*background-color: #4a4a4a;*/
+				text-align: right;
+				/*height: 60px;*/
+				line-height: 40px;
+				color:white;
+			}
+			#wrongScore{
+				font-size: 25px;
+				text-align: right;
+				height: 60px;
+				color:white;
+			}
+			#wordTXT{
+				/*border-radius: 3px;*/
+				border:0px;
+				box-shadow: 0px 0px 0px grey;
+				padding: 3px;
+				font-size: 50px;
+				text-align: center;
+				height: 60px;
+				line-height: 60px;
+			}
+			#wordTXT:focus{
+				/*background-color: grey;*/
+				/*border: inset 1px solid grey;*/
+				box-shadow: inset 0px 0px 10px 5px lightgrey;
+				outline:0;
+			}
+			#enter{
+				border:0px;
+				box-shadow: 0px 0px 2px black;
+				padding: 3px;
+				font-size: 50px;
+				text-align: center;
+				height: 60px;
+				line-height: 60px;
+				opacity: 0;
+			}
+			#all{
+				left: 50%;
+				top: 50%;
+				width: 614px;
+				position: absolute;
+				transform: translate(-50%, -50%);
+				/*box-shadow: 0px 0px 10px darkgrey;*/
+			}
+			#bgTime{
+				width: 1%;
+				height: 100%;
+				background-color: #4a4a4a !important;
+				position: absolute;
+				top: 0%;
+				left: 0%;
+				overflow: hidden;
+				z-index: -1;
+				transition-duration: 200ms;
+				transition-timing-function: ease-out;
+			}
+			body{
+				background-color: #8c8c8c;
+				font-family: sans-serif;
+			}
+			#wrongWords{
+				font-size: 25px;
+				/*text-align: right;*/
+				line-height: 40px;
+				color:white;
+				width: 150px;
+				display: none;
+				white-space:pre;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="all">
+			<div id="ToSpell">Enter a no. from 1 to 12</div>
+			<input type="text" name="word" id="wordTXT">
+			<div id="score"></div>
+			<div id="wrongScore"></div>
+			<div id="wrongWords">Incorrect:</div>
+		</div>
+			<button id="enter" onclick="check()"> Go! </button>
+			<br>
+			<div id="bgTime"></div>
+
+		<script type="text/javascript">
+			document.getElementById("wordTXT").addEventListener("keyup", function(event) {
+			  if (event.keyCode === 13) {
+			   event.preventDefault();
+			   document.getElementById("enter").click();
+			  }
+			});
+
+			var i ="";
+			var score=0;
+			var wrong=0;
+			var s = false;
+			var start = false;
+			var val;
+			var cal;
+			function check(){
+				if (start==true) {
+					if(document.getElementById("wordTXT").value == val){
+						score=score+1;
+						document.body.style.backgroundColor = "#20b257";
+						document.getElementById("score").innerHTML = "Score: "+score;
+						widthr = widthr - 5;
+					}else if(document.getElementById("wordTXT").value !== val){
+						wrong=wrong+1;
+						document.body.style.backgroundColor = "#c73c4c";
+						document.getElementById("wrongScore").innerHTML = "Wrong: "+wrong;
+						widthr = widthr + 10;
+
+						document.getElementById("wrongWords").innerHTML = document.getElementById("wrongWords").innerHTML
+						+"\r\n"
+						+document.getElementById("ToSpell").innerHTML+" "+val;
+					}	
+				}
+				if(start==false){
+					cal = document.getElementById("wordTXT").value;
+					if (!isNaN(cal)) {
+						var myVar = setInterval(myTimer, 200);
+						start=true;
+					}
+				}
+				if(start==true){
+					i = Math.floor((Math.random() * 12) + 1);
+					val = cal * i;
+					document.getElementById("ToSpell").innerHTML = cal + " x " + i + " =";
+					document.getElementById("wordTXT").value ="";
+				}
+			}
+
+			var widthr=0;
+			function myTimer() {
+				if(widthr < 100){
+					widthr = widthr + 1;
+			    	document.getElementById("bgTime").style.width = widthr + '%';
+				}else{
+					document.getElementById("bgTime").style.opacity = 0;
+					document.getElementById("wordTXT").disabled = true;
+					document.getElementById("wordTXT").style.opacity = 0;
+					document.getElementById("ToSpell").style.opacity = 0;
+					document.getElementById("wrongWords").style.display="block";
+				}
+			}
+		</script>
+	</body>
+</html>
+
+

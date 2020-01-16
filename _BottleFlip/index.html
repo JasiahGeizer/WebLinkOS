@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<!--
+
+Timer 
+	- get old position
+	- get current position
+	- minus current by old
+	- apply as rotation
+
+-->
+<html>
+	<head>
+		
+	</head>
+
+<body>
+	<style>
+		*{
+			user-select: none; 
+		}
+		#label{
+			width: 120px;
+			height: 35%;
+			top: 60%;
+			left: 50%;
+			background-color: white;
+			position: absolute;
+			transform: translate(-25%);
+			color: grey;
+			font-family: monospace;
+			text-align: center;
+			line-height: 50px;
+			transition: transform 0.5s;
+			transform-origin: top center;
+		}
+		#waterbottle{
+			transform: rotate(10deg) translate(-50%, -50%);
+			left: 50%;
+			top: 50%;
+			height: 75%;
+			width: 50%;
+			position: absolute;
+			border:0px; 
+			background-color: lightyellow;
+		}
+	</style>
+		<img src="bottle.png" id="label" onmouseup="mouseUp()">
+		
+		<script type="text/javascript">
+
+			dragElement(document.getElementById("label"));
+
+			function dragElement(elmnt) {
+			  var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+			  if (document.getElementById(elmnt.id)) {
+			    document.getElementById(elmnt.id).onmousedown = dragMouseDown;
+			  } else {
+			    elmnt.onmousedown = dragMouseDown;
+			  }
+			  function dragMouseDown(e) {
+			    e = e || window.event;
+			    e.preventDefault();
+			    pos3 = e.clientX;
+			    pos4 = e.clientY;
+			    document.onmouseup = closeDragElement;
+			    document.onmousemove = elementDrag;
+			    letGo=false;
+			  }
+			  function elementDrag(e) {
+			  	if (letGo==false) {
+			  		e = e || window.event;
+				    e.preventDefault();
+				    pos1 = pos3 - e.clientX;
+				    pos2 = pos4 - e.clientY;
+				    pos3 = e.clientX;
+				    pos4 = e.clientY;
+				    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+				    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+			  	}
+			    
+			  }
+			  function closeDragElement() {
+			    document.onmouseup = null;
+			    document.onmousemove = null;
+			  }
+			}
+			var POStoMove;
+			var letGo = false;
+			function mouseUp(){
+				console.log("oopsie " + POStoRotate + " | " + document.getElementById("label").style.left);
+				//set a variable telling it to move?
+				POStoMove = currentPOS -previousPOS;
+				letGo=true;
+			}
+			var myVar = setInterval(myTimer, 100);
+			var currentPOS="500";
+			var previousPOS="500";
+			var POStoRotate;
+			var currentROS=1;
+			function myTimer() {
+				if (letGo==false) {
+					previousPOS = currentPOS;
+					currentPOS = document.getElementById("label").style.left;
+					POStoRotate = parseInt(currentPOS, 10)-parseInt(previousPOS, 10);
+
+					document.getElementById("label").style.transform = "rotate("+ POStoRotate +"deg) translate(0%, 0%)"; 	
+				}else{
+					currentROS=currentROS+POStoRotate/10;//make it slow down ?
+					console.log(currentROS);
+					document.getElementById("label").style.transform = "rotate("+ currentROS +"deg) translate(0%, 0%)"; 
+				}
+
+				//
+			}
+			
+		</script>
+	</body>
+</html>
+
+

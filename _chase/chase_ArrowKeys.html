@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<link rel="stylesheet" href="styles.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+		<script type="text/javascript">
+
+            function leftArrowPressed() {
+            var element = document.getElementById("image1");
+            element.style.left = parseInt(element.style.left) - 100 + 'px';
+            }
+
+            function rightArrowPressed() {
+            var element = document.getElementById("image1");
+            element.style.left = parseInt(element.style.left) + 100 + 'px';
+
+            }
+
+            function upArrowPressed() {
+            var element = document.getElementById("image1");
+            element.style.top = parseInt(element.style.top) - 100 + 'px';
+            }
+
+            function downArrowPressed() {
+            var element = document.getElementById("image1");
+            element.style.top = parseInt(element.style.top) + 100 + 'px';
+            }
+
+            function moveSelection(evt) {
+                switch (evt.keyCode) {
+                    case 37:
+                    leftArrowPressed();
+                    break;
+                    case 39:
+                    rightArrowPressed();
+                    break;
+                    case 38:
+                    upArrowPressed();
+                    break;
+                    case 40:
+                    downArrowPressed();
+                    break;
+                    }
+                };
+
+        function docReady()
+        {
+          window.addEventListener('keydown', moveSelection);
+        }
+  </script>
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+			    var y = $('.follower').position();
+			    var x2 = document.getElementById("image1");
+			    var y2 = document.getElementById("image2");
+
+			setInterval(function(){ 
+				y2.style.top = parseInt(x2.style.top) + "px";
+			    y2.style.left = parseInt(x2.style.left) + "px";
+
+			    document.getElementById("image1").innerHTML = y2.style.top + " " + y2.style.left;
+				document.getElementById("image2").innerHTML = x2.style.top + " " + x2.style.left; 
+			}, 15);
+		});
+	</script>
+
+</head>
+
+<body onload="docReady()" onkeydown="" onkeyup="">
+
+	<style>
+		.follower {
+			  width: 50px;
+			  height: 50px;
+			  background-color: lightgreen;
+			  border-radius: 50px;
+			  transition-duration: 3500ms;
+			  transition-timing-function: ease-out;
+			  position: fixed;
+			  transform: translate(-50%, -50%);
+			  text-align: center;
+			  line-height: 25px;
+			  font-size: 12px;
+		}
+		img {
+			transition-duration: 2000ms;
+			transition-timing-function: ease-out;
+			transform: translate(-50%, -50%);
+		}
+		.interacter {
+			transition-duration: 2000ms;
+			transition-timing-function: ease-out;
+			transform: translate(-50%, -50%);
+			background-color: lightblue;
+			height:150px;
+			width:150px;
+			border-radius: 150px;
+			vertical-align:50% !important;
+			text-align: center;
+			opacity: 0.75;
+			line-height: 150px;
+		}
+	</style>
+
+	<div class="follower" id="image2"><span>potato</span></div>
+	<div class="interacter" id="image1" style="position:absolute;left:0; top:0;" height="150px" width="150px">carrot</div>
+	</body>
+</html>
+
+

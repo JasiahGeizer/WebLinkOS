@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script type="text/javascript">
+			function starting(btn){
+				btn.style.backgroundColor = "grey";
+				btn.style.color = "darkgrey";
+
+				document.getElementById("realbg").style.backgroundColor = "#643eb1";
+
+				document.getElementById("btn2").style.backgroundColor = "white";
+				document.getElementById("btn2").style.color = "black";
+				document.getElementById("btn2").disabled = false;
+				document.getElementById("btn1").disabled = true;
+			}
+			var level = 1;
+			function winning(btn){
+				btn.style.backgroundColor = "grey";
+				btn.style.color = "darkgrey";
+
+				document.getElementById("realbg").style.backgroundColor = "#6a5397";
+
+				document.getElementById("btn1").style.backgroundColor = "white";
+				document.getElementById("btn1").style.color = "black";
+				document.getElementById("btn2").disabled = true;
+				document.getElementById("btn1").disabled = false;
+
+				if(level == 4){
+					level = level + 1;
+					document.getElementById("btn1").innerHTML = "You Win!";
+					document.getElementById("btn2").innerHTML = "You Win!";
+					document.body.style.backgroundColor = "white";
+					//document.getElementById("realbg").style.backgroundColor = "#b13e66";
+					alert("You Win!");
+				}	
+				if(level == 3){
+					level = level + 1;
+					document.getElementById("c11").style.left = "10%";
+					document.getElementById("c11").style.top = "10%";
+					document.getElementById("c11").style.width = "7%";
+					document.getElementById("c11").style.height = "28%";
+
+					document.getElementById("c22").style.left = "55%";
+					document.getElementById("c22").style.top = "35%";
+					document.getElementById("c22").style.width = "7%";
+					document.getElementById("c22").style.height = "30%";
+
+					document.getElementById("c33").style.left = "10%";
+					document.getElementById("c33").style.top = "35%";
+					document.getElementById("c33").style.width = "50%";
+					document.getElementById("c33").style.height = "3%";
+
+					document.getElementById("btn2").style.top = "10%";
+					document.getElementById("btn2").style.left = "10%";
+					document.getElementById("btn2").style.width = "7%";
+					document.getElementById("btn2").style.height = "10%";
+					document.getElementById("btn2").innerHTML = "Finish Game!";
+
+					document.getElementById("btn1").style.top = "55%";
+					document.getElementById("btn1").style.left = "55%";
+					document.getElementById("btn1").style.width = "7%";
+					document.getElementById("btn1").style.height = "10%";
+				}				
+				if(level == 2){
+					level = level + 1;
+					document.getElementById("c11").style.left = "30%";
+					document.getElementById("c11").style.top = "55%";
+					document.getElementById("c11").style.width = "3%";
+					document.getElementById("c11").style.height = "20%";
+
+					document.getElementById("c22").style.left = "30%";
+					document.getElementById("c22").style.top = "55%";
+					document.getElementById("c22").style.width = "35%";
+					document.getElementById("c22").style.height = "7%";
+
+					document.getElementById("c33").style.left = "30%";
+					document.getElementById("c33").style.top = "70%";
+					document.getElementById("c33").style.width = "50%";
+					document.getElementById("c33").style.height = "5%";
+
+					document.getElementById("btn1").style.top = "70%";
+					document.getElementById("btn1").style.left = "75%";
+					document.getElementById("btn1").style.height = "5%";
+					document.getElementById("btn1").style.width = "10%";
+
+					document.getElementById("btn2").style.top = "55%";
+					document.getElementById("btn2").style.left = "55%";
+					document.getElementById("btn2").style.width = "10%";
+					document.getElementById("btn2").style.height = "7%";
+				}
+				if(level == 1){
+					level = level + 1;
+					document.getElementById("c11").style.left = "10%";
+					document.getElementById("c11").style.top = "25%";
+					document.getElementById("c11").style.width = "10%";
+					document.getElementById("c11").style.height = "60%";
+
+					document.getElementById("c22").style.left = "10%";
+					document.getElementById("c22").style.top = "25%";
+					document.getElementById("c22").style.width = "70%";
+					document.getElementById("c22").style.height = "5%";
+
+					document.getElementById("c33").style.left = "75%";
+					document.getElementById("c33").style.top = "25%";
+					document.getElementById("c33").style.width = "5%";
+					document.getElementById("c33").style.height = "50%";
+
+					document.getElementById("btn2").style.top = "70%";
+					document.getElementById("btn2").style.left = "75%";
+					document.getElementById("btn2").style.width = "5%";
+					document.getElementById("btn2").style.height = "10%";
+
+					document.getElementById("btn1").style.top = "75%";
+					document.getElementById("btn1").style.left = "10%";
+				}	
+			}
+
+			function hover(x) {
+				document.getElementById("btn2").style.backgroundColor = "grey";
+				document.getElementById("btn2").style.color = "darkgrey";
+
+				document.getElementById("realbg").style.backgroundColor = "#6a5397";
+
+				document.getElementById("btn1").style.backgroundColor = "white";
+				document.getElementById("btn1").style.color = "black";
+				document.getElementById("btn2").disabled = true;
+				document.getElementById("btn1").disabled = false;
+			}
+			function unhover(x) {
+				//console.log("unhover");
+			}			
+		</script>
+		<style type="text/css">
+			body {
+				background-color: #6e608b;
+			}
+			#btn1 {
+				width: 10%;
+				height: 10%;
+				background-color: white;
+				border:0px;
+				border-radius: 3px;
+				position: absolute;
+				left: 10%;
+				top: 10%;
+				border-radius: 9px;
+			}
+			.c1 {
+				background-color: #3a3a3a;
+				position: absolute;
+				width: 75%;
+				height: 10%;
+				top: 10%;
+				left: 10%;
+				z-index: -1;
+				border-radius: 10px;
+			}
+			.c2 {
+				background-color: #3a3a3a;
+				position: absolute;
+				width: 5%;
+				height: 75%;
+				top: 10%;
+				left: 80%;
+				z-index: -1;
+				border-radius: 10px;
+			}
+			.c3 {
+				background-color: #3a3a3a;
+				position: absolute;
+				width: 75%;
+				height: 10%;
+				top: 75%;
+				left: 10%;
+				z-index: -1;
+				border-radius: 10px;
+			}
+			#btn2 {
+				width: 10%;
+				height: 10%;
+				background-color: grey;
+				border:0px;
+				border-radius: 9px;
+				position: absolute;
+				left: 10%;
+				top: 75%;
+				color:lightgrey;
+			}
+			button{
+				outline: none !important;
+			}
+			button:hover{
+				box-shadow: 0px 0px 3px black !important;
+			}
+			button:active{
+				box-shadow: inset 0px 0px 3px black !important;
+			}
+		</style>
+	</head>
+	
+	<body oncontextmenu="return false;"> 
+			<div id="realbg" onmouseover="hover(this)" onmouseout="unhover(this)" style="width: 99%; height: 99%; position: absolute; z-index: -5;"></div>
+			<span style="color: white; font-family: monospace; font-size: 16px;">Mouse Maze Game</span><br>
+			<button id="btn1" onclick="starting(this)" type="submit" >Start</button>
+			<div class="c1" id="c11"></div>
+			<div class="c2" id="c22"></div>
+			<div class="c3" id="c33"></div>
+			<button id="btn2" onclick="winning(this)" disabled="true">Next Level</button>
+	</body>
+</html>

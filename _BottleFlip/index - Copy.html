@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		
+	</head>
+
+<body>
+	<style>
+		*{
+			user-select: none; 
+		}
+		#lid{
+			width: 60px;
+			height: 5%;
+			top: 50%;
+			left: 50%;
+			background-color: lightgrey;
+			position: absolute;
+		}
+		#funnel{
+			width: 120px;
+			height: 5%;
+			top: 55%;
+			left: 50%;
+			background-color: lightblue;
+			position: absolute;
+			transform: translate(-25%);
+		}
+		#label{
+			width: 120px;
+			height: 15%;
+			top: 60%;
+			left: 50%;
+			background-color: lightgrey;
+			position: absolute;
+			transform: translate(-25%);
+			color: grey;
+			font-family: monospace;
+			text-align: center;
+			line-height: 50px;
+		}
+		#waterbottle{
+			transform: rotate(10deg) translate(-50%, -50%);
+			left: 50%;
+			top: 50%;
+			height: 75%;
+			width: 50%;
+			position: absolute;
+			border:0px; 
+			background-color: lightyellow;
+		}
+	</style>
+		<iframe id="waterbottle" src="bottle.html"></iframe>
+		
+		<script type="text/javascript">
+
+			dragElement(document.getElementById("waterbottle"));
+
+			function dragElement(elmnt) {
+			  var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+			  if (document.getElementById(elmnt.id)) {
+			    document.getElementById(elmnt.id).onmousedown = dragMouseDown;
+			  } else {
+			    elmnt.onmousedown = dragMouseDown;
+			  }
+			  function dragMouseDown(e) {
+			    e = e || window.event;
+			    e.preventDefault();
+			    pos3 = e.clientX;
+			    pos4 = e.clientY;
+			    document.onmouseup = closeDragElement;
+			    document.onmousemove = elementDrag;
+			  }
+			  function elementDrag(e) {
+			    e = e || window.event;
+			    e.preventDefault();
+			    pos1 = pos3 - e.clientX;
+			    pos2 = pos4 - e.clientY;
+			    pos3 = e.clientX;
+			    pos4 = e.clientY;
+			    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+			    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+			  }
+			  function closeDragElement() {
+			    document.onmouseup = null;
+			    document.onmousemove = null;
+			  }
+			}
+		</script>
+	</body>
+</html>
+
+

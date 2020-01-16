@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+
+<!-- To Do:
+	- [BUG] click the same image or found matches twice to get score;
+	- Change canvas size / amount of images.
+	- Get other 12 images to be included in the set, at random.
+	- When images are dragged/held down, you can see what they are.
+	- When you win (score=12), then add a "You Win" prompt.
+-->
+
+<html>
+	<head>
+		<script>
+			
+				//random selection of 1 to 24 image numbers
+				var arr = [];
+				while(arr.length < 12){
+				    var r = Math.floor(Math.random() * 24) + 1;
+				    if(arr.indexOf(r) === -1) arr.push(r);
+				}
+
+			function decision(x) {
+				document.getElementById("aa").style.backgroundColor="#404040";
+				var a = Array.from(Array(24).keys()).map(x => x + 1);
+				shuffle(a);
+				for(i = 0; i < 12; i++){
+					document.getElementById(a[i]).src="images/" + arr[i] + ".PNG";
+					document.getElementById(a[i]).style.opacity="0.0";
+					//document.getElementByClassNames().style.backgroundColor = "white";
+
+				}
+				shuffle(arr);
+				for(i = 0; i < 12; i++){
+					document.getElementById(a[i+12]).src="images/" + arr[i] + ".PNG";
+					document.getElementById(a[i+12]).style.opacity="0.0";
+					scorecount = 0;
+					guessed = 0;
+					document.getElementById("score").innerHTML = scorecount;
+					document.getElementById("guesses").innerHTML = guessed;
+				}
+			}
+
+			function shuffle(array) {
+			  array.sort(() => Math.random() - 0.5);
+			}
+
+			var total = 0;
+			var img1;
+			var img2;
+			var num1;
+			var scorecount = 0;
+			var guessed = 1;
+
+			function selected(num) { //needs fixing - it controls what is shown and what isn't
+				document.getElementById(num).style.opacity = "1";
+				guessed = guessed + 0.5;
+				document.getElementById("guesses").innerHTML = guessed;
+				if(total == "0"){
+					document.getElementById(num).style.opacity = "1";
+					total = total + 1;	
+					img1 = (document.getElementById(num).src);
+					num1 = num;
+				}else if(total == "1"){
+					total = 0;
+					img2 = (document.getElementById(num).src);
+					if(img2 == img1){
+						document.getElementById(num).style.opacity = "0.7";
+						document.getElementById(num1).style.opacity = "0.7";
+						scorecount = scorecount + 1;
+						document.getElementById("score").innerHTML = scorecount;
+					}else if (img2 !== img1){
+						document.getElementById(num).style.opacity = "1";
+						waiting(num, num1);
+					}
+				}
+			}
+			function waiting(b1,b2) {
+			  setTimeout(function(){
+			  	document.getElementById(b1).style.opacity = "0";
+			  	document.getElementById(b2).style.opacity = "0";
+			  }, 1000);
+			}			
+
+
+		</script>
+
+		<style type="text/css">
+			html, body {
+				height: 99%;
+				user-select: none;
+				-moz-user-select: none;
+				background-color: dodgerblue;
+				font-family: monospace;
+			}			
+			.items{
+				float: left;
+				margin:2px;
+			}
+			.grouped{
+				position: relative;
+				background-color: #404040;
+				width: 700px;
+				height: 500px;
+				top: 100px;
+				margin: 0 auto;
+				border-radius: 20px;
+				box-shadow: 0px 2px 13px grey;	
+				color: lightgrey;		
+			}
+
+			ul {
+			    margin: 0 auto;
+			    padding-top: 10px;
+			    list-style-type: none;
+			    display:block;
+			    font-family: sans-serif;
+			}
+
+			img {
+				height: 120px;
+				line-height: 100px;
+				opacity: 0.0;
+			}
+
+			p{
+				height: 100px;
+			}	
+
+			li {
+				height: 80px;
+				width:  80px;
+				padding: 10px;
+				overflow: hidden;
+				background-color: white;
+			}
+			li:hover{
+				/*background-color: darkgrey !important;*/
+			}
+			span{
+				padding: 5px;
+			}
+			button{
+				margin-left: 2px;
+				border:1px solid darkgrey;
+				padding: 5px;
+				padding-left: 15px;
+				padding-right: 15px;
+			}
+			#aa{
+				background-color: white;
+			}
+		</style>
+	</head>
+
+
+	<body>
+		Pair Two - Memory Match
+		<div class="grouped" id="aa">
+			<br>
+			<ul >
+				<button onclick="decision()">Start</button><span></span>
+				Score: <span id="score">0</span> <span></span>
+				Guesses: <span id="guesses"> 0 </span>				
+				<br>
+				<li onclick="selected(1)"class="items"><img id="1" src="" draggable="false"></li>
+				<li onclick="selected(2)" class="items"><img id="2" src="" draggable="false"></li>
+				<li onclick="selected(3)" class="items"><img id="3" src="" draggable="false"></li>
+				<li onclick="selected(4)" class="items"><img id="4" src="" draggable="false"></li>
+				<li onclick="selected(5)" class="items"><img id="5" src="" draggable="false"></li>
+				<li onclick="selected(6)" class="items"><img id="6" src="" draggable="false"></li>
+				<li onclick="selected(7)" class="items"><img id="7" src="" draggable="false"></li>
+				<li onclick="selected(8)" class="items"><img id="8" src="" draggable="false"></li>				
+			</ul>
+			
+			<ul>
+				<li onclick="selected(9)" class="items"><img id="9" src="" draggable="false"></li>
+				<li onclick="selected(10)" class="items"><img id="10" src="" draggable="false"></li>
+				<li onclick="selected(11)" class="items"><img id="11" src="" draggable="false"></li>
+				<li onclick="selected(12)" class="items"><img id="12" src="" draggable="false"></li>
+				<li onclick="selected(13)" class="items"><img id="13" src="" draggable="false"></li>
+				<li onclick="selected(14)" class="items"><img id="14" src="" draggable="false"></li>
+				<li onclick="selected(15)" class="items"><img id="15" src="" draggable="false"></li>
+				<li onclick="selected(16)" class="items"><img id="16"src="" draggable="false"></li>				
+			</ul>
+			
+			<ul>
+				<li onclick="selected(17)" class="items"><img id="17" src="" draggable="false"></li>
+				<li onclick="selected(18)" class="items"><img id="18" src="" draggable="false"></li>
+				<li onclick="selected(19)" class="items"><img id="19" src="" draggable="false"></li>
+				<li onclick="selected(20)" class="items"><img id="20" src="" draggable="false"></li>
+				<li onclick="selected(21)" class="items"><img id="21" src="" draggable="false"></li>
+				<li onclick="selected(22)" class="items"><img id="22" src="" draggable="false"></li>
+				<li onclick="selected(23)" class="items"><img id="23" src="" draggable="false"></li>
+				<li onclick="selected(24)" class="items"><img id="24" src="" draggable="false"></li>
+			</ul>
+
+			</div>
+
+
+		</div>
+	</body>
+
+
+</html>

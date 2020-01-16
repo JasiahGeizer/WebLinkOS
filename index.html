@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<!--
+	Finish:
+		- Fix unpinning when app is closed
+		- Fix: |ONLY WHEN APP IS PINED!| currently can't have mutiple desktop icons (opens same one) - fix to run app based on text of clicked item
+
+	To Do:
+		- Create calander, show calanader when clicked on time.
+		- Create icons for apps & games.
+		- Create core apps.
+		- Improve design of apps list.
+
+		Potential QoL improvements:
+			- Change background image/color/themes
+			- Click on desktop to lower startbar
+
+		Shortcuts:
+			- Close App
+			- Swap active-tab / app
+			- Start/windows button
+-->
+<html>
+<head>
+<title>WebLink OS</title>
+
+	<style type="text/css">
+		body{
+			background-color: lightsteelblue; /*lightskyblue*/
+			user-select: none;
+			font-family: monospace;
+			overflow: hidden;
+		}
+		#navBTM{
+			background-color: lightgrey !important;
+			bottom: 0px;
+			height: 40px;
+			width: 100%;
+			left: 0%;
+			overflow: hidden;
+			position: absolute;
+			box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
+			z-index: 10;display: inline;	
+		}
+		#navBar{
+			background-color: #f1f1f1;
+			box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
+		}
+		#StartBTN{
+			width: 50px;
+			height: 40px;
+			background-color: dodgerblue;
+
+			color: white;
+			line-height: 40px;
+			font-size: 11px;
+			text-align: center;
+
+			margin-left: 10px;
+			box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.15);
+		}
+		.StartBTN2{
+			width: 110px;
+			height: 40px;
+			background-color: #e0e0e0;
+
+			color: black;
+			line-height: 40px;
+			font-size: 11px;
+			text-align: center;
+
+			margin-left: 10px;
+			box-shadow: inset 0px 1px 5px rgba(0, 0, 0, 0.15);
+		}
+		#StartBTN:hover{background-color: deepskyblue;}
+		#StartBTN:active{background-color: royalblue;}
+		#StartMenu{
+			/*width: 50%;*/
+			/*background-color: grey;*/
+			height: 20%;
+			padding: 30px;
+		}
+		ul{
+			margin: 0 auto;
+		    padding: 20px;
+		    list-style-type: none;
+		    /*display:block;*/
+		}
+		.lilow{
+			height: 25px;
+			width:  100px;
+			padding: 10px;
+			margin: 2px;
+			overflow: hidden;
+			background-color: white;
+			border-radius: 2px;
+			box-shadow: 0px 1px 3px grey;
+			display: inline-block;
+		}
+		.lilow:hover{
+			background-color: #e6e6e6;
+		}
+		.lilow:active{
+			background-color: darkgrey;
+			box-shadow: 0px 0px 0px 0px lightgrey;
+		}
+		#lilow{
+			height: 25px;
+			width:  100px;
+			padding: 10px;
+			margin: 2px;
+			background-color: white;
+			border-radius: 2px;
+			box-shadow: 0px 1px 3px grey;
+		}
+		#lilow:hover{
+			background-color: #e6e6e6;
+		}
+		#lilow:active{
+			background-color: darkgrey;
+			box-shadow: 0px 0px 0px 0px lightgrey;
+		}
+		li{
+			display: inline-block;
+			list-style-type: none;
+		}
+		iframe{
+			border:0px;
+			width: 100%;
+			height: 100%;
+  			overflow: hidden;
+  			padding:0px; 
+
+  			resize: both;
+  			padding-bottom:0px;
+  			margin-bottom:-3px;
+		}
+		#iframeWrap{
+			padding:20px; 
+			background-color: white;
+			position: relative;
+			height: 50%;
+			width: 50%;
+			resize: both;
+			overflow: hidden;
+			box-shadow:0px 1px 5px rgba(0, 0, 0, 0.35);
+		}
+		.mydiv {
+			position: absolute;
+			z-index: 9;
+			resize: both;
+			box-shadow:0px 1px 5px rgba(0, 0, 0, 0.35);
+		}
+		.mydivheader {
+			box-shadow:0px 1px 5px rgba(0, 0, 0, 0.35);
+		  padding-top: 10px;
+		  padding-bottom: 10px;
+		  /*cursor: move;*/
+		  z-index: 10;
+		  text-align: center;
+		  background-color: white;
+		  height: 5px;
+		}
+		.FrameBTN{
+			width: 25px;
+			right: 0px;
+			top: 0px;
+			height: 25px;
+			line-height: 25px;
+			position: absolute;
+			text-align: center;
+		}
+		.FrameBTN:hover{
+			background-color: red;
+			color:white;
+		}
+		.FrameBTN2{
+			width: 25px;
+			right: 25px;
+			top: 0px;
+			height: 25px;
+			line-height: 25px;
+			position: absolute;
+			text-align: center;
+		}
+		.FrameBTN2:hover{
+			background-color: dodgerblue;
+			color:white;
+		}
+		a { color: inherit; } 
+		.menu-option:hover{
+			background-color: lightgrey;
+		}
+		p{
+			padding:0px;
+			margin:0px;
+			border:0px; 
+		}
+		.menu-option{
+			padding:3px;
+			width: 110px;
+			height: 100%;
+		}
+	</style>
+</head>
+	<body onload="startTime()" >
+
+		<div id="navBTM"oncontextmenu="return false;"> 
+			<div id="navBar">
+				<li id="StartBTN" onclick="BigNav()">
+				Start	
+				</li>
+				<li id="txt" style="position: absolute; right: 10px;top: 12px"></li>
+			</div>
+
+			
+			<div id="StartMenu">
+				<span>Applications</span>
+				<ul>
+					<span>Games</span><p></p>
+					<li class="lilow" onclick="run('http://www.jwg.rf.gd/NoughtsandCrosses/','Noughts&Crosses')">Noughts and Crosses</li>
+					<li class="lilow" onclick="run('http://www.jwg.rf.gd/MemoryMatch/','MemoryMatch')">Memory Match</li>
+					<li class="lilow" onclick="run('http://www.jwg.rf.gd/GuessWho/','GuessWho')",>Guess Who</li>
+					<li class="lilow" onclick="run('http://www.jwg.rf.gd/Connect4/','Connect4')">Connect 4</li>
+					<li class="lilow" onclick="run('http://www.jwg.rf.gd/Battleship/','Battleship')">Battleship</li>
+					<li class="lilow" onclick="run('http://www.jwg.rf.gd/Checkers/','Checkers')">Checkers</li>
+					<li class="lilow" onclick="run('http://www.jwg.rf.gd/Chess/','Chess')">Chess</li>
+					<li class="lilow" onclick="run('http://www.jwg.rf.gd/MouseMaze/','MouseMaze')">Mouse Maze</li>
+					<li class="lilow" onclick="run('http://www.jwg.rf.gd/100MeterDash/','100MeterDash')">100 Meter Dash</li>
+					<li class="lilow" onclick="run('http://www.jwg.rf.gd/3584/','3584')">3584</li>
+					<li class="lilow" onclick="run('http://www.jwg.rf.gd/TypingRacer/','TypingRacer')">Typing Racer</li>
+					<li class="lilow" onclick="run('http://www.jwg.rf.gd/WordPuzzle/','WordPuzzle')">Word Puzzle</li>
+					<li class="lilow" onclick="run('http://www.jwg.rf.gd/AimAndShoot/','AimAndShoot')">Aim And Shoot</li>
+					<li class="lilow" onclick="run('http://www.jwg.rf.gd/MathsQuiz/','MathsQuiz')">Maths Quiz</li>
+					<li class="lilow" onclick="run('http://jwg.rf.gd/Minesweeper','Minesweeper')">Minesweeper</li>
+				</ul>
+				<ul>
+					<span>Apps</span><p></p>
+					<li class="lilow" >Calculator [WIP]</li>
+					<li class="lilow" onclick="run('http://jwg.rf.gd/Notes','Notes')">Notes</li>
+					<li class="lilow" onclick="run('http://jwg.rf.gd/Painter','Painter')">Painter</li>
+				</ul>
+				<ul>
+					<span>Others</span><p></p>
+					<a href="http://www.jwg.rf.gd/Classic"><li class="lilow" >Classic View</li></a>
+				</ul>
+
+			</div>	
+		</div>
+
+			<div id="menu" style="width: 120px;box-shadow: 0 4px 5px 3px rgba(0, 0, 0, 0.2); position: relative;z-index: 20;background-color: white; display: none;">
+			  <ul class="menu-options" style="list-style: none;padding: 5px 00px 00px 5px;line-height: 15px; width: 100%;">
+			    <li class="menu-option" onclick="closeIt('empty')">Close</li><p>
+			    <li class="menu-option" onclick="minimizeIt('empty')">Show/Hide</li></p>
+			    <li class="menu-option" onclick="pinIt()">Pin </li><p>
+			    <li class="menu-option" onclick="run2('http://jwg.rf.gd/Minesweeper','Minesweeper')">Create Icon</li><p>
+			    <!--<li class="menu-option">Restart</li></p>
+			    <li class="menu-option">Save to Desktop</li>-->
+			  </ul>
+			</div>
+
+		<script type="text/javascript">
+			var mode=0;
+			var nav;
+			function BigNav() {
+				if(mode==0){
+					nav = document.getElementById('navBTM')
+					nav.style.top = "20%";
+					nav.style.height = "80%";
+					mode=1;
+				}else{
+					nav.style.top = "";
+					nav.style.bottom= "0px";
+					nav.style.height = "40px";
+					mode=0;
+				}
+			}
+			var count=0;
+			function run(program,name){
+				BigNav();
+				
+				var div = document.createElement("div");
+				div.id = "mydiv"+count;
+				div.className="mydiv";
+				div.innerHTML = "";
+				document.body.appendChild(div);
+
+				var div2 = document.createElement("div");
+				div2.id = count;
+				div2.className="mydivheader";
+				div2.ondblclick=function(){maximiseIt(this)}
+				div2.innerHTML = "";
+				document.getElementById("mydiv"+count).appendChild(div2);
+
+				//close button
+				var counting1=count;
+
+				var div3 = document.createElement("div");
+				div3.id = count;
+				div3.className="FrameBTN";
+				div3.onclick=function(){closeIt(this);}; 
+				div3.innerHTML = "X";
+				document.getElementById("mydiv"+count).appendChild(div3);
+				
+				var div4 = document.createElement("div");
+				div4.id = count;
+				div4.className="FrameBTN2";
+				div4.onclick=function(){minimizeIt(this);}; 
+				div4.innerHTML = "_";
+				document.getElementById("mydiv"+count).appendChild(div4);
+
+				//iframe
+				var iframe = document.createElement('iframe');
+				var html = '';
+				iframe.id="frame"+count;
+				iframe.src = program + encodeURI(html);
+				document.getElementById("mydiv"+count).appendChild(iframe);
+
+				dragElement(document.getElementById("mydiv"+count));
+
+				var liFrameApp = document.createElement('li');
+				liFrameApp.id="StartBTN2"+count;
+				liFrameApp.className="StartBTN2";
+				liFrameApp.innerHTML=name;
+				liFrameApp.oncontextmenu=function(){RightClick(this.id);};
+				liFrameApp.onclick=function(){minimizeIt(counting1);} 
+				document.getElementById('navBar').appendChild(liFrameApp);
+
+				count=count+1;
+			}
+
+			//Close the tab
+			function closeIt(counts){
+
+			if (counts=="empty") {
+				if (document.getElementById(itemBTN).style.backgroundColor == 'lightgrey') {
+					document.getElementById(itemBTN.substring(9)).parentNode.remove();
+					//if statement - minimize function - if no div - run program - "jwg"+name+"/"
+					document.getElementById(itemBTN).style.boxShadow = '0px 1px 2px rgba(0, 0, 0, 0.15)';
+					document.getElementById(itemBTN).style.color = 'grey';
+					document.getElementById(itemBTN).style.backgroundColor="#dedede";
+					//count=count-1;
+					//need 2 counts - difference in iframes and tabs but they use same number
+				}else{
+					document.getElementById(itemBTN.substring(9)).parentNode.remove();
+					document.getElementById(itemBTN).remove();
+					//count=count-1;
+				}	
+			}else{
+				console.log(counts.id);
+				if (document.getElementById(counts.id).style.backgroundColor == 'lightgrey') {
+					document.getElementById(counts.id).style.boxShadow = '0px 1px 2px rgba(0, 0, 0, 0.15)';
+					document.getElementById(counts.id).style.color = 'grey';
+					document.getElementById(counts.id).style.backgroundColor="#dedede";
+					var dunno='StartBTN2'+counts.id;
+					counts.parentNode.remove();
+				}else{
+					var dunno='StartBTN2'+counts.id;
+					document.getElementById(dunno).remove();
+					counts.parentNode.remove();
+					//count=count-1;//dont need?
+				}}
+			}
+
+
+			//Minimise the tab
+				//need to add function for when item is pinned and closed, to run app
+			function minimizeIt(counts){
+				if (counts=="empty") {
+					//console.log("empty " + document.getElementById(itemBTN).style.backgroundColor);
+					
+						if (document.getElementById(itemBTN.substring(9)).parentNode.style.display == 'none') {
+							document.getElementById(itemBTN.substring(9)).parentNode.style.display = 'block';
+							document.getElementById(itemBTN).style.boxShadow = 'inset 0px 1px 2px rgba(0, 0, 0, 0.15)';
+						}else{
+							document.getElementById(itemBTN.substring(9)).parentNode.style.display = 'none';
+							document.getElementById(itemBTN).style.boxShadow = '0px 1px 2px rgba(0, 0, 0, 0.15)';
+						}		
+				}else{
+					if (counts.id>=0) {
+						var dunno2='StartBTN2'+counts.id;
+						if (document.getElementById(counts.id).parentNode.style.display == 'none') {
+							document.getElementById(counts.id).parentNode.style.display = 'block';
+							document.getElementById(dunno2).style.boxShadow = 'inset 0px 1px 2px rgba(0, 0, 0, 0.15)';
+						}else{
+							document.getElementById(counts.id).parentNode.style.display = 'none';
+							document.getElementById(dunno2).style.boxShadow = '0px 1px 2px rgba(0, 0, 0, 0.15)';
+							
+						}
+					}else{
+						var dunno2='StartBTN2'+counts;
+						var name2;
+						var program2;
+						
+						if (document.getElementById(dunno2).style.backgroundColor=="rgb(222, 222, 222)") {
+							name2 = document.getElementById(dunno2).innerHTML;
+							program2 = "http://www.jwg.rf.gd/"+name2+"/";
+
+							run(program2,name2);
+							BigNav();
+							var numR = count-1;
+							document.getElementById("StartBTN2"+numR).remove();
+							document.getElementById(dunno2).id="StartBTN2"+numR;
+
+							document.getElementById("StartBTN2"+numR).style.boxShadow = 'inset 0px 1px 2px rgba(0, 0, 0, 0.15)';
+							document.getElementById("StartBTN2"+numR).style.color = 'black';
+							document.getElementById("StartBTN2"+numR).style.backgroundColor="lightgrey";
+							document.getElementById("StartBTN2"+numR).onclick=function(){minimizeIt(numR)};
+
+						}
+						else if (document.getElementById(counts).parentNode.style.display == 'none') {
+							document.getElementById(counts).parentNode.style.display = 'block';
+							document.getElementById(dunno2).style.boxShadow = 'inset 0px 1px 2px rgba(0, 0, 0, 0.15)';
+						}else{
+							document.getElementById(counts).parentNode.style.display = 'none';
+							document.getElementById(dunno2).style.boxShadow = '0px 1px 2px rgba(0, 0, 0, 0.15)';
+						}
+					}
+				}
+			}
+
+			//pin app onto start menu [WIP]
+			function pinIt(){
+				if (document.getElementById(itemBTN).style.backgroundColor == 'lightgrey') {
+					document.getElementById(itemBTN).style.backgroundColor = '#e0e0e0';
+				}else{
+					document.getElementById(itemBTN).style.backgroundColor = 'lightgrey';
+				}
+				//when pinned add onclick function that runs the app but only when closed  
+					//document.getElementById(itemBTN).onclick = function() { yourjavascriptfunction();};
+			}
+
+			//maximise tab
+			function maximiseIt(element){
+				console.log(element.id);
+				if(document.getElementById("frame"+element.id).style.height==window.innerHeight-65+"px"){
+					document.getElementById("frame"+element.id).style.width="750px";
+					document.getElementById("frame"+element.id).style.height="500px";
+				}else{
+					document.getElementById("mydiv"+element.id).style.top="0px";
+					document.getElementById("mydiv"+element.id).style.left="0px";
+					document.getElementById("frame"+element.id).style.width=window.innerWidth+"px";
+					document.getElementById("frame"+element.id).style.height=window.innerHeight-65+"px";
+				}
+				
+			}
+
+
+
+			//This makes the DIV element draggagle:
+			var active; //current active tab //give top z-index
+
+			function dragElement(elmnt) {
+				  var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+				  if (document.getElementsByClassName( "mydivheader")[count]) {
+				    /* if present, the header is where you move the DIV from:*/
+				    document.getElementsByClassName("mydivheader")[count].onmousedown = dragMouseDown;
+
+				  } else {
+				    /* otherwise, move the DIV from anywhere inside the DIV:*/
+				    elmnt.onmousedown = dragMouseDown;console.log(elmnt.id);
+				  }
+
+				  function dragMouseDown(e) {
+				    e = e || window.event;
+				    e.preventDefault();
+				    // get the mouse cursor position at startup:
+				    pos3 = e.clientX;
+				    pos4 = e.clientY;
+				    document.onmouseup = closeDragElement;
+				    // call a function whenever the cursor moves:
+				    document.onmousemove = elementDrag;
+
+				    if (active==null) {}else{active.style.zIndex="8";}
+				    
+				  }
+
+				  function elementDrag(e) {
+				    e = e || window.event;
+				    e.preventDefault();
+				    // calculate the new cursor position:
+				    pos1 = pos3 - e.clientX;
+				    pos2 = pos4 - e.clientY;
+				    pos3 = e.clientX;
+				    pos4 = e.clientY;
+				    // set the element's new position:
+				    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+				    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+
+				    elmnt.style.zIndex = "9";
+				    active = elmnt;
+				  }
+
+				  function closeDragElement() {
+				    /* stop moving when mouse button is released:*/
+				    document.onmouseup = null;
+				    document.onmousemove = null;
+				  }
+			}
+
+			//set time on clock
+			function startTime() {
+				let now = new Date();
+
+			    var realtime = new Intl.DateTimeFormat('default',
+			        {
+			            hour12: true,
+			            hour: 'numeric',
+			            minute: 'numeric'
+			        }).format(now);
+
+			  document.getElementById('txt').innerHTML =
+			  realtime;
+			  var t = setTimeout(startTime, 1000);
+			}
+
+
+			
+
+
+			//replace right click on nav bar
+					//fix but where right click lowers fist app
+			var mouseX = 0;
+			var mouseY = 0;
+			var itemBTN;
+			var gameTitle;
+			function RightClick(idname) {
+				itemBTN=idname;
+
+				gameTitle=document.getElementById(idname).innerHTML;
+
+				//window.oncontextmenu = function (e) {
+				  event.preventDefault()
+				  	mouseX = event.clientX + document.body.scrollLeft;
+	  			 	mouseY = event.clientY + document.body.scrollTop;
+	  			 	mouseY=mouseY-80;
+	  			 	mouseX=mouseX-7;
+	  			 	var div = document.getElementById('menu');
+					div.style.left = mouseX+'px';
+					div.style.top = mouseY+'px';
+					document.getElementById('menu').style.display = 'block'; //Show menu
+					}
+			//}
+			document.onclick = function() { //hide menu on left click
+			    if (document.getElementById('menu').style.display !== 'none') {document.getElementById('menu').style.display = 'none';}
+			}	
+
+
+
+			function closeIt1(element){
+				//console.log(element.parentNode);
+				element.parentNode.remove();
+			}
+
+
+			//Create desktop icon
+			function run2(program,name){
+				var li = document.createElement("div");
+				var gameURL="http://www.jwg.rf.gd/"+gameTitle+"/";
+				li.id = "mydiv"+count;
+				li.className="mydiv";
+				li.innerHTML = "";
+				li.zIndex=0;
+				li.style.boxShadow="0px 0px 0px 0px red";
+				li.ondblclick=function(){run(gameURL,gameTitle);BigNav();};
+				document.body.appendChild(li);
+
+				var div2 = document.createElement("div");
+				div2.id = count;
+				div2.className="lilow";
+				div2.zIndex=0;
+				div2.innerHTML = gameTitle;
+				document.getElementById("mydiv"+count).appendChild(div2);
+				
+				dragElement(document.getElementById("mydiv"+count));
+
+				count=count+1;
+			}
+		</script>
+	</body>
+</html>
