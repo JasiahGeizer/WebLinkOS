@@ -2,9 +2,7 @@
 <!--
 	To Do:
 		- Add Subtraction and Addition
-		- Add Highscore and restart
 		- Better graphical representation of question 
-		- List all incorrect at the end
 -->
 <html>
 	<head>
@@ -24,11 +22,13 @@
 				/*height: 60px;*/
 				line-height: 40px;
 				color:white;
+				white-space: pre;
 			}
 			#wrongScore{
 				font-size: 25px;
 				text-align: right;
 				height: 60px;
+				line-height: 40px;
 				color:white;
 			}
 			#wordTXT{
@@ -90,6 +90,27 @@
 				display: none;
 				white-space:pre;
 			}
+			#restarting{
+				height: 50px;
+			    width: 120px;
+			    padding: 10px;
+			    margin: 2px;
+			    overflow: hidden;
+			    background-color: #4a4a4a;
+			    color:white;
+			    font-size: 25px;
+			    border-radius: 0px;
+			    box-shadow: 0px 1px 1px black;
+			    display: inline-block;
+			    border:0px;
+			    outline:0;
+			}
+			#restarting:hover{
+				box-shadow: 0px 2px 1px black;
+			}
+			#restarting:active{
+				box-shadow: 0px -1px 1px black;
+			}
 		</style>
 	</head>
 	<body>
@@ -101,6 +122,7 @@
 			<div id="wrongWords">Incorrect:</div>
 		</div>
 			<button id="enter" onclick="check()"> Go! </button>
+			<button id="restarting" onclick="restart()">Restart</button>
 			<br>
 			<div id="bgTime"></div>
 
@@ -119,13 +141,20 @@
 			var start = false;
 			var val;
 			var cal;
+			var audio = new Audio('correct.wav');
+			var audio2 = new Audio('wrong.wav');
+			var Nana=false;
+			var myVar;
+			var highscore=0;
 			function check(){
 				if (start==true) {
+					if (Nana==true) {cal=Math.floor(Math.random() * 12) + 1}
 					if(document.getElementById("wordTXT").value == val){
 						score=score+1;
 						document.body.style.backgroundColor = "#20b257";
 						document.getElementById("score").innerHTML = "Score: "+score;
 						widthr = widthr - 5;
+						audio.play();
 					}else if(document.getElementById("wordTXT").value !== val){
 						wrong=wrong+1;
 						document.body.style.backgroundColor = "#c73c4c";
@@ -135,13 +164,17 @@
 						document.getElementById("wrongWords").innerHTML = document.getElementById("wrongWords").innerHTML
 						+"\r\n"
 						+document.getElementById("ToSpell").innerHTML+" "+val;
+						audio2.play();
 					}	
 				}
 				if(start==false){
 					cal = document.getElementById("wordTXT").value;
+					if (isNaN(parseInt(cal))) {Nana=true;cal=Math.floor(Math.random() * 11) + 1}
+					
 					if (!isNaN(cal)) {
-						var myVar = setInterval(myTimer, 200);
+						myVar = setInterval(myTimer, 200);
 						start=true;
+						
 					}
 				}
 				if(start==true){
@@ -158,12 +191,36 @@
 					widthr = widthr + 1;
 			    	document.getElementById("bgTime").style.width = widthr + '%';
 				}else{
+					clearInterval(myVar);
 					document.getElementById("bgTime").style.opacity = 0;
+					if (score>highscore) {highscore=score}
+					document.getElementById("score").innerHTML = document.getElementById("score").innerHTML + "\nHighscore: "+highscore;
+
 					document.getElementById("wordTXT").disabled = true;
 					document.getElementById("wordTXT").style.opacity = 0;
 					document.getElementById("ToSpell").style.opacity = 0;
 					document.getElementById("wrongWords").style.display="block";
 				}
+			}
+
+			function restart(){
+					widthr=0;
+					score=0;
+					wrong=0;
+					start=false;
+					Nana=false;
+					document.getElementById("bgTime").style.width = '1%';
+					document.getElementById("bgTime").style.opacity = 1;
+					document.getElementById("wordTXT").disabled = false;
+					document.getElementById("wordTXT").style.opacity = 1;
+					document.getElementById("ToSpell").style.opacity = 1;
+					document.getElementById("wrongWords").style.display="none";
+					document.getElementById("wrongWords").innerHTML="Incorrect:";
+					document.getElementById("score").innerHTML="";
+					document.getElementById("wrongScore").innerHTML="";
+					document.getElementById("ToSpell").innerHTML="Enter a no. from 1 to 12:";
+					document.getElementById('wordTXT').value ="";
+					document.body.style.backgroundColor="#8c8c8c";
 			}
 		</script>
 	</body>

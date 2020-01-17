@@ -89,7 +89,6 @@
 			height: 25px;
 			width:  100px;
 			padding: 10px;
-			line-height: 13px;
 			margin: 2px;
 			overflow: hidden;
 			background-color: white;
@@ -201,91 +200,23 @@
 			width: 110px;
 			height: 100%;
 		}
-		#location{
-			height: 40px;
-			top: 0px;
-			position: absolute; 
-			right:  75px; 
-			line-height: 40px;
-			border-right: solid 1px lightgrey; 
-			padding-right: 12px;
-			padding-left: 12px;
-		}
-		#location:hover{
-			background-color: lightgrey;
-
-		}
-		#location:active{
-			background-color: darkgrey;
-		}
-		#txt{
-			height: 40px;
-			top: 0px;
-			position: absolute; 
-			right:  0px; 
-			line-height: 40px;
-			text-align: center;
-			width: 76px;
-		}
-		#txt:hover{
-			background-color: lightgrey;
-		}
-		#txt:active{
-			background-color: darkgrey;
-		}
 	</style>
 </head>
-	<body onload="startTime()">
+	<body onload="startTime()" >
 
 		<div id="navBTM"oncontextmenu="return false;"> 
 			<div id="navBar">
 				<li id="StartBTN" onclick="BigNav()">
 				Start	
 				</li>
-				<li ondblclick="alertLocation()" onclick="changeTime()" id="txt"></li>
-				<li onclick="getLocation()" id="location">--°</li>
-				
+				<li id="txt" style="position: absolute; right: 10px;top: 12px"></li>
 			</div>
 
-			<script type="text/javascript"> //get and set temp.
-				var weatherCOUNT=0;
-				var temp;
-				var loc;
-				function getLocation() {
-					if (weatherCOUNT==0) {
-						if (navigator.geolocation) {
-							navigator.geolocation.getCurrentPosition(showPosition);
-						} else { 
-							console.log("Geolocation is not supported by this browser.");
-						}
-								weatherCOUNT=weatherCOUNT+1;
-								//console.log(weatherCOUNT);
-					}else if (weatherCOUNT==1){
-							 document.getElementById("location").innerHTML=temp+"° ";
-							 weatherCOUNT=2;
-					}else {
-						document.getElementById("location").innerHTML=temp+"° "+loc;
-						weatherCOUNT=1;
-					}
-				}
-				function showPosition(position) {
-					var api = "http://api.openweathermap.org/data/2.5/weather?lat="+position.coords.latitude+"&lon="+position.coords.longitude+"&appid=4861ee482d1b551fd8342de810c0d2c0&units=metric";
-					fetch(api)
-						.then((response) => {
-						    return response.json();
-						})
-						.then((myJson) => {
-							temp=myJson.main.temp;
-							loc=myJson.name;
-						    document.getElementById("location").innerHTML=temp+"° "+loc;
-						});
-				}
-			</script>
 			
 			<div id="StartMenu">
 				<span>Applications</span>
 				<ul>
-					<span style="line-height: 25px;">Games</span><p></p>
+					<span>Games</span><p></p>
 					<li class="lilow" onclick="run('http://www.jwg.rf.gd/NoughtsandCrosses/','Noughts&Crosses')">Noughts and Crosses</li>
 					<li class="lilow" onclick="run('http://www.jwg.rf.gd/MemoryMatch/','MemoryMatch')">Memory Match</li>
 					<li class="lilow" onclick="run('http://www.jwg.rf.gd/GuessWho/','GuessWho')",>Guess Who</li>
@@ -303,13 +234,13 @@
 					<li class="lilow" onclick="run('http://jwg.rf.gd/Minesweeper','Minesweeper')">Minesweeper</li>
 				</ul>
 				<ul>
-					<span style="line-height: 25px;">Apps</span><p></p>
+					<span>Apps</span><p></p>
 					<li class="lilow" >Calculator [WIP]</li>
 					<li class="lilow" onclick="run('http://jwg.rf.gd/Notes','Notes')">Notes</li>
 					<li class="lilow" onclick="run('http://jwg.rf.gd/Painter','Painter')">Painter</li>
 				</ul>
 				<ul>
-					<span style="line-height: 25px;">Others</span><p></p>
+					<span>Others</span><p></p>
 					<a href="http://www.jwg.rf.gd/Classic"><li class="lilow" >Classic View</li></a>
 				</ul>
 
@@ -326,6 +257,7 @@
 			    <li class="menu-option">Save to Desktop</li>-->
 			  </ul>
 			</div>
+
 		<script type="text/javascript">
 			var mode=0;
 			var nav;
@@ -414,7 +346,7 @@
 					//count=count-1;
 				}	
 			}else{
-				//console.log(counts.id);
+				console.log(counts.id);
 				if (document.getElementById(counts.id).style.backgroundColor == 'lightgrey') {
 					document.getElementById(counts.id).style.boxShadow = '0px 1px 2px rgba(0, 0, 0, 0.15)';
 					document.getElementById(counts.id).style.color = 'grey';
@@ -499,7 +431,7 @@
 
 			//maximise tab
 			function maximiseIt(element){
-				//console.log(element.id);
+				console.log(element.id);
 				if(document.getElementById("frame"+element.id).style.height==window.innerHeight-65+"px"){
 					document.getElementById("frame"+element.id).style.width="750px";
 					document.getElementById("frame"+element.id).style.height="500px";
@@ -525,7 +457,7 @@
 
 				  } else {
 				    /* otherwise, move the DIV from anywhere inside the DIV:*/
-				    elmnt.onmousedown = dragMouseDown;//console.log(elmnt.id);
+				    elmnt.onmousedown = dragMouseDown;console.log(elmnt.id);
 				  }
 
 				  function dragMouseDown(e) {
@@ -564,50 +496,25 @@
 				    document.onmousemove = null;
 				  }
 			}
-			var timeFormat=true;
-			var realtime;
-			let now;
+
 			//set time on clock
 			function startTime() {
-				now = new Date();
-				//console.log(now);
-			    realtime = new Intl.DateTimeFormat('default',
+				let now = new Date();
+
+			    var realtime = new Intl.DateTimeFormat('default',
 			        {
-			            hour12: timeFormat,
+			            hour12: true,
 			            hour: 'numeric',
 			            minute: 'numeric'
 			        }).format(now);
 
 			  document.getElementById('txt').innerHTML =
 			  realtime;
-			  var t = setTimeout(startTime, 5000); //every 5 seconds, update time
+			  var t = setTimeout(startTime, 1000);
 			}
+
+
 			
-			function changeTime(){
-				if (timeFormat==false) {
-					timeFormat=true;
-					realtime = new Intl.DateTimeFormat('default',
-			        {
-			            hour12: timeFormat,
-			            hour: 'numeric',
-			            minute: 'numeric'
-			        }).format(now);
-					document.getElementById('txt').innerHTML=realtime;
-				}else{
-					timeFormat=false;
-					realtime = new Intl.DateTimeFormat('default',
-			        {
-			            hour12: timeFormat,
-			            weekday: 'short',
-			            hour: 'numeric',
-			            minute: 'numeric'
-			        }).format(now);
-					document.getElementById('txt').innerHTML=realtime;
-				}
-			}
-			function alertLocation(){
-				alert(now);
-			}
 
 
 			//replace right click on nav bar
