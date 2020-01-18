@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+
+<!-- To Do:
+	- When a pawn reaches the end, open a promt to choose what chess piece to change it to. 
+-->
+
+<html>
+<title>Chess</title>
+	<head>
+		<script>
+			var audio = new Audio('down.mp3');
+			var audio3 = new Audio('hit.wav');
+			function allowDrop(ev) {
+			  ev.preventDefault();
+			}
+			function drag(ev) {
+			  ev.dataTransfer.setData("text", ev.target.id);
+			}
+			function drop(ev) {
+			  ev.preventDefault();
+			  var data = ev.dataTransfer.getData("text");
+			  ev.target.appendChild(document.getElementById(data));
+			  
+			  
+
+			  var child=document.getElementById(data);
+			  var LorR=false;
+
+				  if(child.parentNode.id.includes("drag")){
+				  		audio3.play();
+				  	if (child.parentNode.id.replace('drag','')>16) {
+				  		LorR=true;
+				  	}
+					var parentTest =document.getElementById(data).parentNode;
+					var grandparent=parentTest.parentNode;
+					grandparent.appendChild(child);
+
+					if (LorR==true) {
+						document.getElementsByClassName('PiecePositionTop')[0].appendChild(parentTest);
+					}else{
+						document.getElementsByClassName('PiecePosition')[0].appendChild(parentTest);
+					}
+				  }else{
+				  		audio.play();
+				  }	  
+			}
+
+			function king(x) {
+
+				if(document.getElementById(x).innerHTML !== "King"){
+					document.getElementById(x).innerHTML = "King";
+				}else{
+					document.getElementById(x).innerHTML = "";
+				}
+			}
+		</script>
+
+		<style type="text/css">
+			html, body {
+				height: 99%;
+				user-select: none;
+				-moz-user-select: none;
+				background-color: #4b6482;
+				font-family: monospace;
+				color:black;
+			}			
+			.dragStyle{
+				float: left;
+				margin:2px;
+				background-color: #443f3c00;
+				width: 62px;
+				height: 62px;
+				border-radius: 50px;
+				border: 1px solid #4d4d4d00;
+				text-align: center;
+				line-height: 62px;
+				color: grey;
+			}
+			.dragStyle:hover{
+				background-color: #8e8e8e;
+				border-color: #8e8e8e;
+			}
+			.dragStyle:active{
+				background-color: #6f6f6f;
+				border-color: #6f6f6f;
+			}
+			.dragStyle2{
+				float: left;
+				margin:2px;
+				background-color: #b77c5200;
+				width: 60px;
+				height: 60px;
+				border-radius: 50px;
+				border: 3px solid #b77c5200;
+				text-align: center;
+				line-height: 62px;
+				color: #404040;
+			}
+			.dragStyle2:hover{
+				background-color: #8e8e8e;
+				border-color: #8e8e8e;
+			}
+			.dragStyle2:active{
+				background-color: #e4e4e4;
+				border-color: #e4e4e4;
+			}				
+			.grouped{
+				position: absolute;
+				background-color: #4a4949;
+				width: 670px;
+				height: 675px;
+				top: 100px;
+				left: 50%;
+				margin-left: -335px;
+				border-radius: 2px;
+				box-shadow: 0px 8px 5px #313131;	
+				color: lightgrey;		
+			}
+			ul{
+			    margin: 0 auto;
+			    padding-top: 10px;
+			    list-style-type: none;
+			    display:block;
+			}	
+			p{
+				height: 25px;
+			}		
+			.items{
+				background-color: #e2e2e2 !important;
+				float: left;
+				margin:2px;
+				width: 70px;
+				height: 70px;
+			}
+			.items2{
+				background-color: #6f6f6f !important;
+				float: left;
+				margin:2px;
+				width: 70px;
+				height: 70px;
+			}
+			.PiecePosition{
+				position: absolute;
+				left: 50%;
+				margin-left: -510px;
+				padding-left: 10px;
+				height: 675px;
+				margin-top:75px; 
+				width: 140px !important;
+				background-color: #4a4949;
+				box-shadow: 0px 0px 13px 2px #313131;
+			}
+			.PiecePositionTop{
+				position: absolute;
+				left: 50%;
+				margin-left: 350px;
+				padding-left: 10px;
+				height: 675px;
+				margin-top:75px; 
+				width: 140px !important;
+				background-color: #4a4949;
+				box-shadow: 0px 0px 13px 2px #313131;
+			}
+		</style>
+	</head>
+
+	<body>
+		<span>Chess</span> <br>
+		<div class="PiecePositionTop" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)">
+				<span></span>
+				<img class="dragStyle" src="images/bp.png" id="drag1" draggable="true" ondragstart="drag(event)" ondblclick="king('drag1')">
+				<img class="dragStyle" src="images/bp.png" id="drag2" draggable="true" ondragstart="drag(event)" ondblclick="king('drag2')"></img>
+				<img class="dragStyle" src="images/bp.png" id="drag3" draggable="true" ondragstart="drag(event)" ondblclick="king('drag3')"></img>
+				<img class="dragStyle" src="images/bp.png" id="drag4" draggable="true" ondragstart="drag(event)" ondblclick="king('drag4')"></img>
+				<img class="dragStyle" src="images/bp.png" id="drag5" draggable="true" ondragstart="drag(event)" ondblclick="king('drag5')"></img>
+				<img class="dragStyle" src="images/bp.png" id="drag6" draggable="true" ondragstart="drag(event)" ondblclick="king('drag6')"></img>
+				<img class="dragStyle" src="images/bp.png" id="drag7" draggable="true" ondragstart="drag(event)" ondblclick="king('drag7')"></img>
+				<img class="dragStyle" src="images/bp.png" id="drag8" draggable="true" ondragstart="drag(event)" ondblclick="king('drag8')"></img>
+				<img class="dragStyle" src="images/br.png" id="drag9" draggable="true" ondragstart="drag(event)" ondblclick="king('drag9')"></img>
+				<img class="dragStyle" src="images/br.png" id="drag10" draggable="true" ondragstart="drag(event)" ondblclick="king('drag10')"></img>
+				<img class="dragStyle" src="images/bn.png" id="drag11" draggable="true" ondragstart="drag(event)" ondblclick="king('drag11')"></img>
+				<img class="dragStyle" src="images/bn.png" id="drag12" draggable="true" ondragstart="drag(event)" ondblclick="king('drag12')"></img>
+				<img class="dragStyle" src="images/bb.png" id="drag13" draggable="true" ondragstart="drag(event)" ondblclick="king('drag13')"></img>
+				<img class="dragStyle" src="images/bb.png" id="drag14" draggable="true" ondragstart="drag(event)" ondblclick="king('drag14')"></img>
+				<img class="dragStyle" src="images/bq.png" id="drag15" draggable="true" ondragstart="drag(event)" ondblclick="king('drag15')"></img>
+				<img class="dragStyle" src="images/bk.png" id="drag16" draggable="true" ondragstart="drag(event)" ondblclick="king('drag16')"></img>
+		</div>
+		<div class="PiecePosition" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)">
+				<img class="dragStyle2" src="images/wp.png" id="drag17" draggable="true" ondragstart="drag(event)" ondblclick="king('drag17')"></img>
+				<img class="dragStyle2" src="images/wp.png" id="drag18" draggable="true" ondragstart="drag(event)" ondblclick="king('drag18')"></img>
+				<img class="dragStyle2" src="images/wp.png" id="drag19" draggable="true" ondragstart="drag(event)" ondblclick="king('drag19')"></img>
+				<img class="dragStyle2" src="images/wp.png" id="drag20" draggable="true" ondragstart="drag(event)" ondblclick="king('drag20')"></img>
+				<img class="dragStyle2" src="images/wp.png" id="drag21" draggable="true" ondragstart="drag(event)" ondblclick="king('drag21')"></img>
+				<img class="dragStyle2" src="images/wp.png" id="drag22" draggable="true" ondragstart="drag(event)" ondblclick="king('drag22')"></img>
+				<img class="dragStyle2" src="images/wp.png" id="drag23" draggable="true" ondragstart="drag(event)" ondblclick="king('drag23')"></img>
+				<img class="dragStyle2" src="images/wp.png" id="drag24" draggable="true" ondragstart="drag(event)" ondblclick="king('drag24')"></img>
+				<img class="dragStyle2" src="images/wr.png" id="drag25" draggable="true" ondragstart="drag(event)" ondblclick="king('drag25')"></img>
+				<img class="dragStyle2" src="images/wr.png" id="drag26" draggable="true" ondragstart="drag(event)" ondblclick="king('drag26')"></img>
+				<img class="dragStyle2" src="images/wn.png" id="drag27" draggable="true" ondragstart="drag(event)" ondblclick="king('drag27')"></img>
+				<img class="dragStyle2" src="images/wn.png" id="drag28" draggable="true" ondragstart="drag(event)" ondblclick="king('drag28')"></img>
+				<img class="dragStyle2" src="images/wb.png" id="drag29" draggable="true" ondragstart="drag(event)" ondblclick="king('drag29')"></img>
+				<img class="dragStyle2" src="images/wb.png" id="drag30" draggable="true" ondragstart="drag(event)" ondblclick="king('drag30')"></img>
+				<img class="dragStyle2" src="images/wq.png" id="drag31" draggable="true" ondragstart="drag(event)" ondblclick="king('drag31')"></img>
+				<img class="dragStyle2" src="images/wk.png" id="drag32" draggable="true" ondragstart="drag(event)" ondblclick="king('drag32')"></img>
+		</div>
+
+		<div class="grouped">
+			<br>
+			<ul><button onclick="setBoard(this)" style="margin-bottom:10px;position:relative;margin-top:0px;padding: 3px;width: 75px;">Set Board</button>	
+				<br>
+				<li class="items" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li class="items2" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li class="items" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li class="items2" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li class="items" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li class="items2" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li class="items" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li class="items2" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+			</ul>
+			<p></p>
+			<ul>
+				<li class="items2" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>		
+			</ul>
+			<p></p>
+			<ul>
+				<li  class="items" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+			</ul>
+			<p></p>
+			<ul>
+				<li  class="items2" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>				
+			</ul>
+			<p></p>
+			<ul>
+				<li  class="items" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+			</ul>
+			<p></p>
+			<ul>
+				<li  class="items2" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+			</ul>
+			<p></p>
+			<ul>
+				<li  class="items" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+			</ul>			
+			<p></p>
+			<ul>
+				<li  class="items2" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items2" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+			</ul>			
+			</div>
+
+		</div>
+
+		<script type="text/javascript">
+			var audio2 = new Audio('woosh.wav');
+			function setBoard(btn){
+				audio2.play();
+				btn.remove();
+				document.getElementsByClassName("items")[4].appendChild(document.getElementById("drag1")); 
+				document.getElementsByClassName("items")[5].appendChild(document.getElementById("drag2"));
+				document.getElementsByClassName("items")[6].appendChild(document.getElementById("drag3")); 
+				document.getElementsByClassName("items")[7].appendChild(document.getElementById("drag4"));
+				document.getElementsByClassName("items2")[4].appendChild(document.getElementById("drag5")); 
+				document.getElementsByClassName("items2")[5].appendChild(document.getElementById("drag6"));
+				document.getElementsByClassName("items2")[6].appendChild(document.getElementById("drag7")); 
+				document.getElementsByClassName("items2")[7].appendChild(document.getElementById("drag8"));
+
+				document.getElementsByClassName("items")[0].appendChild(document.getElementById("drag9")); 
+				document.getElementsByClassName("items")[1].appendChild(document.getElementById("drag14"));
+				document.getElementsByClassName("items")[2].appendChild(document.getElementById("drag16")); 
+				document.getElementsByClassName("items")[3].appendChild(document.getElementById("drag12"));
+				document.getElementsByClassName("items2")[0].appendChild(document.getElementById("drag11")); 
+				document.getElementsByClassName("items2")[1].appendChild(document.getElementById("drag15"));
+				document.getElementsByClassName("items2")[2].appendChild(document.getElementById("drag13")); 
+				document.getElementsByClassName("items2")[3].appendChild(document.getElementById("drag10"));
+
+				document.getElementsByClassName("items")[28].appendChild(document.getElementById("drag28"));
+				document.getElementsByClassName("items")[29].appendChild(document.getElementById("drag31"));
+				document.getElementsByClassName("items")[30].appendChild(document.getElementById("drag29")); 
+				document.getElementsByClassName("items")[31].appendChild(document.getElementById("drag25"));
+				document.getElementsByClassName("items2")[28].appendChild(document.getElementById("drag26")); 
+				document.getElementsByClassName("items2")[29].appendChild(document.getElementById("drag30"));
+				document.getElementsByClassName("items2")[30].appendChild(document.getElementById("drag32")); 
+				document.getElementsByClassName("items2")[31].appendChild(document.getElementById("drag27"));
+
+				document.getElementsByClassName("items")[24].appendChild(document.getElementById("drag17")); 
+				document.getElementsByClassName("items")[25].appendChild(document.getElementById("drag18"));
+				document.getElementsByClassName("items")[26].appendChild(document.getElementById("drag19")); 
+				document.getElementsByClassName("items")[27].appendChild(document.getElementById("drag20"));
+				document.getElementsByClassName("items2")[24].appendChild(document.getElementById("drag21")); 
+				document.getElementsByClassName("items2")[25].appendChild(document.getElementById("drag22"));
+				document.getElementsByClassName("items2")[26].appendChild(document.getElementById("drag23")); 
+				document.getElementsByClassName("items2")[27].appendChild(document.getElementById("drag24"));
+			}
+			
+ 		</script>
+	</body>
+</html>

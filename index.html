@@ -20,8 +20,10 @@
 			- Start/windows button
 -->
 <html>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <head>
-<title>WebLink OS</title>
+
+<title>Jasiah.dev</title>
 
 	<style type="text/css">
 		body{
@@ -91,11 +93,11 @@
 			padding: 10px;
 			line-height: 13px;
 			margin: 2px;
-			overflow: hidden;
+			/*overflow: hidden;*/
 			background-color: white;
 			border-radius: 2px;
 			box-shadow: 0px 1px 3px grey;
-			display: inline-block;
+			display: inline-flex;
 		}
 		.lilow:hover{
 			background-color: #e6e6e6;
@@ -269,7 +271,7 @@
 					}
 				}
 				function showPosition(position) {
-					var api = "http://api.openweathermap.org/data/2.5/weather?lat="+position.coords.latitude+"&lon="+position.coords.longitude+"&appid=4861ee482d1b551fd8342de810c0d2c0&units=metric";
+					var api = "https://api.openweathermap.org/data/2.5/weather?lat="+position.coords.latitude+"&lon="+position.coords.longitude+"&appid=4861ee482d1b551fd8342de810c0d2c0&units=metric";
 					fetch(api)
 						.then((response) => {
 						    return response.json();
@@ -286,31 +288,31 @@
 				<span>Applications</span>
 				<ul>
 					<span style="line-height: 25px;">Games</span><p></p>
-					<li class="lilow" onclick="run('http://www.jwg.rf.gd/NoughtsandCrosses/','Noughts&Crosses')">Noughts and Crosses</li>
-					<li class="lilow" onclick="run('http://www.jwg.rf.gd/MemoryMatch/','MemoryMatch')">Memory Match</li>
-					<li class="lilow" onclick="run('http://www.jwg.rf.gd/GuessWho/','GuessWho')",>Guess Who</li>
-					<li class="lilow" onclick="run('http://www.jwg.rf.gd/Connect4/','Connect4')">Connect 4</li>
-					<li class="lilow" onclick="run('http://www.jwg.rf.gd/Battleship/','Battleship')">Battleship</li>
-					<li class="lilow" onclick="run('http://www.jwg.rf.gd/Checkers/','Checkers')">Checkers</li>
-					<li class="lilow" onclick="run('http://www.jwg.rf.gd/Chess/','Chess')">Chess</li>
-					<li class="lilow" onclick="run('http://www.jwg.rf.gd/MouseMaze/','MouseMaze')">Mouse Maze</li>
-					<li class="lilow" onclick="run('http://www.jwg.rf.gd/100MeterDash/','100MeterDash')">100 Meter Dash</li>
-					<li class="lilow" onclick="run('http://www.jwg.rf.gd/3584/','3584')">3584</li>
-					<li class="lilow" onclick="run('http://www.jwg.rf.gd/TypingRacer/','TypingRacer')">Typing Racer</li>
-					<li class="lilow" onclick="run('http://www.jwg.rf.gd/WordPuzzle/','WordPuzzle')">Word Puzzle</li>
-					<li class="lilow" onclick="run('http://www.jwg.rf.gd/AimAndShoot/','AimAndShoot')">Aim And Shoot</li>
-					<li class="lilow" onclick="run('http://www.jwg.rf.gd/MathsQuiz/','MathsQuiz')">Maths Quiz</li>
-					<li class="lilow" onclick="run('http://jwg.rf.gd/Minesweeper','Minesweeper')">Minesweeper</li>
+					<li class="lilow" onclick="run('https://www.jasiah.dev/apps/noughtsandcrosses/','noughtsandcrosses')">Noughts and Crosses</li>
+					<li class="lilow" onclick="run('https://www.jasiah.dev/apps/memorymatch/','memorymatch')">Memory Match</li>
+					<li class="lilow" onclick="run('https://www.jasiah.dev/apps/guesswho/','guesswho')",>Guess Who</li>
+					<li class="lilow" onclick="run('https://www.jasiah.dev/apps/connect4/','connect4')">Connect 4</li>
+					<li class="lilow" onclick="run('https://www.jasiah.dev/apps/battleship/','battleship')">Battleship</li>
+					<li class="lilow" onclick="run('https://www.jasiah.dev/apps/checkers/','checkers')">Checkers</li>
+					<li class="lilow" onclick="run('https://www.jasiah.dev/apps/chess/','chess')">Chess</li>
+					<li class="lilow" onclick="run('https://www.jasiah.dev/apps/mousemaze/','mousemaze')">Mouse Maze</li>
+					<li class="lilow" onclick="run('https://www.jasiah.dev/apps/100meterdash/','100meterdash')">100 Meter Dash</li>
+					<li class="lilow" onclick="run('https://www.jasiah.dev/apps/3584/','3584')">3584</li>
+					<li class="lilow" onclick="run('https://www.jasiah.dev/apps/typingracer/','typingracer')">Typing Racer</li>
+					<li class="lilow" onclick="run('https://www.jasiah.dev/apps/wordpuzzle/','wordpuzzle')">Word Puzzle</li>
+					<li class="lilow" onclick="run('https://www.jasiah.dev/apps/aimandshoot/','aimandshoot')">Aim And Shoot</li>
+					<li class="lilow" onclick="run('https://www.jasiah.dev/apps/mathsquiz/','mathsquiz')">Maths Quiz</li>
+					<li class="lilow" onclick="run('https://www.jasiah.dev/apps/minesweeper','minesweeper')">Minesweeper</li>
 				</ul>
 				<ul>
 					<span style="line-height: 25px;">Apps</span><p></p>
 					<li class="lilow" >Calculator [WIP]</li>
-					<li class="lilow" onclick="run('http://jwg.rf.gd/Notes','Notes')">Notes</li>
-					<li class="lilow" onclick="run('http://jwg.rf.gd/Painter','Painter')">Painter</li>
+					<li class="lilow" onclick="run('https://www.jasiah.dev/apps/notes','Notes')">Notes</li>
+					<li class="lilow" onclick="run('https://www.jasiah.dev/apps/painter','Painter')">Painter</li>
 				</ul>
 				<ul>
 					<span style="line-height: 25px;">Others</span><p></p>
-					<a href="http://www.jwg.rf.gd/Classic"><li class="lilow" >Classic View</li></a>
+					<a href="https://www.jasiah.dev/apps/"><li class="lilow" >Apps List Link</li></a>
 				</ul>
 
 			</div>	
@@ -321,7 +323,7 @@
 			    <li class="menu-option" onclick="closeIt('empty')">Close</li><p>
 			    <li class="menu-option" onclick="minimizeIt('empty')">Show/Hide</li></p>
 			    <li class="menu-option" onclick="pinIt()">Pin </li><p>
-			    <li class="menu-option" onclick="run2('http://jwg.rf.gd/Minesweeper','Minesweeper')">Create Icon</li><p>
+			    <li class="menu-option" onclick="run2('https://www.jasiah.dev/apps/minesweeper','minesweeper')">Create Icon</li><p>
 			    <!--<li class="menu-option">Restart</li></p>
 			    <li class="menu-option">Save to Desktop</li>-->
 			  </ul>
@@ -461,7 +463,7 @@
 						
 						if (document.getElementById(dunno2).style.backgroundColor=="rgb(222, 222, 222)") {
 							name2 = document.getElementById(dunno2).innerHTML;
-							program2 = "http://www.jwg.rf.gd/"+name2+"/";
+							program2 = "https://www.jasiah.dev/apps/"+name2+"/";
 
 							run(program2,name2);
 							BigNav();
@@ -648,7 +650,7 @@
 			//Create desktop icon
 			function run2(program,name){
 				var li = document.createElement("div");
-				var gameURL="http://www.jwg.rf.gd/"+gameTitle+"/";
+				var gameURL="https://www.jasiah.dev/apps/"+gameTitle+"/";
 				li.id = "mydiv"+count;
 				li.className="mydiv";
 				li.innerHTML = "";

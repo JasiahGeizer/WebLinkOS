@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<title>Mouse Maze</title>
+	<head>
+		<script type="text/javascript">
+
+			function starting(btn){
+				btn.style.backgroundColor = "grey";
+				btn.style.color = "darkgrey";
+
+				document.getElementById("realbg").style.backgroundColor = "#643eb1";
+				
+				document.getElementById("btn2").style.backgroundColor = "white";
+				document.getElementById("btn2").style.color = "black";
+				document.getElementById("btn2").disabled = false;
+				document.getElementById("btn1").disabled = true;
+			}
+			var c11;
+			var c22;
+			var c33;
+			var btn1;
+			var btn2;
+			var level = 1; //change back to 1 after testing
+			function winning(btn){
+				btn.style.backgroundColor = "grey";
+				btn.style.color = "darkgrey";
+				c11 = document.getElementById("c11");
+				c22 = document.getElementById("c22");
+				c33 = document.getElementById("c33");
+				btn1= document.getElementById("btn1");
+				btn2= document.getElementById("btn2");
+				document.getElementById("realbg").style.backgroundColor = "#6a5397";
+				document.getElementById("text1").innerHTML="Mouse Maze Game\n Level:"+(parseInt(level)+1);
+
+				btn1.style.backgroundColor = "white";
+				btn1.style.color = "black";
+				btn2.disabled = true;
+				btn1.disabled = false;
+
+				if(level >= 4){
+					level = level + 1;
+					/*btn1.innerHTML = "You Win!";
+					btn2.innerHTML = "You Win!";*/
+					document.body.style.backgroundColor = "white";
+					if (level==5) {
+						alert("You won the campaign, but you can keep playing!");
+						btn2.innerHTML = "Next Level";
+					}
+					//document.getElementById("realbg").style.backgroundColor = "#b13e66";
+					
+					btn1.style.height = "10%";
+					btn1.style.width = "10%";
+					btn2.style.height = "10%";
+					btn2.style.width = "10%";
+
+					btn2.style.top = Math.floor(Math.random() * 40) + 10+"%";
+					btn2.style.left = Math.floor(Math.random() * 40) + 10+"%";
+
+					btn1.style.top = Math.floor(Math.random() * 40) + 50+"%";
+					btn1.style.left = Math.floor(Math.random() * 40) + 50+"%";
+
+					var distance=parseInt(btn2.style.left,10)-
+						((btn1.style.left,10)/2)
+					
+					c11.style.left = parseInt(btn2.style.left,10)+5+"%";
+					c11.style.top = btn2.style.top;
+					c11.style.height = btn2.style.height;
+					c11.style.width = distance+"%";
+
+					c22.style.left = parseInt(btn2.style.left,10)+distance+"%";
+					c22.style.top = btn2.style.top;
+					c22.style.height = parseInt(btn1.style.top,10)-parseInt(btn2.style.top,10)+10+"%";
+					c22.style.width = Math.floor(Math.random() * 6)+1+"%";
+					
+					c33.style.left = c22.style.left;
+					c33.style.top = btn1.style.top;
+					c33.style.height = btn1.style.height;
+					
+					if (btn1.style.left < c22.style.left) {
+						c33.style.width = parseInt(c22.style.left,10)-parseInt(btn1.style.left,10)+2+"%";
+						c33.style.left=btn1.style.left;
+					}else{
+						c33.style.width = parseInt(btn1.style.left,10)-parseInt(c22.style.left,10)+10+"%";
+					}
+
+				}	
+				if(level == 3){
+					level = level + 1;
+					c11.style.left = "10%";
+					c11.style.top = "10%";
+					c11.style.width = "7%";
+					c11.style.height = "28%";
+
+					c22.style.left = "55%";
+					c22.style.top = "35%";
+					c22.style.width = "7%";
+					c22.style.height = "30%";
+
+					c33.style.left = "10%";
+					c33.style.top = "35%";
+					c33.style.width = "50%";
+					c33.style.height = "3%";
+
+					btn2.style.top = "10%";
+					btn2.style.left = "10%";
+					btn2.style.width = "7%";
+					btn2.style.height = "10%";
+					btn2.innerHTML = "Finish Game!";
+
+					btn1.style.top = "55%";
+					btn1.style.left = "55%";
+					btn1.style.width = "7%";
+					btn1.style.height = "10%";
+				}				
+				if(level == 2){
+					level = level + 1;
+					c11.style.left = "30%";
+					c11.style.top = "55%";
+					c11.style.width = "3%";
+					c11.style.height = "20%";
+
+					c22.style.left = "30%";
+					c22.style.top = "55%";
+					c22.style.width = "35%";
+					c22.style.height = "7%";
+
+					c33.style.left = "30%";
+					c33.style.top = "70%";
+					c33.style.width = "50%";
+					c33.style.height = "5%";
+
+					btn1.style.top = "70%";
+					btn1.style.left = "75%";
+					btn1.style.height = "5%";
+					btn1.style.width = "10%";
+
+					btn2.style.top = "55%";
+					btn2.style.left = "55%";
+					btn2.style.width = "10%";
+					btn2.style.height = "7%";
+				}
+				if(level == 1){
+					level = level + 1; 
+					c11.style.left = "10%";
+					c11.style.top = "25%";
+					c11.style.width = "10%";
+					c11.style.height = "60%";
+
+					c22.style.left = "10%";
+					c22.style.top = "25%";
+					c22.style.width = "70%";
+					c22.style.height = "5%";
+
+					c33.style.left = "75%";
+					c33.style.top = "25%";
+					c33.style.width = "5%";
+					c33.style.height = "50%";
+
+					btn2.style.top = "70%";
+					btn2.style.left = "75%";
+					btn2.style.width = "5%";
+					btn2.style.height = "10%";
+
+					btn1.style.top = "75%";
+					btn1.style.left = "10%";
+				}	
+			}
+
+			function hover(x) {
+				document.getElementById("btn2").style.backgroundColor = "grey";
+				document.getElementById("btn2").style.color = "darkgrey";
+
+				document.getElementById("realbg").style.backgroundColor = "#6a5397";
+
+				document.getElementById("btn1").style.backgroundColor = "white";
+				document.getElementById("btn1").style.color = "black";
+				document.getElementById("btn2").disabled = true;
+				document.getElementById("btn1").disabled = false;
+			}
+			function unhover(x) {
+				//console.log("unhover");
+			}			
+		</script>
+		<style type="text/css">
+			body {
+				background-color: #6e608b;
+			}
+			#btn1 {
+				width: 10%;
+				height: 10%;
+				background-color: white;
+				border:0px;
+				border-radius: 3px;
+				position: absolute;
+				left: 10%;
+				top: 10%;
+				border-radius: 9px;
+			}
+			.c1 {
+				background-color: #3a3a3a;
+				position: absolute;
+				width: 75%;
+				height: 10%;
+				top: 10%;
+				left: 10%;
+				z-index: -1;
+				border-radius: 10px;
+			}
+			.c2 {
+				background-color: #3a3a3a;
+				position: absolute;
+				width: 5%;
+				height: 75%;
+				top: 10%;
+				left: 80%;
+				z-index: -1;
+				border-radius: 10px;
+			}
+			.c3 {
+				background-color: #3a3a3a;
+				position: absolute;
+				width: 75%;
+				height: 10%;
+				top: 75%;
+				left: 10%;
+				z-index: -1;
+				border-radius: 10px;
+			}
+			#btn2 {
+				width: 10%;
+				height: 10%;
+				background-color: grey;
+				border:0px;
+				border-radius: 9px;
+				position: absolute;
+				left: 10%;
+				top: 75%;
+				color:lightgrey;
+			}
+			button{
+				outline: none !important;
+			}
+			button:hover{
+				box-shadow: 0px 0px 3px black !important;
+			}
+			button:active{
+				box-shadow: inset 0px 0px 3px black !important;
+			}
+			/*oncontextmenu="return false;"*/
+		</style>
+	</head>
+	
+	<body oncontextmenu="return false;"> 
+			<div id="realbg" onmouseover="hover(this)" onmouseout="unhover(this)" style="width: 99%; height: 99%; position: absolute; z-index: -5;"></div>
+			<span id="text1" style="width:140px;display: block;color: white; font-family: monospace; font-size: 16px;">Mouse Maze Game</span><br>
+			<button id="btn1" onclick="starting(this)" type="submit" >Start</button>
+			<div class="c1" id="c11"></div>
+			<div class="c2" id="c22"></div>
+			<div class="c3" id="c33"></div>
+			<button id="btn2" onclick="winning(this)" disabled="true">Next Level</button>
+	</body>
+</html>

@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+
+<!-- To Do:
+	- When empty space is pressed, open nearby empty spaces above.
+	- Add win state
+	- Fix Wrap-around counts
+-->
+
+<html>
+<title>Minesweeper</title>
+	<head>
+		<script>
+			var started = false;
+			function decision(x) {
+				if (flagSwitch==0) {
+					if(started == true){
+						if (x < 101) {
+							if(document.getElementById(x).style.backgroundColor != "white"){
+								/*document.getElementById(x).style.backgroundColor = "white";*/
+								document.getElementById(x).style.boxShadow = "0px 0px 0px white";
+								document.getElementById(x).style.color = "#bdbdbd";
+								if (document.getElementById(x).innerHTML == "B") {
+									document.getElementById(x).style.backgroundColor= "red";
+									document.getElementById(x).style.fontSize = "25px";
+									started=false;
+									document.getElementById('startBTN').disabled=false;
+									document.getElementById('startBTN').style.display = "inline";
+									for (var i = 1; i < 101; i++) {
+										if (document.getElementById(i).innerHTML == "B") {
+											document.getElementById(i).style.fontSize = "25px";
+											document.getElementById(i).style.backgroundColor= "red";
+										}
+									}
+								}else if (document.getElementById(x).innerHTML == "1") {
+									document.getElementById(x).style.color= "blue";
+									document.getElementById(x).style.fontSize = "25px";
+								}else if (document.getElementById(x).innerHTML == "2") {
+									document.getElementById(x).style.color= "green";
+									document.getElementById(x).style.fontSize = "25px";
+								}else if (document.getElementById(x).innerHTML == "3") {
+									document.getElementById(x).style.color= "red";
+									document.getElementById(x).style.fontSize = "25px";
+								}else if (document.getElementById(x).innerHTML == "4") {
+									document.getElementById(x).style.color= "darkblue";
+									document.getElementById(x).style.fontSize = "25px";
+								}
+							}
+						}
+					var x1 = x-1;
+					for (var ii = 0; ii < 2; ii++) {
+						if (document.getElementById(x).innerHTML == "0") {
+							if (document.getElementById(x1).innerHTML == "0") {
+								document.getElementById(x1).style.boxShadow = "0px 0px 0px white";
+								x1=x1-1;
+								ii--;
+							}
+						}
+					}
+					var x2 = x+1;
+					for (var ii = 0; ii < 2; ii++) {
+						if (document.getElementById(x).innerHTML == "0") {
+							if (document.getElementById(x2).innerHTML == "0") {
+								document.getElementById(x2).style.boxShadow = "0px 0px 0px white";
+								x2=x2+1;
+								ii--;
+							}
+						}
+					}
+					}
+				}else{
+					if(started == true){
+						/*document.getElementById(x).style.backgroundColor= "blue";
+						document.getElementById(x).style.color= "blue";*/
+						document.getElementById(x).style.boxShadow = "inset 0px 0px 0px 6px grey";
+					}
+				}
+			}
+			function start(){
+				started = true;
+				document.getElementById('startBTN').disabled=true;
+				document.getElementById('startBTN').style.display = "none";
+
+			for (var i = 1; i < 101; i++) {
+				document.getElementById(i).innerHTML = "0";
+				document.getElementById(i).style.boxShadow = "inset 3px 3px 0px 0px #f3f3f3, inset -3px -3px 0px 0px #7a7a7a";
+				document.getElementById(i).style.backgroundColor = "#bdbdbd";
+				document.getElementById(i).style.color = "#bdbdbd";
+			}
+
+			var bombs = new Array();
+			var i1; // -11
+			var i2; // -10
+			var i3; // -9
+			var i4; // -1
+			var i5; // +1
+			var i6; // +9
+			var i7; // +10
+			var i8; // +11
+
+			for(i = 0; i < 10; i++){
+				bombs[i] = Math.floor((Math.random() * 80+10) + 1);
+					i1 = bombs[i]-11;
+					i2 = bombs[i]-10;
+					i3 = bombs[i]-9;
+					i4 = bombs[i]-1;
+					i5 = bombs[i]+1;
+					i6 = bombs[i]+9;
+					i7 = bombs[i]+10;
+					i8 = bombs[i]+11;
+				document.getElementById(bombs[i]).innerHTML = "B";
+				/*document.getElementById(bombs[i]).style.color = "#bdbdbd";*/
+
+				if (document.getElementById(i1).innerHTML != "B") {
+					document.getElementById(i1).innerHTML = parseInt(document.getElementById(i1).innerHTML)+1;
+				}
+				if (document.getElementById(i2).innerHTML != "B") {
+					document.getElementById(i2).innerHTML = parseInt(document.getElementById(i2).innerHTML)+1;
+				}
+				if (document.getElementById(i3).innerHTML != "B") {
+					document.getElementById(i3).innerHTML = parseInt(document.getElementById(i3).innerHTML)+1;
+				}
+				if (document.getElementById(i4).innerHTML != "B") {
+					document.getElementById(i4).innerHTML = parseInt(document.getElementById(i4).innerHTML)+1;
+				}
+				if (document.getElementById(i5).innerHTML != "B") {
+					document.getElementById(i5).innerHTML = parseInt(document.getElementById(i5).innerHTML)+1;
+				}
+				if (document.getElementById(i6).innerHTML != "B") {
+					document.getElementById(i6).innerHTML = parseInt(document.getElementById(i6).innerHTML)+1;
+				}
+				if (document.getElementById(i7).innerHTML != "B") {
+					document.getElementById(i7).innerHTML = parseInt(document.getElementById(i7).innerHTML)+1;
+				}
+				if (document.getElementById(i8).innerHTML != "B") {
+					document.getElementById(i8).innerHTML = parseInt(document.getElementById(i8).innerHTML)+1;
+				}
+			}
+			}
+		</script>
+
+		<style type="text/css">		
+			html, body {
+				height: 99%;
+				user-select: none;
+				-moz-user-select: none;
+				background-color: lightsteelblue;
+				font-family: monospace;
+				color:black;	
+			}			
+			.items{
+				float: left;
+				/*margin:2px;*/
+				background-color: darkslateblue;
+				width: 29px;
+				height: 29px;
+				/*border-radius: 10px;*/
+				/*border: 3px solid #0053c9;*/
+				box-shadow: inset 0px 0px 0px 1px slateblue;
+			}
+			.items1{
+				float: left;
+				/*margin:2px;*/
+				background-color: #bdbdbd;
+				width: 29px;
+				height: 29px;
+				/*border-radius: 10px;*/
+				/*border: 3px solid #0053c9;*/
+				box-shadow: inset 3px 3px 0px 0px #f3f3f3, inset -3px -3px 0px 0px #7a7a7a;
+			}
+			.items2{
+				float: left;
+				margin:2px;
+				background-color: white;
+				width: 25px;
+				height: 25px;
+				border-radius: 2px;
+				border: 3px solid #0053c9;
+				box-shadow: inset 0px 3px 7px #424242;
+			}
+			.items:hover{
+				background-color: #fffbad;
+				border-color: #fffbad;
+				/*box-shadow: 0px -10px 1px yellow;*/
+			}
+			.items1:hover{
+				background-color: #fffbad;
+				border-color: #fffbad;
+				color: #fffbad;
+				/*box-shadow: 0px -10px 1px yellow;*/	
+			}
+			.items2:hover{
+				background-color: #ffadad;
+				border-color: #ffadad;
+				/*box-shadow: 0px -10px 1px red;*/
+			}
+			.grouped{
+				position: relative;
+				background-color: #bdbdbd;
+				width: 350px;
+				height: 380px;
+				top: 50px;
+				margin: 0 auto;
+				border-radius: 20px;
+				box-shadow: 0px 2px 13px grey;	
+				color: white;		
+			}
+			ul {
+			    margin: 0 auto;
+			    padding: 3px; 
+			    list-style-type: none;
+			    display:block;
+			    font-family: monospace;
+			    height: 290px;
+			    width: 290px;
+			    background: rgb(243,243,243);
+				background: linear-gradient(315deg, rgba(255,255,255,1) 50%, rgba(124,124,124,1) 50%);
+			}	
+			p{
+				height: 5px;
+			}		
+			.myButton {
+				box-shadow:inset 0px 1px 0px 0px #ffffff;
+				background:linear-gradient(to bottom, #ededed 5%, #dfdfdf 100%);
+				background-color:#ededed;
+				border-radius:6px;
+				border:1px solid #dcdcdc;
+				display:inline-block;
+				cursor:pointer;
+				color:#777777;
+				top: 10px;
+				font-family:Arial;
+				font-size:19px;
+				font-weight:bold;
+				padding:4px 14px;
+				text-decoration:none;
+				text-shadow:0px 1px 0px #ffffff;
+			}
+			.myButton:hover {
+				background:linear-gradient(to bottom, #dfdfdf 5%, #ededed 100%);
+				background-color:#dfdfdf;
+			}
+			.myButton:active {
+				position:relative;
+				top:11px;
+			}
+			li {
+				color: #bdbdbd;
+				text-align: center;
+				line-height: 30px;
+				font-size: 12px;
+				list-style-type: none;
+			}
+			li:hover {
+				font-size: 12px;
+				/*color: lightgrey;*/
+			}
+
+		</style>
+	</head>
+
+
+	<body>
+		Minesweeper
+		<div class="grouped">		<br>
+			<span style="margin-left:27px">Minesweeper</span> <br>
+			<ul>
+				<li onclick="decision(1)" class="items1" id="1">0</li>
+				<li onclick="decision(2)" class="items1" id="2">0</li>
+				<li onclick="decision(3)" class="items1" id="3">0</li>
+				<li onclick="decision(4)" class="items1" id="4">0</li>
+				<li onclick="decision(5)" class="items1" id="5">0</li>
+				<li onclick="decision(6)" class="items1" id="6">0</li>
+				<li onclick="decision(7)" class="items1" id="7">0</li>
+				<li onclick="decision(8)" class="items1" id="8">0</li>
+				<li onclick="decision(9)" class="items1" id="9">0</li>
+				<li onclick="decision(10)" class="items1" id="10">0</li>			
+			
+				<li onclick="decision(11)" class="items1" id="11">0</li>
+				<li onclick="decision(12)" class="items1" id="12">0</li>
+				<li onclick="decision(13)" class="items1" id="13">0</li>
+				<li onclick="decision(14)" class="items1" id="14">0</li>
+				<li onclick="decision(15)" class="items1" id="15">0</li>
+				<li onclick="decision(16)" class="items1" id="16">0</li>	
+				<li onclick="decision(17)" class="items1" id="17">0</li>
+				<li onclick="decision(18)" class="items1" id="18">0</li>
+				<li onclick="decision(19)" class="items1" id="19">0</li>
+				<li onclick="decision(20)" class="items1" id="20">0</li>	
+			
+				<li onclick="decision(21)" class="items1" id="21">0</li>
+				<li onclick="decision(22)" class="items1" id="22">0</li>
+				<li onclick="decision(23)" class="items1" id="23">0</li>
+				<li onclick="decision(24)" class="items1" id="24">0</li>
+				<li onclick="decision(25)" class="items1" id="25">0</li>
+				<li onclick="decision(26)" class="items1" id="26">0</li>
+				<li onclick="decision(27)" class="items1" id="27">0</li>
+				<li onclick="decision(28)" class="items1" id="28">0</li>
+				<li onclick="decision(29)" class="items1" id="29">0</li>
+				<li onclick="decision(30)" class="items1" id="30">0</li>
+			
+				<li onclick="decision(31)" class="items1" id="31">0</li>
+				<li onclick="decision(32)" class="items1" id="32">0</li>
+				<li onclick="decision(33)" class="items1" id="33">0</li>
+				<li onclick="decision(34)" class="items1" id="34">0</li>
+				<li onclick="decision(35)" class="items1" id="35">0</li>
+				<li onclick="decision(36)" class="items1" id="36">0</li>
+				<li onclick="decision(37)" class="items1" id="37">0</li>
+				<li onclick="decision(38)" class="items1" id="38">0</li>
+				<li onclick="decision(39)" class="items1" id="39">0</li>
+				<li onclick="decision(40)" class="items1" id="40">0</li>			
+			
+				<li onclick="decision(41)" class="items1" id="41">0</li>
+				<li onclick="decision(42)" class="items1" id="42">0</li>
+				<li onclick="decision(43)" class="items1" id="43">0</li>
+				<li onclick="decision(44)" class="items1" id="44">0</li>
+				<li onclick="decision(45)" class="items1" id="45">0</li>
+				<li onclick="decision(46)" class="items1" id="46">0</li>
+				<li onclick="decision(47)" class="items1" id="47">0</li>
+				<li onclick="decision(48)" class="items1" id="48">0</li>
+				<li onclick="decision(49)" class="items1" id="49">0</li>
+				<li onclick="decision(50)" class="items1" id="50">0</li>
+			
+				<li onclick="decision(51)" class="items1" id="51">0</li>
+				<li onclick="decision(52)" class="items1" id="52">0</li>
+				<li onclick="decision(53)" class="items1" id="53">0</li>
+				<li onclick="decision(54)" class="items1" id="54">0</li>
+				<li onclick="decision(55)" class="items1" id="55">0</li>
+				<li onclick="decision(56)" class="items1" id="56">0</li>
+				<li onclick="decision(57)" class="items1" id="57">0</li>
+				<li onclick="decision(58)" class="items1" id="58">0</li>
+				<li onclick="decision(59)" class="items1" id="59">0</li>
+				<li onclick="decision(60)" class="items1" id="60">0</li>			
+			
+				<li onclick="decision(61)" class="items1" id="61">0</li>
+				<li onclick="decision(62)" class="items1" id="62">0</li>
+				<li onclick="decision(63)" class="items1" id="63">0</li>
+				<li onclick="decision(64)" class="items1" id="64">0</li>
+				<li onclick="decision(65)" class="items1" id="65">0</li>
+				<li onclick="decision(66)" class="items1" id="66">0</li>	
+				<li onclick="decision(67)" class="items1" id="67">0</li>
+				<li onclick="decision(68)" class="items1" id="68">0</li>
+				<li onclick="decision(69)" class="items1" id="69">0</li>
+				<li onclick="decision(70)" class="items1" id="70">0</li>	
+			
+				<li onclick="decision(71)" class="items1" id="71">0</li>
+				<li onclick="decision(72)" class="items1" id="72">0</li>
+				<li onclick="decision(73)" class="items1" id="73">0</li>
+				<li onclick="decision(74)" class="items1" id="74">0</li>
+				<li onclick="decision(75)" class="items1" id="75">0</li>
+				<li onclick="decision(76)" class="items1" id="76">0</li>
+				<li onclick="decision(77)" class="items1" id="77">0</li>
+				<li onclick="decision(78)" class="items1" id="78">0</li>
+				<li onclick="decision(79)" class="items1" id="79">0</li>
+				<li onclick="decision(80)" class="items1" id="80">0</li>
+			
+				<li onclick="decision(81)" class="items1" id="81">0</li>
+				<li onclick="decision(82)" class="items1" id="82">0</li>
+				<li onclick="decision(83)" class="items1" id="83">0</li>
+				<li onclick="decision(84)" class="items1" id="84">0</li>
+				<li onclick="decision(85)" class="items1" id="85">0</li>
+				<li onclick="decision(86)" class="items1" id="86">0</li>
+				<li onclick="decision(87)" class="items1" id="87">0</li>
+				<li onclick="decision(88)" class="items1" id="88">0</li>
+				<li onclick="decision(89)" class="items1" id="89">0</li>
+				<li onclick="decision(90)" class="items1" id="90">0</li>			
+			
+				<li onclick="decision(91)" class="items1" id="91">0</li>
+				<li onclick="decision(92)" class="items1" id="92">0</li>
+				<li onclick="decision(93)" class="items1" id="93">0</li>
+				<li onclick="decision(94)" class="items1" id="94">0</li>
+				<li onclick="decision(95)" class="items1" id="95">0</li>
+				<li onclick="decision(96)" class="items1" id="96">0</li>
+				<li onclick="decision(97)" class="items1" id="97">0</li>
+				<li onclick="decision(98)" class="items1" id="98">0</li>
+				<li onclick="decision(99)" class="items1" id="99">0</li>
+				<li onclick="decision(100)" class="items1" id="100">0</li>
+			</ul>
+			<button class="myButton" id="startBTN" style="position:relative; left: 150px;" onclick="start()">Start?</button>
+
+			<li onclick="flagORbomb('flag')" class="items1" id="flag" style="position:relative; left: 30px; top: 10px;color: black;box-shadow:inset 3px 3px 0px 0px grey,inset -3px -3px 0px 0px lightgrey;">-</li>
+			<li onclick="flagORbomb(102)" class="items1" id="102" style="position:relative; left: 30px; top: 10px; color: black;">🚩</li>
+
+			</div>
+			
+		</div>
+		<br>
+		</div>	
+There are ~10 mines, <br> clear every space except those 10 to win.
+		<script type="text/javascript">
+			var flgORbmb;
+			var flagSwitch=0;
+			function flagORbomb(x) {
+				flgORbmb = x;
+				if (flagSwitch==0) {
+					document.getElementById(102).style.boxShadow = "inset 3px 3px 0px 0px grey,inset -3px -3px 0px 0px lightgrey";
+					document.getElementById('flag').style.boxShadow = "inset 3px 3px 0px 0px #f3f3f3, inset -3px -3px 0px 0px #7a7a7a";
+					flagSwitch=1;
+				}else{
+					document.getElementById('flag').style.boxShadow = "inset 3px 3px 0px 0px grey,inset -3px -3px 0px 0px lightgrey";
+					document.getElementById(102).style.boxShadow = "inset 3px 3px 0px 0px #f3f3f3, inset -3px -3px 0px 0px #7a7a7a";
+					flagSwitch=0;
+				}
+			}
+		</script>
+	</body>
+</html>

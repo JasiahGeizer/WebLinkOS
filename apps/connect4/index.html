@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+
+<!-- To Do:
+	- Get blocks to animate falling downwards.
+	- Detect when someone's won
+	- Create reset button
+	- Clean code by creating elements in a for loop
+	- Create background div graphics for stand and tray
+-->
+
+<html>
+<title>Connect4</title>
+	<head>
+		<script>
+			var chosen;
+			var turn = "yellow";
+			function decision(x) {
+				var t = x+40; console.log(t);
+
+				while(	document.getElementById(t).style.backgroundColor == "red" ||
+						document.getElementById(t).style.backgroundColor == "yellow"){t=t-8;}
+
+				var i;
+				for (i = x; i < t; i++) {
+					console.log(i)
+
+					for (B = 1; B < 9; B++) {
+						if(turn == "red"){
+							document.getElementById(B).className = "items";
+						}
+						else{
+							document.getElementById(B).className = "items2";
+						}
+					}
+					//document.getElementById(i).style.backgroundColor = turn; //change red to variable
+					//document.getElementById(i).style.border = "3px solid " + turn;
+					//document.getElementById(i).style["boxShadow"] = "0 0 5px " + turn;
+					
+					document.getElementById(i+8).style.backgroundColor = "white";
+					//document.getElementById(i).style.border = "3px solid #0053c9";
+					//document.getElementById(i).style["boxShadow"] = "inset 0px 3px 7px #424242"
+
+					i=i+7;
+				}
+				
+				for (i; i < t+7; i++) {
+					console.log(i)
+					document.getElementById(i).style.backgroundColor = turn; //change red to variable
+					//document.getElementById(i).style.border = "3px solid " + turn;
+					//document.getElementById(i).style["boxShadow"] = "0 0 5px black";
+					
+					//document.getElementById(i).style.backgroundColor = "white";
+					//document.getElementById(i).style.border = "3px solid #0053c9";
+					//document.getElementById(i).style["boxShadow"] = "inset 0px 3px 7px #424242"
+
+					i=i+7;
+				}
+			if(turn == "red"){
+				turn = "yellow";
+			}else{turn = "red";}
+
+			var audio = new Audio('clink.wav');
+			audio.play();
+			}
+		</script>
+
+		<style type="text/css">
+			html, body {
+				height: 99%;
+				user-select: none;
+				-moz-user-select: none;
+				background-color: deeppink;
+				font-family: monospace;
+				color:white;
+				
+			}			
+			.items{
+				float: left;
+				margin:2px;
+				background-color: white;
+				width: 60px;
+				height: 60px;
+				border-radius: 50px;
+				border: 3px solid #0053c9;
+				box-shadow: inset 0px 3px 7px #424242;
+			}
+			.items2{
+				float: left;
+				margin:2px;
+				background-color: white;
+				width: 60px;
+				height: 60px;
+				border-radius: 50px;
+				border: 3px solid #0053c9;
+				box-shadow: inset 0px 3px 7px #424242;
+			}
+			.items:hover{
+				background-color: #fffbad;
+				border-color: #fffbad;
+				/*box-shadow: 0px -10px 1px yellow;*/
+			}
+			.items2:hover{
+				background-color: #ffadad;
+				border-color: #ffadad;
+				/*box-shadow: 0px -10px 1px red;*/
+			}
+			.grouped{
+				position: relative;
+				background-color: #006aff;
+				width: 640px;
+				height: 500px;
+				top: 100px;
+				margin: 0 auto;
+				border-radius: 20px;
+				box-shadow: 0px 2px 13px grey;	
+				color: lightgrey;		
+			}
+			ul {
+			    margin: 0 auto;
+			    padding-top: 10px;
+			    list-style-type: none;
+			    display:block;
+			}	
+			p{
+				height: 25px;
+			}		
+			i{
+				line-height: 250px;
+			}
+		</style>
+	</head>
+
+
+	<body>
+		<span>Connect Four</span>
+		<div class="grouped">
+			<br>
+			<ul>
+				 <br>
+				<li onclick="decision(1)" class="items" id="1"></li>
+				<li onclick="decision(2)" class="items" id="2"></li>
+				<li onclick="decision(3)" class="items" id="3"></li>
+				<li onclick="decision(4)" class="items" id="4"></li>
+				<li onclick="decision(5)" class="items" id="5"></li>
+				<li onclick="decision(6)" class="items" id="6"></li>
+				<li onclick="decision(7)" class="items" id="7"></li>
+				<li onclick="decision(8)" class="items" id="8"></li>
+							
+			</ul>
+			<p></p>
+			<ul>
+				<li onclick="decision(9)" class="items" id="9"></li>
+				<li onclick="decision(10)" class="items" id="10"></li>
+				<li onclick="decision(11)" class="items" id="11"></li>
+				<li onclick="decision(12)" class="items" id="12"></li>
+				<li onclick="decision(13)" class="items" id="13"></li>
+				<li onclick="decision(14)" class="items" id="14"></li>
+				<li onclick="decision(15)" class="items" id="15"></li>
+				<li onclick="decision(16)" class="items" id="16"></li>		
+			</ul>
+			<p></p>
+			<ul>
+				<li onclick="decision(17)" class="items" id="17"></li>
+				<li onclick="decision(18)" class="items" id="18"></li>
+				<li onclick="decision(19)" class="items" id="19"></li>
+				<li onclick="decision(20)" class="items" id="20"></li>
+				<li onclick="decision(21)" class="items" id="21"></li>
+				<li onclick="decision(22)" class="items" id="22"></li>
+				<li onclick="decision(23)" class="items" id="23"></li>
+				<li onclick="decision(24)" class="items" id="24"></li>
+			</ul>
+			<p></p>
+			<ul>
+				<li onclick="decision(25)" class="items" id="25"></li>
+				<li onclick="decision(26)" class="items" id="26"></li>
+				<li onclick="decision(27)" class="items" id="27"></li>
+				<li onclick="decision(28)" class="items" id="28"></li>
+				<li onclick="decision(29)" class="items" id="29"></li>
+				<li onclick="decision(30)" class="items" id="30"></li>
+				<li onclick="decision(31)" class="items" id="31"></li>
+				<li onclick="decision(32)" class="items" id="32"></li>				
+			</ul>
+			<p></p>
+			<ul>
+				<li onclick="decision(33)" class="items" id="33"></li>
+				<li onclick="decision(34)" class="items" id="34"></li>
+				<li onclick="decision(35)" class="items" id="35"></li>
+				<li onclick="decision(36)" class="items" id="36"></li>
+				<li onclick="decision(37)" class="items" id="37"></li>
+				<li onclick="decision(38)" class="items" id="38"></li>
+				<li onclick="decision(39)" class="items" id="39"></li>
+				<li onclick="decision(40)" class="items" id="40"></li>
+			</ul>
+			<p></p>
+			<ul>
+				<li onclick="decision(41)" class="items" id="41"></li>
+				<li onclick="decision(42)" class="items" id="42"></li>
+				<li onclick="decision(43)" class="items" id="43"></li>
+				<li onclick="decision(44)" class="items" id="44"></li>
+				<li onclick="decision(45)" class="items" id="45"></li>
+				<li onclick="decision(46)" class="items" id="46"></li>
+				<li onclick="decision(47)" class="items" id="47"></li>
+				<li onclick="decision(48)" class="items" id="48"></li>
+			</ul>
+			</div>
+			<i>click on the top row to drop a piece</i>
+		</div>
+
+	</body>
+
+
+</html>
