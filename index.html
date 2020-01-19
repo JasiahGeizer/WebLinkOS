@@ -206,8 +206,9 @@
 		#location{
 			height: 40px;
 			top: 0px;
-			position: absolute; 
-			right:  75px; 
+			position: relative; 
+			/*right:  75px; */
+			float: right;
 			line-height: 40px;
 			border-right: solid 1px lightgrey; 
 			padding-right: 12px;
@@ -223,11 +224,14 @@
 		#txt{
 			height: 40px;
 			top: 0px;
-			position: absolute; 
-			right:  0px; 
+			position: relative;
+			float: right; 
+			/*right:  0px;*/
 			line-height: 40px;
 			text-align: center;
-			width: 76px;
+			/*width: 76px;*/
+			padding-left: 10px;
+			padding-right: 10px;
 		}
 		#txt:hover{
 			background-color: lightgrey;
@@ -272,6 +276,7 @@
 				}
 				function showPosition(position) {
 					var api = "https://api.openweathermap.org/data/2.5/weather?lat="+position.coords.latitude+"&lon="+position.coords.longitude+"&appid=4861ee482d1b551fd8342de810c0d2c0&units=metric";
+					document.getElementById("location").innerHTML="...";
 					fetch(api)
 						.then((response) => {
 						    return response.json();
@@ -307,12 +312,13 @@
 				<ul>
 					<span style="line-height: 25px;">Apps</span><p></p>
 					<li class="lilow" >Calculator [WIP]</li>
-					<li class="lilow" onclick="run('https://www.jasiah.dev/apps/notes','Notes')">Notes</li>
-					<li class="lilow" onclick="run('https://www.jasiah.dev/apps/painter','Painter')">Painter</li>
+					<li class="lilow" onclick="run('https://www.jasiah.dev/apps/notes','notes')">Notes</li>
+					<li class="lilow" onclick="run('https://www.jasiah.dev/apps/painter','painter')">Painter</li>
 				</ul>
 				<ul>
 					<span style="line-height: 25px;">Others</span><p></p>
 					<a href="https://www.jasiah.dev/apps/"><li class="lilow" >Apps List Link</li></a>
+					<li class="lilow" onclick="run('https://www.jasiah.dev/contact','contact')">Contact</li>
 				</ul>
 
 			</div>	
@@ -382,6 +388,8 @@
 				var iframe = document.createElement('iframe');
 				var html = '';
 				iframe.id="frame"+count;
+				iframe.style.width="750px";
+				iframe.style.height="650px";
 				iframe.src = program + encodeURI(html);
 				document.getElementById("mydiv"+count).appendChild(iframe);
 
@@ -559,53 +567,120 @@
 				    elmnt.style.zIndex = "9";
 				    active = elmnt;
 				  }
-
-				  function closeDragElement() {
+				  var sizeWrong=false;
+				  function closeDragElement(e) {
 				    /* stop moving when mouse button is released:*/
 				    document.onmouseup = null;
 				    document.onmousemove = null;
-				  }
+				    //console.log(event.clientX);
+				    if (e.clientY<0){ //drag to top to make full screen
+				    	//maximiseIt(elmnt.childNodes[0]);
+					    	document.getElementById("mydiv"+elmnt.childNodes[0].id).style.top="0px";
+							document.getElementById("mydiv"+elmnt.childNodes[0].id).style.left="0px";
+							document.getElementById("frame"+elmnt.childNodes[0].id).style.width=window.innerWidth+"px";
+							document.getElementById("frame"+elmnt.childNodes[0].id).style.height=window.innerHeight-65+"px";
+							sizeWrong=true;
+				    }else if (e.clientX<1) 
+				    { //drag to top to make full screen
+				    	//maximiseIt(elmnt.childNodes[0]);
+				    	sizeWrong=true;
+				    	var halfSize=window.innerWidth/2;
+				    	document.getElementById("mydiv"+elmnt.childNodes[0].id).style.top="0px";
+						document.getElementById("mydiv"+elmnt.childNodes[0].id).style.left="0px";
+						document.getElementById("frame"+elmnt.childNodes[0].id).style.width=halfSize+"px";
+						document.getElementById("frame"+elmnt.childNodes[0].id).style.height=window.innerHeight-65+"px";
+				    }else if (e.clientX>window.innerWidth-2){
+				    	sizeWrong=true;
+				    	var halfSize=window.innerWidth/2;
+				    	document.getElementById("mydiv"+elmnt.childNodes[0].id).style.top="0px";
+						document.getElementById("mydiv"+elmnt.childNodes[0].id).style.left=halfSize+"px";
+						document.getElementById("frame"+elmnt.childNodes[0].id).style.width=halfSize+"px";
+						document.getElementById("frame"+elmnt.childNodes[0].id).style.height=window.innerHeight-65+"px";
+				    }else if (sizeWrong==true) {
+				    	if (document.getElementById("mydiv"+elmnt.childNodes[0].id).style.top!=="0px") {
+				    		document.getElementById("frame"+elmnt.childNodes[0].id).style.width="750px";
+							document.getElementById("frame"+elmnt.childNodes[0].id).style.height="500px";
+				    	}
+						
+				    }
+				  	}
 			}
+
 			var timeFormat=true;
 			var realtime;
 			let now;
+			var clockType=0;
 			//set time on clock
 			function startTime() {
 				now = new Date();
 				//console.log(now);
-			    realtime = new Intl.DateTimeFormat('default',
+				if (clockType==0) {
+					realtime = new Intl.DateTimeFormat('default',
 			        {
-			            hour12: timeFormat,
+			            hour12: true,
+			            weekday: 'short',
 			            hour: 'numeric',
 			            minute: 'numeric'
 			        }).format(now);
+				}else if (clockType==1){
+					realtime = new Intl.DateTimeFormat('default',
+			        {
+			            hour12: true,
+			            hour: 'numeric',
+			            minute: 'numeric'
+			        }).format(now);
+				}else {
+					realtime = new Intl.DateTimeFormat('default',
+			        {
+			            hour12: false,
+			            year: '2-digit',
+			            month: 'numeric',
+			            day: 'numeric',
+			            hour: 'numeric',
+			            minute: 'numeric'
+			        }).format(now);
+				}
+			    
 
 			  document.getElementById('txt').innerHTML =
 			  realtime;
 			  var t = setTimeout(startTime, 5000); //every 5 seconds, update time
 			}
 			
-			function changeTime(){
-				if (timeFormat==false) {
-					timeFormat=true;
+			function changeTime(){ //detect button press to change clock typing and change instantly
+				if (clockType==0) {
+					clockType=1;
 					realtime = new Intl.DateTimeFormat('default',
 			        {
-			            hour12: timeFormat,
+			            hour12: true,
 			            hour: 'numeric',
 			            minute: 'numeric'
 			        }).format(now);
-					document.getElementById('txt').innerHTML=realtime;
-				}else{
-					timeFormat=false;
-					realtime = new Intl.DateTimeFormat('default',
+			        document.getElementById('txt').innerHTML=realtime;
+				}else if (clockType==1){
+					clockType=2;
+			        realtime = new Intl.DateTimeFormat('default',
 			        {
-			            hour12: timeFormat,
+			            hour12: false,
+			            year: '2-digit',
+			            month: 'numeric',
+			            day: 'numeric',
+			            hour: 'numeric',
+			            minute: 'numeric'
+			        }).format(now);
+			        document.getElementById('txt').innerHTML=realtime;
+				}else{
+					clockType=0;
+			        realtime = new Intl.DateTimeFormat('default',
+			        {
+			            hour12: true,
 			            weekday: 'short',
 			            hour: 'numeric',
 			            minute: 'numeric'
 			        }).format(now);
-					document.getElementById('txt').innerHTML=realtime;
+			        document.getElementById('txt').innerHTML=realtime;
 				}
+				
 			}
 			function alertLocation(){
 				alert(now);
@@ -670,6 +745,8 @@
 
 				count=count+1;
 			}
+
+
 		</script>
 	</body>
 </html>

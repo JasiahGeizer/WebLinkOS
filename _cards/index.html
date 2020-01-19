@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<style type="text/css">
+			body{
+				background-color: lightblue;
+			}
+			img{
+				width: 100px;
+				user-drag: none;
+				user-select: none;
+			}
+		</style>
+	</head>
+	<body>
+		<div>
+
+			<img src="img/2D.png" id="1" ondrag="drag(this)" ondragend="drag2()" style="position: absolute;top: 5px; left: 5px;">
+			<!--<img src="img/3D.png">
+			<img src="img/4D.png">
+			<img src="img/5D.png">
+			<img src="img/6D.png">
+			<img src="img/7D.png">
+			<img src="img/8D.png">
+			<img src="img/9D.png">
+			<img src="img/10D.png">
+			<img src="img/JD.png">
+			<img src="img/QD.png">
+			<img src="img/KD.png">
+			<img src="img/AD.png">
+
+			<img src="img/2H.png">
+			<img src="img/3H.png">
+			<img src="img/4H.png">
+			<img src="img/5H.png">
+			<img src="img/6H.png">
+			<img src="img/7H.png">
+			<img src="img/8H.png">
+			<img src="img/9H.png">
+			<img src="img/10H.png">
+			<img src="img/JH.png">
+			<img src="img/QH.png">
+			<img src="img/KH.png">
+			<img src="img/AH.png">
+
+			<img src="img/2S.png">
+			<img src="img/3S.png">
+			<img src="img/4S.png">
+			<img src="img/5S.png">
+			<img src="img/6S.png">
+			<img src="img/7S.png">
+			<img src="img/8S.png">
+			<img src="img/9S.png">
+			<img src="img/10S.png">
+			<img src="img/JS.png">
+			<img src="img/QS.png">
+			<img src="img/KS.png">
+			<img src="img/AS.png">
+
+			<img src="img/2C.png">
+			<img src="img/3C.png">
+			<img src="img/4C.png">
+			<img src="img/5C.png">
+			<img src="img/6C.png">
+			<img src="img/7C.png">
+			<img src="img/8C.png">
+			<img src="img/9C.png">
+			<img src="img/10C.png">
+			<img src="img/JC.png">
+			<img src="img/QC.png">
+			<img src="img/KC.png">
+			<img src="img/AC.png">-->
+		</div>
+		
+	</body>
+	<script type="text/javascript">
+				function drag(it,e) {
+					e.preventDefault();
+					event.target.style.top=event.clientY-100+'px';
+					event.target.style.left=event.clientX-55+'px';
+				}
+				function drag2(it){
+					event.target.style.top=event.clientY-100+'px';
+					event.target.style.left=event.clientX-50+'px';
+				}
+	</script>
+</html>

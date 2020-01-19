@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<title>Jasiah's Apps</title>
+<!--
+	- Seperate based on:
+		- Single Player
+		- 2 Player: Single Screen
+		- 2 Player: Seperate Screens
+-->
+	<head>
+		<style type="text/css">
+			html, body {
+				height: 99%;
+				user-select: none;
+				-moz-user-select: none;
+				background-color: #6b8da9;
+				font-family: monospace;
+				font-size: 14px;
+				display: grid;
+			}			
+			.items{
+				float: left;
+				margin:2px;
+			}
+			.grouped{
+				position: relative;
+				background-color: #404040;
+				width: 603px;
+				height: 425px;
+				/*top: 100px;*/
+				margin: 0 auto;
+				border-radius: 20px;
+				box-shadow: 0px 2px 13px #545454;	
+				color: lightgrey;	
+				vertical-align: center;
+    				
+			}
+			ul {
+			    margin: 0 auto;
+			    padding-top: 10px;
+			    list-style-type: none;
+			    display:block;
+			}	
+			p{
+				height: 60px;
+			}		
+			li {
+				height: 45px;
+				width:  80px;
+				padding: 10px;
+				overflow: hidden;
+				background-color: white;
+				border-radius: 2px;
+				box-shadow: 0px 1px 3px black;
+				line-height: 15px;
+				display: flex;
+				justify-content: left;
+				align-items: center;
+			}
+			li:hover{
+				background-color: lightgrey !important;
+			}
+			li:active{
+				background-color: darkgrey !important;
+			}
+			span{
+				padding: 5px;
+				line-height: 19px;
+			}
+			button{
+				margin-left: 2px;
+			}
+			a {
+				color: black;
+			}
+			img{
+				padding: 3px;
+				float: left;
+				padding-right: 25px;
+			}
+		</style>
+	</head>
+	
+	<body>
+		<span style="color: white;"> Contact Card</span>
+		<div class="grouped">
+			<br>
+			<ul>		
+				<img src="profile.png" style="height: 150px; width: 150px;top: 20px; position: relative;">
+				<span style="color: white;top: 20px;position: relative;"><br>Hello! <br> I'm Jasiah, a data scientist & developer. <br> 
+				This is a side project i've been working on.<br>To begin: Press start and open an app.</span> <br> 
+				<p></p>
+				<span style="color: white;"><br> You can also find me here: </span> <br>
+				<a href="https://twitter.com/jasiahgeizer" target="_blank">		<li class="items">Twitter</li><a>
+				<a href="https://github.com/JasiahGeizer" target="_blank">		<li class="items">Github</li><a>
+				<a href="https://www.kaggle.com/jasiah" target="_blank">		<li class="items">Kaggle</li><a>
+				<a href="http://www.linkedin.com/in/jasiah" target="_blank">	<li class="items">Linkedin</li><a>
+				<a href="https://ello.co/jasiah" target="_blank">				<li class="items">Design Portfolio</li><a>
+				<a href="https://www.imdb.com/name/nm6004339/" target="_blank">	<li class="items">IMDB</li><a>
+				<a href="https://medium.com/@Jasiah" target="_blank">			<li class="items">Medium</li><a>
+				<a href="https://dribbble.com/Jasiah" target="_blank">			<li class="items">Dribbble</li><a>
+				<a href="https://vimeo.com/jasiah" target="_blank">				<li class="items">Vimeo</li><a>
+			</ul>
+		</div>
+	</body>
+</html>

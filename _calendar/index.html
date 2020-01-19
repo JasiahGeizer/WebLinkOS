@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<!--
+	To Do:
+		- Get start day of each month
+			- Move 1st to that day
+			- get maths for every year calculation
+		- Get fix for feb days of week leap year
+		- Click on "[Month] [Year]" to get months view
+			- Click again, on "[year]" to view years
+				- Click again "[year] - [year]" to view decades
+		- Once finished move to main page, (without using iframe?)
+-->
+<html>
+	<head>
+		<style type="text/css">
+			*{
+				font-family: monospace;
+
+			}
+			body{
+				background-color: lightblue;
+			}
+			#a1{
+				user-select: none;  
+				position: absolute;
+				background-color: white;
+				height: 250px;
+				width: 300px;
+				bottom: 200px;
+				left: 50%;
+				box-shadow: 0px 1px 5px grey;
+			}
+			#a2{
+				position: absolute;
+				background-color: white;
+				height: 181px;
+				width: 218px;
+				left: 42px;
+			}
+			#a3{
+				width: 100%;
+				height: 50px;
+				background-color: white;
+				text-align: center;
+				line-height: 50px;
+				border-bottom: 1px solid lightgrey;
+			}
+			span:hover{
+				background-color: grey;
+				color: white;
+				box-shadow: 0px 1px 2px lightgrey;
+				padding: 5px;
+			}
+			span:active{
+				background-color: black;
+			}
+			.smalls{
+				position: relative;
+				height: 25px;
+				width: 25px;
+				/*box-shadow: 0px 1px 2px lightgrey;*/
+				background-color: white;
+				text-align: center;
+				line-height: 25px;
+				display: inline-block;
+				margin-top:5px; 
+			}
+			.smalls:hover{
+				background-color: grey;
+				color: white;
+				box-shadow: 0px 1px 2px grey;
+			}
+			.smalls:active{
+				background-color: black;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="a1">
+			<div id="a2">
+				<div class="smalls" id="0" onclick="monthChange(1)" style="position: absolute;top:7px;"><</div>
+				<div id="a3"><span>January 2020</span></div>
+				<div class="smalls" id="0" onclick="monthChange(2)" style="position: absolute;top:7px;left: 193px;">></div>
+
+				<div class="smalls" onclick="nextCheck(this)" id="0">Mo</div>
+				<div class="smalls" onclick="nextCheck(this)" id="0">Tu</div>
+				<div class="smalls" onclick="nextCheck(this)" id="0">We</div>
+				<div class="smalls" onclick="nextCheck(this)" id="0">Th</div>
+				<div class="smalls" onclick="nextCheck(this)" id="0">Fr</div>
+				<div class="smalls" onclick="nextCheck(this)" id="0">Sa</div>
+				<div class="smalls" onclick="nextCheck(this)" id="0">Su</div>
+
+				<div class="smalls" onclick="nextCheck(this)" id="1">1</div>
+				<div class="smalls" onclick="nextCheck(this)" id="2">2</div>
+				<div class="smalls" onclick="nextCheck(this)" id="3">3</div>
+				<div class="smalls" onclick="nextCheck(this)" id="4">4</div>
+				<div class="smalls" onclick="nextCheck(this)" id="5">5</div>
+				<div class="smalls" onclick="nextCheck(this)" id="6">6</div>
+				<div class="smalls" onclick="nextCheck(this)" id="7">7</div>
+				<div class="smalls" onclick="nextCheck(this)" id="8">8</div>
+				<div class="smalls" onclick="nextCheck(this)" id="9">9</div>
+				<div class="smalls" onclick="nextCheck(this)" id="10">10</div>
+
+				<div class="smalls" onclick="nextCheck(this)" id="11">11</div>
+				<div class="smalls" onclick="nextCheck(this)" id="12">12</div>
+				<div class="smalls" onclick="nextCheck(this)" id="13">13</div>
+				<div class="smalls" onclick="nextCheck(this)" id="14">14</div>
+				<div class="smalls" onclick="nextCheck(this)" id="15">15</div>
+				<div class="smalls" onclick="nextCheck(this)" id="16">16</div>
+				<div class="smalls" onclick="nextCheck(this)" id="17">17</div>
+				<div class="smalls" onclick="nextCheck(this)" id="18">18</div>
+				<div class="smalls" onclick="nextCheck(this)" id="19">19</div>
+				<div class="smalls" onclick="nextCheck(this)" id="20">20</div>
+
+				<div class="smalls" onclick="nextCheck(this)" id="21">21</div>
+				<div class="smalls" onclick="nextCheck(this)" id="22">22</div>
+				<div class="smalls" onclick="nextCheck(this)" id="23">23</div>
+				<div class="smalls" onclick="nextCheck(this)" id="24">24</div>
+				<div class="smalls" onclick="nextCheck(this)" id="25">25</div>
+				<div class="smalls" onclick="nextCheck(this)" id="26">26</div>
+				<div class="smalls" onclick="nextCheck(this)" id="27">27</div>
+				<div class="smalls" onclick="nextCheck(this)" id="28">28</div>
+				<div class="smalls" onclick="nextCheck(this)" id="29">29</div>
+				<div class="smalls" onclick="nextCheck(this)" id="30">30</div>
+
+				<div class="smalls" onclick="nextCheck(this)" id="31">31</div>
+				<div class="smalls" onclick="nextCheck(this)" id="32">32</div>
+				<div class="smalls" onclick="nextCheck(this)" id="33">33</div>
+				<div class="smalls" onclick="nextCheck(this)" id="34">34</div>
+				<div class="smalls" onclick="nextCheck(this)" id="35">35</div>
+			</div>
+		</div>
+		
+	</body>
+	<script type="text/javascript">
+		var jan=31;
+		var feb=29;
+		var mar=31;
+		var apr=30;
+		var may=31;
+		var jun=30;
+		var jul=31;
+		var aug=31;
+		var sep=30;
+		var oct=31;
+		var nov=30;
+		var dec=31;
+
+		var year=2020;
+		var months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+		var monthsDays = [31,29,31,30,31,30,31,31,30,31,30,31];
+		var counter=0;
+		function monthChange(LorR) {
+			if (LorR==1) {
+				if (counter!==0) {
+					counter=counter-1;
+				}else{counter=11;year=year-1;}
+				document.getElementById("a3").innerHTML=months[counter]+" "+year;
+				fixDays();
+			}else{
+				if (counter!==11) {
+					counter=counter+1;
+				}else{counter=0;year=year+1;}
+				document.getElementById("a3").innerHTML=months[counter]+" "+year;
+				fixDays();
+			}
+		}
+		function fixDays(){
+			var i1;
+			for (i = monthsDays[counter]+1; i < 36; i++) {
+			  	document.getElementById(i).style.color="lightgrey";
+			  	document.getElementById(i).innerHTML=i-monthsDays[counter];
+			}
+			var i2;
+			for (i = 1; i < monthsDays[counter]+1; i++) {
+				document.getElementById(i).innerHTML=i;
+			  	document.getElementById(i).style.color="black";
+			}
+		}
+		function nextCheck(that){ //go to next if it's apart of next
+			if (that.id>monthsDays[counter]-1) {
+				monthChange(2);
+			}
+		}
+
+		//styling "current" month 
+		monthChange(1);
+		monthChange(2);
+	</script>
+</html>
