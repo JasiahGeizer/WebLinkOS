@@ -277,18 +277,13 @@
 		var back2FwrdCompare=1;
 		var backChk2;
 			if (LorR==1) {
-				if (counter!==0) { //press backward arrow
+				if (counter!==0) { //press backward arrow!!!
 					counter=counter-1;
 				}else{counter=11;year=year-1;}
 				document.getElementById("a3").innerHTML=months[counter]+" "+year;
 				console.log("need to reverse engineer to get back button working");
+ 
 
-							/*	for (i0 = realDay; i0 > 0; i0--) {
-									console.log(dayNum+" | "+i0);
-
-								  	dayNum=dayNum-1;
-								  	if (dayNum==0) {dayNum=7;}
-								}	*/ 
 								//if next number bigger, accept continue, else stop
 								//work back from biggest number stop, when 0 change to 7, stop at 1st. 			
 
@@ -304,13 +299,14 @@
 								if (backChk2==0) {backChk2=7;}
 							}
 
-					console.log(backChk2+" |cancer");
+					console.log(backChk2-1+" |cancer");
 
-				beforeCounter=(monthsDays[currentMonth-1])-(dayEnd-dayNum);
+				
 				currentMonth=parseInt(currentMonth)-1; //go back to dec when 0
 				if (currentMonth==0) {currentMonth=12;}
-				
-				for (var i = 1; i <43; i++) {
+				beforeCounter=(monthsDays[currentMonth-1])-backChk2;
+
+				for (var i = 1; i <43; i++) { //this is what needs fixing! //both arrows stop working after a few goes
 					if (i<backChk2) {
 						document.getElementById(i).style.color="lightgrey";
 						document.getElementById(i).innerHTML=beforeCounter;
@@ -329,7 +325,7 @@
 				}
 				//day end = before coutner for back
 
-			}else{ //press forward arrow
+			}else{ //press forward arrow!!
 				if (counter!==11) { //if not end of year
 					counter=counter+1;
 				}else{counter=0;year=year+1;}
@@ -362,7 +358,7 @@
 					}if(aa==8){aa=1}
 
 				}
-				dayEnd=(aa-1);//day end = before coutner for back
+				dayEnd=(aa);//day end = before coutner for back
 			}
 		}
 		/*function fixDays(){
