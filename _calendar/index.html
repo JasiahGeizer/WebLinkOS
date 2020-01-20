@@ -10,6 +10,13 @@
 				- Click again "[year] - [year]" to view decades
 		- Once finished move to main page, (without using iframe?)
 -->
+<!--
+	- Get date of now
+		- set month to now
+		- set day to highlight
+		- work back to get start of the month
+			- use that to work out all future days in comparison. 
+-->
 <html>
 	<head>
 		<style type="text/css">
@@ -24,7 +31,7 @@
 				user-select: none;  
 				position: absolute;
 				background-color: white;
-				height: 250px;
+				height: 270px;
 				width: 300px;
 				bottom: 200px;
 				left: 50%;
@@ -128,63 +135,254 @@
 				<div class="smalls" onclick="nextCheck(this)" id="33">33</div>
 				<div class="smalls" onclick="nextCheck(this)" id="34">34</div>
 				<div class="smalls" onclick="nextCheck(this)" id="35">35</div>
+
+				<div class="smalls" onclick="nextCheck(this)" id="36">36</div>
+				<div class="smalls" onclick="nextCheck(this)" id="37">37</div>
+				<div class="smalls" onclick="nextCheck(this)" id="38">38</div>
+				<div class="smalls" onclick="nextCheck(this)" id="39">39</div>
+				<div class="smalls" onclick="nextCheck(this)" id="40">40</div>
+				<div class="smalls" onclick="nextCheck(this)" id="41">41</div>
+				<div class="smalls" onclick="nextCheck(this)" id="42">42</div>
 			</div>
 		</div>
 		
 	</body>
 	<script type="text/javascript">
-		var jan=31;
-		var feb=29;
-		var mar=31;
-		var apr=30;
-		var may=31;
-		var jun=30;
-		var jul=31;
-		var aug=31;
-		var sep=30;
-		var oct=31;
-		var nov=30;
-		var dec=31;
-
 		var year=2020;
 		var months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 		var monthsDays = [31,29,31,30,31,30,31,31,30,31,30,31];
 		var counter=0;
+		getDate();
+		var realWeekday;
+		var realDay;
+		var realMonth;
+		var realYear;
+		var dayNum;
+
+		var i0;
+		var goBackDay;  //delete/unused?
+		var i1;
+		var iv;
+		var ivCount=1;
+		var prevMonthCount;
+		var prevCounter;
+		var dayEnd;
+		function getDate(){
+			now = new Date();
+			realWeekday = new Intl.DateTimeFormat('default',
+			        {
+			            weekday: 'short'
+			        }).format(now);
+			console.log(realWeekday);
+			realDay = new Intl.DateTimeFormat('default',
+			        {
+			            day: 'numeric',
+			        }).format(now);
+			console.log(realDay);
+			realMonth = new Intl.DateTimeFormat('default',
+			        {
+			            month: 'numeric',
+			        }).format(now);
+			console.log(realMonth);
+			realYear = new Intl.DateTimeFormat('default',
+			        {
+			        	year: 'numeric',
+			        }).format(now);
+			console.log(realYear);
+		}
+		function initalizeDate(){
+			year = parseInt(realYear);
+			document.getElementById("a3").innerHTML=months[parseInt(realMonth)-1]+" "+year;
+			counter=parseInt(realMonth)-1;
+
+			//document.getElementById(realDay).style.backgroundColor="lightgrey";
+			switch(realWeekday) {
+			  case "Mon":
+			    dayNum=1;
+			    break;
+			  case "Tue":
+			    dayNum=2;	
+			    break;
+			  case "Wed":
+			    dayNum=3;	
+			    break;
+			  case "Thu":
+			    dayNum=4;	
+			    break;
+			  case "Fri":
+			    dayNum=5;	
+			    break;
+			  case "Sat":
+			    dayNum=6;	
+			    break;
+			  case "Sun":
+			    dayNum=7;	
+			    break;  
+			}
+			
+			for (i0 = realDay; i0 > 0; i0--) {
+				console.log(dayNum+" | "+i0);
+
+			  	dayNum=dayNum-1;
+			  	if (dayNum==0) {dayNum=7;}
+			}
+			//for 1 to 40 if above daynum, set black, otherwise grey
+
+			
+			if (counter==1) {prevCounter=12;}else{prevCounter=counter;}
+			prevMonthCount=monthsDays[prevCounter];
+
+			for (iv = 1; iv <43; iv++) {
+			  	if (iv < parseInt(dayNum)+1) {
+			  		console.log(iv+" ");
+			  		document.getElementById(iv).style.color="#eaeaea";
+			  		document.getElementById(iv).innerHTML=(monthsDays[prevCounter])-((parseInt(dayNum))-iv);
+
+			  	}else{
+			  		//dayNum+1 = new var 1; new var++
+			  		document.getElementById(iv).innerHTML=ivCount;
+			  		document.getElementById(iv).style.color="black";
+			  		ivCount=ivCount+1;
+			  	}
+			}
+			for (i1 = monthsDays[counter]+parseInt(dayNum)+1; i1 < 43; i1++) {
+			  	document.getElementById(i1).style.color="lightgrey";
+			  	document.getElementById(i1).innerHTML=i1-monthsDays[counter]-parseInt(dayNum);
+			}
+			console.log(parseInt(realDay)+parseInt(dayNum));
+			document.getElementById(parseInt(realDay)+2).style.backgroundColor="lightgrey";
+			console.log("______________");
+			console.log(i1 + "|" + iv); //total days
+			console.log(realDay); //day w/out diff.
+			console.log(dayNum); //difference
+			console.log(ivCount); //end 
+			console.log(dayNum); //start day
+
+			dayEnd=dayNum;
+			for (var i = dayNum; i < ivCount; i++) {
+				dayEnd=dayEnd+1;
+				if (dayEnd==8) {dayEnd=1;}
+				console.log(dayEnd); //day of the week (6=saturday)
+			}
+		}
+
+		
+		var currentMonth=realMonth;
 		function monthChange(LorR) {
+
+		var beforeCounter=1;
+		var dayCounter=1;
+		var afterCounter=1;
+		var backChkCompare=1;
+		var back2FwrdCompare=1;
+		var backChk2;
 			if (LorR==1) {
-				if (counter!==0) {
+				if (counter!==0) { //press backward arrow
 					counter=counter-1;
 				}else{counter=11;year=year-1;}
 				document.getElementById("a3").innerHTML=months[counter]+" "+year;
-				fixDays();
-			}else{
-				if (counter!==11) {
+				console.log("need to reverse engineer to get back button working");
+
+							/*	for (i0 = realDay; i0 > 0; i0--) {
+									console.log(dayNum+" | "+i0);
+
+								  	dayNum=dayNum-1;
+								  	if (dayNum==0) {dayNum=7;}
+								}	*/ 
+								//if next number bigger, accept continue, else stop
+								//work back from biggest number stop, when 0 change to 7, stop at 1st. 			
+
+							for (var backChk = 1; backChk < 43; backChk++) {
+								if (parseInt(document.getElementById(backChk).innerHTML)>backChkCompare) {
+									backChkCompare=document.getElementById(backChk).innerHTML;
+								}else{console.log(backChk);break;}
+							}console.log(backChk-1);
+
+							backChk2=backChk-1;
+							for (var back2Fwrd = 1; back2Fwrd < 31; back2Fwrd++) {
+								backChk2=backChk2-1;
+								if (backChk2==0) {backChk2=7;}
+							}
+
+					console.log(backChk2+" |cancer");
+
+				beforeCounter=(monthsDays[currentMonth-1])-(dayEnd-dayNum);
+				currentMonth=parseInt(currentMonth)-1; //go back to dec when 0
+				if (currentMonth==0) {currentMonth=12;}
+				
+				for (var i = 1; i <43; i++) {
+					if (i<backChk2) {
+						document.getElementById(i).style.color="lightgrey";
+						document.getElementById(i).innerHTML=beforeCounter;
+						beforeCounter=beforeCounter+1;
+					}
+					else if (i-backChk2+1 > monthsDays[currentMonth-1]) {
+						document.getElementById(i).style.color="lightgrey";
+						document.getElementById(i).innerHTML=afterCounter;
+						afterCounter=afterCounter+1;
+					}
+					else {
+						document.getElementById(i).style.color="black";
+						document.getElementById(i).innerHTML=dayCounter;
+						dayCounter=dayCounter+1;
+					}
+				}
+				//day end = before coutner for back
+
+			}else{ //press forward arrow
+				if (counter!==11) { //if not end of year
 					counter=counter+1;
 				}else{counter=0;year=year+1;}
 				document.getElementById("a3").innerHTML=months[counter]+" "+year;
-				fixDays();
+				var aa=1;
+				var ab=1;
+				beforeCounter=(monthsDays[currentMonth-1])-(dayEnd-dayNum);
+				currentMonth=parseInt(currentMonth)+1;
+					console.log(months[currentMonth-1]);
+					console.log(monthsDays[currentMonth-1]);
+				for (var i = 1; i <43; i++) {
+					console.log(dayEnd+" |asdf");
+					if (i<dayEnd) {
+						document.getElementById(i).style.color="lightgrey";
+						document.getElementById(i).innerHTML=beforeCounter;
+						beforeCounter=beforeCounter+1;
+						aa=aa+1;
+					}
+					else if (i-dayEnd+1 > monthsDays[currentMonth-1]) {
+						document.getElementById(i).style.color="lightgrey";
+						document.getElementById(i).innerHTML=afterCounter;
+						afterCounter=afterCounter+1;
+						
+					}
+					else {
+						document.getElementById(i).style.color="black";
+						document.getElementById(i).innerHTML=dayCounter;
+						dayCounter=dayCounter+1;
+						aa=aa+1;
+					}if(aa==8){aa=1}
+
+				}
+				dayEnd=(aa-1);//day end = before coutner for back
 			}
 		}
-		function fixDays(){
+		/*function fixDays(){
 			var i1;
-			for (i = monthsDays[counter]+1; i < 36; i++) {
+			for (i = monthsDays[counter]+1; i <43; i++) {
 			  	document.getElementById(i).style.color="lightgrey";
 			  	document.getElementById(i).innerHTML=i-monthsDays[counter];
 			}
 			var i2;
 			for (i = 1; i < monthsDays[counter]+1; i++) {
-				document.getElementById(i).innerHTML=i;
+				//document.getElementById(i).innerHTML=i;
 			  	document.getElementById(i).style.color="black";
 			}
-		}
+		}*/
 		function nextCheck(that){ //go to next if it's apart of next
 			if (that.id>monthsDays[counter]-1) {
 				monthChange(2);
 			}
 		}
 
-		//styling "current" month 
-		monthChange(1);
-		monthChange(2);
+		initalizeDate();//need to set rand and combine 
 	</script>
 </html>
