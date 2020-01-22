@@ -1,22 +1,13 @@
 <!DOCTYPE html>
 <!--
 	To Do:
-		- Get start day of each month
-			- Move 1st to that day
-			- get maths for every year calculation
 		- Get fix for feb days of week leap year
 		- Click on "[Month] [Year]" to get months view
 			- Click again, on "[year]" to view years
 				- Click again "[year] - [year]" to view decades
-		- Once finished move to main page, (without using iframe?)
+		- Once finished move to main page
 -->
-<!--
-	- Get date of now
-		- set month to now
-		- set day to highlight
-		- work back to get start of the month
-			- use that to work out all future days in comparison. 
--->
+
 <html>
 	<head>
 		<style type="text/css">
@@ -52,15 +43,7 @@
 				line-height: 50px;
 				border-bottom: 1px solid lightgrey;
 			}
-			span:hover{
-				background-color: grey;
-				color: white;
-				box-shadow: 0px 1px 2px lightgrey;
-				padding: 5px;
-			}
-			span:active{
-				background-color: black;
-			}
+			
 			.smalls{
 				position: relative;
 				height: 25px;
@@ -173,29 +156,24 @@
 			        {
 			            weekday: 'short'
 			        }).format(now);
-			console.log(realWeekday);
 			realDay = new Intl.DateTimeFormat('default',
 			        {
 			            day: 'numeric',
 			        }).format(now);
-			console.log(realDay);
 			realMonth = new Intl.DateTimeFormat('default',
 			        {
 			            month: 'numeric',
 			        }).format(now);
-			console.log(realMonth);
 			realYear = new Intl.DateTimeFormat('default',
 			        {
 			        	year: 'numeric',
 			        }).format(now);
-			console.log(realYear);
 		}
 		function initalizeDate(){
 			year = parseInt(realYear);
 			document.getElementById("a3").innerHTML=months[parseInt(realMonth)-1]+" "+year;
 			counter=parseInt(realMonth)-1;
 
-			//document.getElementById(realDay).style.backgroundColor="lightgrey";
 			switch(realWeekday) {
 			  case "Mon":
 			    dayNum=1;
@@ -221,20 +199,16 @@
 			}
 			
 			for (i0 = realDay; i0 > 0; i0--) {
-				console.log(dayNum+" | "+i0);
-
 			  	dayNum=dayNum-1;
 			  	if (dayNum==0) {dayNum=7;}
 			}
 			//for 1 to 40 if above daynum, set black, otherwise grey
-
 			
 			if (counter==1) {prevCounter=12;}else{prevCounter=counter;}
 			prevMonthCount=monthsDays[prevCounter];
 
 			for (iv = 1; iv <43; iv++) {
 			  	if (iv < parseInt(dayNum)+1) {
-			  		console.log(iv+" ");
 			  		document.getElementById(iv).style.color="#eaeaea";
 			  		document.getElementById(iv).innerHTML=(monthsDays[prevCounter])-((parseInt(dayNum))-iv);
 
@@ -249,24 +223,15 @@
 			  	document.getElementById(i1).style.color="lightgrey";
 			  	document.getElementById(i1).innerHTML=i1-monthsDays[counter]-parseInt(dayNum);
 			}
-			console.log(parseInt(realDay)+parseInt(dayNum));
 			document.getElementById(parseInt(realDay)+2).style.backgroundColor="lightgrey";
-			console.log("______________");
-			console.log(i1 + "|" + iv); //total days
-			console.log(realDay); //day w/out diff.
-			console.log(dayNum); //difference
-			console.log(ivCount); //end 
-			console.log(dayNum); //start day
 
 			dayEnd=dayNum;
 			for (var i = dayNum; i < ivCount; i++) {
 				dayEnd=dayEnd+1;
-				if (dayEnd==8) {dayEnd=1;}
-				console.log(dayEnd); //day of the week (6=saturday)
+				if (dayEnd==8) {dayEnd=1;}//day of the week 
 			}
 		}
 
-		
 		var currentMonth=realMonth;
 		function monthChange(LorR) {
 
@@ -275,72 +240,70 @@
 		var afterCounter=1;
 		var backChkCompare=1;
 		var back2FwrdCompare=1;
-		var backChk2;
+		var backChk=1;
+		var aa=1;
+		
 			if (LorR==1) {
-				if (counter!==0) { //press backward arrow!!!
+				if (counter!==0) { //press backward arrow
 					counter=counter-1;
 				}else{counter=11;year=year-1;}
 				document.getElementById("a3").innerHTML=months[counter]+" "+year;
-				console.log("need to reverse engineer to get back button working");
- 
-
-								//if next number bigger, accept continue, else stop
-								//work back from biggest number stop, when 0 change to 7, stop at 1st. 			
+ 				
+ 				currentMonth=parseInt(currentMonth)-1; //go back to dec when 0
+				if (currentMonth==0) {currentMonth=12;}
+				var currentMonth2 = currentMonth-1;
+				if (currentMonth2==0) {currentMonth2=12;}	
 
 							for (var backChk = 1; backChk < 43; backChk++) {
 								if (parseInt(document.getElementById(backChk).innerHTML)>backChkCompare) {
 									backChkCompare=document.getElementById(backChk).innerHTML;
-								}else{console.log(backChk);break;}
-							}console.log(backChk-1);
-
-							backChk2=backChk-1;
-							for (var back2Fwrd = 1; back2Fwrd < 31; back2Fwrd++) {
-								backChk2=backChk2-1;
-								if (backChk2==0) {backChk2=7;}
+								}else{break;}
 							}
-
-					console.log(backChk2-1+" |cancer");
-
+							backChk2=backChk;
+							for (var back2Fwrd = 1; back2Fwrd < monthsDays[currentMonth-1]; back2Fwrd++) {
+								backChk2=backChk2-1;
+								if (backChk2==1) {backChk2=8;};
+							}
 				
-				currentMonth=parseInt(currentMonth)-1; //go back to dec when 0
-				if (currentMonth==0) {currentMonth=12;}
-				beforeCounter=(monthsDays[currentMonth-1])-backChk2;
-
-				for (var i = 1; i <43; i++) { //this is what needs fixing! //both arrows stop working after a few goes
-					if (i<backChk2) {
-						document.getElementById(i).style.color="lightgrey";
+				beforeCounter=(monthsDays[currentMonth2-1])-backChk2+3; 
+				if (backChk2-1==1) {backChk2=9;} //if at 1, move to next week
+				for (var i = 1; i <43; i++) { //going from back to forwards = broken
+					if (i<backChk2-1) {
+						document.getElementById(i).style.color="lightgrey"; //lightgrey //before
 						document.getElementById(i).innerHTML=beforeCounter;
 						beforeCounter=beforeCounter+1;
+						aa=aa+1;
 					}
-					else if (i-backChk2+1 > monthsDays[currentMonth-1]) {
-						document.getElementById(i).style.color="lightgrey";
+					else if (i-backChk2+2 > monthsDays[currentMonth-1]) {
+						document.getElementById(i).style.color="lightgrey"; //light grey //after
 						document.getElementById(i).innerHTML=afterCounter;
 						afterCounter=afterCounter+1;
 					}
 					else {
-						document.getElementById(i).style.color="black";
+						document.getElementById(i).style.color="black"; //black //middle (real)
 						document.getElementById(i).innerHTML=dayCounter;
 						dayCounter=dayCounter+1;
-					}
-				}
+						aa=aa+1;
+					}if(aa==8){aa=1};
+					
+				}dayEnd=aa;
 				//day end = before coutner for back
 
-			}else{ //press forward arrow!!
+			}else{ //press forward arrow
 				if (counter!==11) { //if not end of year
 					counter=counter+1;
 				}else{counter=0;year=year+1;}
 				document.getElementById("a3").innerHTML=months[counter]+" "+year;
-				var aa=1;
-				var ab=1;
-				beforeCounter=(monthsDays[currentMonth-1])-(dayEnd-dayNum);
+				aa=1;
+				beforeCounter=(monthsDays[currentMonth-1])-(dayEnd-3);
 				currentMonth=parseInt(currentMonth)+1;
-					console.log(months[currentMonth-1]);
-					console.log(monthsDays[currentMonth-1]);
+				if (currentMonth==13) {currentMonth=1;}
+
+					if (dayEnd==1) {dayEnd=8;beforeCounter=beforeCounter-8;}
 				for (var i = 1; i <43; i++) {
-					console.log(dayEnd+" |asdf");
 					if (i<dayEnd) {
 						document.getElementById(i).style.color="lightgrey";
-						document.getElementById(i).innerHTML=beforeCounter;
+						document.getElementById(i).innerHTML=beforeCounter-1;
 						beforeCounter=beforeCounter+1;
 						aa=aa+1;
 					}
@@ -358,27 +321,16 @@
 					}if(aa==8){aa=1}
 
 				}
-				dayEnd=(aa);//day end = before coutner for back
+				dayEnd=aa;//day end = before coutner for back
 			}
 		}
-		/*function fixDays(){
-			var i1;
-			for (i = monthsDays[counter]+1; i <43; i++) {
-			  	document.getElementById(i).style.color="lightgrey";
-			  	document.getElementById(i).innerHTML=i-monthsDays[counter];
-			}
-			var i2;
-			for (i = 1; i < monthsDays[counter]+1; i++) {
-				//document.getElementById(i).innerHTML=i;
-			  	document.getElementById(i).style.color="black";
-			}
-		}*/
+
 		function nextCheck(that){ //go to next if it's apart of next
 			if (that.id>monthsDays[counter]-1) {
 				monthChange(2);
 			}
 		}
 
-		initalizeDate();//need to set rand and combine 
+		initalizeDate();
 	</script>
 </html>
