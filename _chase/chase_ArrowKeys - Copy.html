@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<!--
+	To Do:
+		- Change colision values to a single variable (or block height/length/position)
+		- move block when touching
+-->
+<html>
+	<head>
+		<script type="text/javascript">
+			var moverLeft;
+			var moverRight;
+			var moverUp;
+			var moverDown;
+
+			var fired1=false;
+			var fired2=false;
+			var fired3=false;
+			var fired4=false;
+
+            function leftArrowPressed() {
+            	if (fired1==false) {
+            		moverLeft = setInterval(moverL, 1);
+            		fired1=true;
+            	}
+            	
+            }
+
+            function rightArrowPressed() {
+            	if (fired2==false) {
+            		moverRight = setInterval(moverR, 1);
+            		fired2=true;
+            	}
+            }
+
+            function upArrowPressed() {
+            	if (fired3==false) {
+            		moverUp = setInterval(moverU, 1);
+            		fired3=true;
+            	}
+            }
+
+            function downArrowPressed() {
+            	if (fired4==false) {
+            		moverDown = setInterval(moverD, 1);
+            		fired4=true;
+            	}
+            }
+
+            function moveSelection(evt) {
+                switch (evt.keyCode) {
+                    case 37:
+                    leftArrowPressed();
+                    break;
+                    case 39:
+                    rightArrowPressed();
+                    break;
+                    case 38:
+                    upArrowPressed();
+                    break;
+                    case 40:
+                    downArrowPressed();
+                    break;
+                    }
+                };
+
+            function moveSelection2(evt) {
+                switch (evt.keyCode) {
+                    case 37:
+                    clearInterval(moverLeft);
+                    fired1=false;
+
+                    document.getElementById("block1").style.backgroundColor="grey";
+
+                    break;
+                    case 39:
+                    clearInterval(moverRight);
+                    fired2=false;
+
+                    document.getElementById("block1").style.backgroundColor="grey";
+
+                    break;
+                    case 38:
+                    clearInterval(moverUp);
+                    fired3=false;
+
+                    document.getElementById("block1").style.backgroundColor="grey";
+
+                    break;
+                    case 40:
+                    clearInterval(moverDown);
+                    fired4=false;
+
+                    document.getElementById("block1").style.backgroundColor="grey";
+
+                    break;
+                    }
+                };
+
+        function docReady()
+        {
+          window.addEventListener('keydown', moveSelection);
+          window.addEventListener('keyup', moveSelection2);
+
+        }
+        function moverL(){
+        	var element = document.getElementById("image1");
+        	if (parseInt(element.style.left)!==0) {
+        		element.style.left = parseInt(element.style.left) - 1 + 'px';
+        	}
+
+        	//collision detection block1
+			if (parseInt(element.style.left)==300) {
+        		if (parseInt(element.style.top)>115 && parseInt(element.style.top)<270) {
+        			element.style.left = parseInt(element.style.left) + 1 + 'px';
+        			document.getElementById("block1").style.backgroundColor="darkgrey";
+				}
+            	
+            }
+
+            //collision detection block2
+			if (parseInt(element.style.left)==parseInt(document.getElementById("block2").style.left)+parseInt(document.getElementById("block2").style.width)) {
+        		if (parseInt(element.style.top)-30
+        			>parseInt(document.getElementById("block2").style.top) 
+        			&& parseInt(element.style.top)
+        				<parseInt(document.getElementById("block2").style.top)
+        				+parseInt(document.getElementById("block2").style.height)+70) 
+			        		{
+			        			element.style.left = parseInt(element.style.left) + 1 + 'px';
+			        			document.getElementById("block2").style.backgroundColor="darkgrey";
+							}
+			            	
+            }
+        }
+        function moverR(){
+        	var element = document.getElementById("image1");
+        	element.style.left = parseInt(element.style.left) + 1 + 'px';
+
+        	//collsion detection block1 
+        	if (parseInt(element.style.left)==97) {
+        		if (parseInt(element.style.top)>115 && parseInt(element.style.top)<270) {
+        			element.style.left = parseInt(element.style.left) - 1 + 'px';
+        			document.getElementById("block1").style.backgroundColor="darkgrey";
+
+        			/*if (document.getElementById("block1").style.width!=="200px") {
+        				document.getElementById("block1").style.width=parseInt(document.getElementById("block1").style.width)+1+"px";
+        			}else{document.getElementById("block1").style.width="10px"}*/
+				}
+            }
+            //collsion detection block2
+            if ((parseInt(element.style.left)+parseInt(element.offsetWidth))-20==parseInt(document.getElementById("block2").style.left)) {
+        		if (parseInt(element.style.top)-30
+        			>parseInt(document.getElementById("block2").style.top) 
+        			&& parseInt(element.style.top)
+        				<parseInt(document.getElementById("block2").style.top)
+        				+parseInt(document.getElementById("block2").style.height)+70) 
+			        		{
+			        			element.style.left = parseInt(element.style.left) - 1 + 'px';
+			        			document.getElementById("block2").style.backgroundColor="darkgrey";
+
+							}
+            	
+            }
+        }
+        function moverU(){
+        	var element = document.getElementById("image1");
+        	if (parseInt(element.style.top)!==0) {
+            	element.style.top = parseInt(element.style.top) - 1 + 'px';
+            }
+
+            //collsion detection block1
+            if (parseInt(element.style.left)>115) {
+        		if (parseInt(element.style.top)==300 && parseInt(element.style.left)<270) {
+        			element.style.top = parseInt(element.style.top) + 1 + 'px';
+        			document.getElementById("block1").style.backgroundColor="darkgrey";
+        		}
+        	}
+
+        	//collision detection block2
+			if (parseInt(element.style.top)-parseInt(element.offsetHeight)+20==parseInt(document.getElementById("block2").style.top)+parseInt(document.getElementById("block2").style.height)) {
+        		if (parseInt(element.style.left)+70
+        			>parseInt(document.getElementById("block2").style.left)
+        			&& parseInt(element.style.left)
+        				<parseInt(document.getElementById("block2").style.left)
+        				+parseInt(document.getElementById("block2").style.width)-30) 
+			        		{
+			        			element.style.top = parseInt(element.style.top) + 1 + 'px';
+			        			document.getElementById("block2").style.backgroundColor="darkgrey";
+							}
+			            	
+            }
+
+        }
+        
+        function moverD(){
+        	var element = document.getElementById("image1");
+        	element.style.top = parseInt(element.style.top) + 1 + 'px';
+
+        	//collsion detection block1 
+        	if (parseInt(element.style.left)>115) {
+        		if (parseInt(element.style.top)==100 && parseInt(element.style.left)<270) {
+            		element.style.top = parseInt(element.style.top) - 1 + 'px';
+
+            		document.getElementById("block1").style.backgroundColor="darkgrey";
+
+            		/*if (document.getElementById("block1").style.height!=="200px") {
+            			document.getElementById("block1").style.height=parseInt(document.getElementById("block1").style.height)+1+"px";
+            		}else{document.getElementById("block1").style.backgroundColor="grey"}*/
+            		
+            	}
+            }
+            //collision detection block2
+			if (parseInt(element.style.top)==parseInt(document.getElementById("block2").style.top)) {
+        		if (parseInt(element.style.left)+70
+        			>parseInt(document.getElementById("block2").style.left)
+        			&& parseInt(element.style.left)
+        				<parseInt(document.getElementById("block2").style.left)
+        				+parseInt(document.getElementById("block2").style.width)-30) 
+			        		{
+			        			element.style.top = parseInt(element.style.top) - 1 + 'px';
+			        			document.getElementById("block2").style.backgroundColor="darkgrey";
+							}
+			            	
+            }
+        }
+        function checkr(){ //for problem solving don't need anymore
+        	var element = document.getElementById("image1");
+        	console.log(
+	        		"top: "
+	        		+document.getElementById("image1").style.top
+	        		+"\n"
+	        		+"left: "
+	        		+document.getElementById("image1").style.left
+
+        		);
+
+        }
+  </script>
+
+</head>
+
+<body onload="docReady()" onkeydown="" onkeyup="">
+
+	<style>
+		body{
+			background-color: lightblue;
+		}
+		img {
+			/*transition-duration: 2000ms;
+			transition-timing-function: ease-out;
+			transform: translate(-50%, -50%);*/
+		}
+		.interacter {
+			/*transition-duration: 2000ms;
+			transition-timing-function: ease-out;
+			transform: translate(-50%, -50%);*/
+			background-color: lightblue ;
+			border-radius: 100px;
+			height:120px;
+			width:120px;
+			vertical-align:50% !important;
+			text-align: center;
+			opacity: 0.75;
+			line-height: 100px;
+		}
+		.insides{
+			position:relative;
+			background-color:brown; 
+			height:100px;width:100px; 
+			border-radius: 100px; 
+			left:10px;top:10px;
+			font-size: 35px;
+		}
+	</style>
+
+
+		<div class="interacter" id="image1" style="position:absolute;left:0; top:0;" height="150px" width="150px">
+			<div onclick="checkr()" class="insides">ʕ•ᴥ•ʔ</div>
+		</div>
+
+	<div id="block1" style="position: relative;height: 100px; width: 100px; top:200px; left:200px;background-color: grey;"></div>
+
+	<div id="block2" style="position: relative;height: 100px; width: 100px; top:400px; left:400px;background-color: grey;"></div>
+	
+	</body>
+</html>
+
+

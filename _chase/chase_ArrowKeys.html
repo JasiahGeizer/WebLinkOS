@@ -13,9 +13,11 @@
             }
 
             function rightArrowPressed() {
-            var element = document.getElementById("image1");
-            element.style.left = parseInt(element.style.left) + 100 + 'px';
-
+            	if (element.style.left<500) {
+            		var element = document.getElementById("image1");
+            		element.style.left = parseInt(element.style.left) + 100 + 'px';
+            		console.log(element.style.left);
+            	}
             }
 
             function upArrowPressed() {
