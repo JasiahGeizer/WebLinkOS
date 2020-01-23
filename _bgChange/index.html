@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<style type="text/css">
+			*{
+				font-family: monospace;
+			}
+			body{
+				background-size: cover;
+			}
+			#bg1{
+				user-select: none;  
+				position: absolute;
+				background-color: white;
+				height: 240px;
+				width: 290px;
+				bottom: 200px;
+				left: 50%;
+				box-shadow: 0px 1px 5px grey;
+			}
+			#bg2{
+				position: absolute;
+				background-color: white;
+				height: 181px;
+				width: 232px;
+				left: 30px;
+			}
+			#bg3{
+				width: 100%;
+				height: 45px;
+				background-color: white;
+				text-align: center;
+				line-height: 50px;
+				border-bottom: 1px solid lightgrey;
+			}
+			
+			.bgPickSmall{
+				position: relative;
+				height: 40px;
+				width: 40px;
+				background-color: lightgrey;
+				text-align: center;
+				line-height: 40px;
+				display: inline-block;
+				margin-top:5px; 
+			}
+			.bgPickSmall:hover{
+				color: white;
+				box-shadow: 2px 2px 2px lightgrey;
+			}
+			.bgPickSmall:active{
+				opacity: 0.8;
+				box-shadow: inset 0px 0px 0px grey;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="bg1">
+			<div id="bg2">
+				<div id="bg3"><span>Background Picker</span></div>
+
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#f44336">01</div>
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#e91e63">02</div>
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#9c27b0">03</div>
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#673ab7">04</div>
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#3f51b5">05</div>
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#2196f3">06</div>
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#03a9f4">07</div>
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#00bcd4">08</div>
+
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#009688">09</div>
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#4caf50">10</div>
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#8bc34a">11</div>
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#cddc39">12</div>
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#ffeb3b">13</div>
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#ffc107">14</div>
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#ff9800">15</div>
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#ff5722">16</div>
+				
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:url('bg1.jpg') no-repeat center center fixed">17</div>
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:url('bg2.jpg') no-repeat center center fixed">18</div>
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:url('bg3.jpg') no-repeat center center fixed">19</div>
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:url('bg4.jpg') no-repeat center center fixed">20</div>
+			</div>
+		</div>
+	<script type="text/javascript">
+		function bgChanger(that) {
+			 document.body.style.background = that.style.background;
+			 document.body.style.backgroundSize = "cover";
+		}
+	</script>
+
+	</body>
+	
+</html>

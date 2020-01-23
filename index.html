@@ -41,7 +41,7 @@
 			overflow: hidden;
 			position: absolute;
 			box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
-			z-index: 10;display: inline;	
+			z-index: 15;display: inline;	
 		}
 		#navBar{
 			background-color: #f1f1f1;
@@ -286,6 +286,52 @@
 			.smalls:active{
 				background-color: black;
 			}
+			/*Background Changer*/
+			#bg1{
+				user-select: none;  
+				position: absolute;
+				background-color: white;
+				height: 240px;
+				width: 290px;
+				bottom: 55px;
+				right: 100px;
+				display: none;
+				box-shadow: 0px 1px 5px grey;
+			}
+			#bg2{
+				position: absolute;
+				background-color: white;
+				height: 181px;
+				width: 232px;
+				left: 30px;
+			}
+			#bg3{
+				width: 100%;
+				height: 45px;
+				background-color: white;
+				text-align: center;
+				line-height: 50px;
+				border-bottom: 1px solid lightgrey;
+			}
+			
+			.bgPickSmall{
+				position: relative;
+				height: 40px;
+				width: 40px;
+				background-color: lightgrey;
+				text-align: center;
+				line-height: 40px;
+				display: inline-block;
+				margin-top:5px; 
+			}
+			.bgPickSmall:hover{
+				color: white;
+				box-shadow: 2px 2px 2px lightgrey;
+			}
+			.bgPickSmall:active{
+				opacity: 0.8;
+				box-shadow: inset 0px 0px 0px grey;
+			}
 	</style>
 </head>
 	<body onload="startTime()">
@@ -297,6 +343,7 @@
 				</li>
 				<li onclick="alertLocation()" oncontextmenu="alertLocation2()" id="txt"></li>
 				<li onclick="getLocation()" id="location">--°</li>
+				<li onclick="getColor()" id="location">^</li>
 				
 			</div>
 
@@ -361,6 +408,7 @@
 					<li class="lilow" >Calculator [WIP]</li>
 					<li class="lilow" onclick="run('https://www.jasiah.dev/apps/notes','notes')">Notes</li>
 					<li class="lilow" onclick="run('https://www.jasiah.dev/apps/painter','painter')">Painter</li>
+					<li class="lilow" onclick="run('https://www.jasiah.dev/apps/drummachine','drummachine')">Drum Machine</li>
 				</ul>
 				<ul>
 					<span style="line-height: 25px;">Others</span><p></p>
@@ -444,6 +492,41 @@
 				<div class="smalls" onclick="nextCheck(this)" id="42">42</div>
 			</div>
 		</div>
+
+		<div id="bg1">
+			<div id="bg2">
+				<div id="bg3"><span>Background Picker</span></div>
+
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#f44336">01</div>
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#e91e63">02</div>
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#9c27b0">03</div>
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#673ab7">04</div>
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#3f51b5">05</div>
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#2196f3">06</div>
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#03a9f4">07</div>
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#00bcd4">08</div>
+
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#009688">09</div>
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#4caf50">10</div>
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#8bc34a">11</div>
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#cddc39">12</div>
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#ffeb3b">13</div>
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#ffc107">14</div>
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#ff9800">15</div>
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#ff5722">16</div>
+				
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:url('bg1.jpg') no-repeat center center fixed">17</div>
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:url('bg2.jpg') no-repeat center center fixed">18</div>
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:url('bg3.jpg') no-repeat center center fixed">19</div>
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:url('bg4.jpg') no-repeat center center fixed">20</div>
+			</div>
+		</div>
+		<script type="text/javascript">
+		function bgChanger(that) {
+			 document.body.style.background = that.style.background;
+			 document.body.style.backgroundSize = "cover";
+		}
+	</script>
 		<script type="text/javascript">
 			var mode=0;
 			var nav;
@@ -453,6 +536,7 @@
 					nav.style.top = "20%";
 					nav.style.height = "80%";
 					mode=1;
+					
 				}else{
 					nav.style.top = "";
 					nav.style.bottom= "0px";
@@ -463,7 +547,7 @@
 			var count=0;
 			function run(program,name){
 				BigNav();
-				
+				count = count+"a";
 				var div = document.createElement("div");
 				div.id = "mydiv"+count;
 				div.className="mydiv";
@@ -513,7 +597,7 @@
 				liFrameApp.onclick=function(){minimizeIt(counting1);} 
 				document.getElementById('navBar').appendChild(liFrameApp);
 
-				count=count+1;
+				count=parseInt(count)+1;
 			}
 
 			//Close the tab
@@ -546,7 +630,8 @@
 					document.getElementById(dunno).remove();
 					counts.parentNode.remove();
 					//count=count-1;//dont need?
-				}}
+
+				}}//count=count+1;
 			}
 
 
@@ -554,7 +639,7 @@
 				//need to add function for when item is pinned and closed, to run app
 			function minimizeIt(counts){
 				if (counts=="empty") {
-					//console.log("empty " + document.getElementById(itemBTN).style.backgroundColor);
+					//console.log("empty " + document.getElementById(itemBTN+"a").style.backgroundColor);
 					
 						if (document.getElementById(itemBTN.substring(9)).parentNode.style.display == 'none') {
 							document.getElementById(itemBTN.substring(9)).parentNode.style.display = 'block';
@@ -564,7 +649,7 @@
 							document.getElementById(itemBTN).style.boxShadow = '0px 1px 2px rgba(0, 0, 0, 0.15)';
 						}		
 				}else{
-					if (counts.id>=0) {
+					if (parseInt(counts.id)>=0) {
 						var dunno2='StartBTN2'+counts.id;
 						if (document.getElementById(counts.id).parentNode.style.display == 'none') {
 							document.getElementById(counts.id).parentNode.style.display = 'block';
@@ -576,23 +661,28 @@
 						}
 					}else{
 						var dunno2='StartBTN2'+counts;
+						console.log(counts);
 						var name2;
 						var program2;
-						
 						if (document.getElementById(dunno2).style.backgroundColor=="rgb(222, 222, 222)") {
 							name2 = document.getElementById(dunno2).innerHTML;
+
 							program2 = "https://www.jasiah.dev/apps/"+name2+"/";
+							if (name2=="contact") {program2 = "https://www.jasiah.dev/"+name2+"/";}
 
 							run(program2,name2);
 							BigNav();
-							var numR = count-1;
-							document.getElementById("StartBTN2"+numR).remove();
-							document.getElementById(dunno2).id="StartBTN2"+numR;
+							var numR = parseInt(count)-1+"a";
+							dunno2='StartBTN2'+(parseInt(counts))+"a";
 
-							document.getElementById("StartBTN2"+numR).style.boxShadow = 'inset 0px 1px 2px rgba(0, 0, 0, 0.15)';
-							document.getElementById("StartBTN2"+numR).style.color = 'black';
-							document.getElementById("StartBTN2"+numR).style.backgroundColor="lightgrey";
-							document.getElementById("StartBTN2"+numR).onclick=function(){minimizeIt(numR)};
+							document.getElementById(dunno2).remove();
+							//document.getElementById(dunno2).id="StartBTN2"+numR;
+
+							dunno2='StartBTN2'+(parseInt(counts)+1)+"a";
+							document.getElementById(dunno2).style.boxShadow = 'inset 0px 1px 2px rgba(0, 0, 0, 0.15)';
+							document.getElementById(dunno2).style.color = 'black';
+							document.getElementById(dunno2).style.backgroundColor="lightgrey";
+							//document.getElementById(dunno2).onclick=function(){minimizeIt(numR)};
 
 						}
 						else if (document.getElementById(counts).parentNode.style.display == 'none') {
@@ -807,6 +897,17 @@
 				 event.preventDefault();
 				 changeTime();
 			}
+			var ColPop=false;
+			function getColor(){
+				if (ColPop==false) {
+					document.getElementById('bg1').style.display='block';
+					ColPop=true;
+				}else{
+					document.getElementById('bg1').style.display='none';
+					ColPop=false;
+				}
+				
+			}
 
 			//replace right click on nav bar
 					//fix but where right click lowers fist app
@@ -816,7 +917,6 @@
 			var gameTitle;
 			function RightClick(idname) {
 				itemBTN=idname;
-
 				gameTitle=document.getElementById(idname).innerHTML;
 
 				//window.oncontextmenu = function (e) {

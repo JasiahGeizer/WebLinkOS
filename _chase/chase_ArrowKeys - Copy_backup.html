@@ -68,18 +68,30 @@
                     case 37:
                     clearInterval(moverLeft);
                     fired1=false;
+
+                    document.getElementById("block1").style.backgroundColor="grey";
+
                     break;
                     case 39:
                     clearInterval(moverRight);
                     fired2=false;
+
+                    document.getElementById("block1").style.backgroundColor="grey";
+
                     break;
                     case 38:
                     clearInterval(moverUp);
                     fired3=false;
+
+                    document.getElementById("block1").style.backgroundColor="grey";
+
                     break;
                     case 40:
                     clearInterval(moverDown);
                     fired4=false;
+
+                    document.getElementById("block1").style.backgroundColor="grey";
+
                     break;
                     }
                 };
@@ -90,54 +102,64 @@
           window.addEventListener('keyup', moveSelection2);
 
         }
-        var blockCount=5;
         function moverL(){
         	var element = document.getElementById("image1");
         	if (parseInt(element.style.left)!==0) {
         		element.style.left = parseInt(element.style.left) - 1 + 'px';
         	}
 
-            //collision detection blocks
-            for (var i = 1; i < blockCount; i++) {
-				if (parseInt(element.style.left)+10==parseInt(document.getElementById("block"+i).style.left)+parseInt(document.getElementById("block"+i).style.width)) {
-	        		if (parseInt(element.style.top)+70
-	        			>parseInt(document.getElementById("block"+i).style.top) 
-	        			&& parseInt(element.style.top)
-	        				<parseInt(document.getElementById("block"+i).style.top)
-	        				+parseInt(document.getElementById("block"+i).style.height)-40) 
-				        		{
-				        			element.style.left = parseInt(element.style.left) + 1 + 'px';
-				        			document.getElementById("block"+i).style.backgroundColor="darkgrey";
-								}
-				            	
-	            }
+        	//collision detection block1
+			if (parseInt(element.style.left)==300) {
+        		if (parseInt(element.style.top)>115 && parseInt(element.style.top)<270) {
+        			element.style.left = parseInt(element.style.left) + 1 + 'px';
+        			document.getElementById("block1").style.backgroundColor="darkgrey";
+				}
+            	
+            }
+
+            //collision detection block2
+			if (parseInt(element.style.left)+10==parseInt(document.getElementById("block2").style.left)+parseInt(document.getElementById("block2").style.width)) {
+        		if (parseInt(element.style.top)+70
+        			>parseInt(document.getElementById("block2").style.top) 
+        			&& parseInt(element.style.top)
+        				<parseInt(document.getElementById("block2").style.top)
+        				+parseInt(document.getElementById("block2").style.height)-40) 
+			        		{
+			        			element.style.left = parseInt(element.style.left) + 1 + 'px';
+			        			document.getElementById("block2").style.backgroundColor="darkgrey";
+							}
+			            	
             }
         }
         function moverR(){
         	var element = document.getElementById("image1");
         	element.style.left = parseInt(element.style.left) + 1 + 'px';
 
+        	//collsion detection block1 
+        	if (parseInt(element.style.left)==97) {
+        		if (parseInt(element.style.top)>115 && parseInt(element.style.top)<270) {
+        			element.style.left = parseInt(element.style.left) - 1 + 'px';
+        			document.getElementById("block1").style.backgroundColor="darkgrey";
 
         			/*if (document.getElementById("block1").style.width!=="200px") {
         				document.getElementById("block1").style.width=parseInt(document.getElementById("block1").style.width)+1+"px";
         			}else{document.getElementById("block1").style.width="10px"}*/
+				}
+            }
+            //collsion detection block2
+            if ((parseInt(element.style.left)+parseInt(element.offsetWidth))-10==parseInt(document.getElementById("block2").style.left)) {
+        		if (parseInt(element.style.top)+70
+        			>parseInt(document.getElementById("block2").style.top) 
+        			&& parseInt(element.style.top)
+        				<parseInt(document.getElementById("block2").style.top)
+        				+parseInt(document.getElementById("block2").style.height)-40) 
+			        		{
+			        			element.style.left = parseInt(element.style.left) - 1 + 'px';
+			        			document.getElementById("block2").style.backgroundColor="darkgrey";
 
-            //collsion detection blocks
-            for (var i = 1; i < blockCount; i++) {
-	            if ((parseInt(element.style.left)+parseInt(element.offsetWidth))-10==parseInt(document.getElementById("block"+i).style.left)) {
-	        		if (parseInt(element.style.top)+70
-	        			>parseInt(document.getElementById("block"+i).style.top) 
-	        			&& parseInt(element.style.top)
-	        				<parseInt(document.getElementById("block"+i).style.top)
-	        				+parseInt(document.getElementById("block"+i).style.height)-40) 
-				        		{
-				        			element.style.left = parseInt(element.style.left) - 1 + 'px';
-				        			document.getElementById("block"+i).style.backgroundColor="darkgrey";
-
-								}
-	            	
-	            }
-	        }
+							}
+            	
+            }
         }
         function moverU(){
         	var element = document.getElementById("image1");
@@ -145,48 +167,60 @@
             	element.style.top = parseInt(element.style.top) - 1 + 'px';
             }
 
-           
-        	//collision detection blocks
-        	for (var i = 1; i < blockCount; i++) {
-				if (parseInt(element.style.top)+10==parseInt(document.getElementById("block"+i).style.top)+parseInt(document.getElementById("block"+i).style.height)) {
-	        		if (parseInt(element.style.left)+70
-	        			>parseInt(document.getElementById("block"+i).style.left)
-	        			&& parseInt(element.style.left)
-	        				<parseInt(document.getElementById("block"+i).style.left)
-	        				+parseInt(document.getElementById("block"+i).style.width)-30) 
-				        		{
-				        			element.style.top = parseInt(element.style.top) + 1 + 'px';
-				        			document.getElementById("block"+i).style.backgroundColor="darkgrey";
-								}
-				            	
-	            }
-	        }
+            //collsion detection block1
+            if (parseInt(element.style.left)>115) {
+        		if (parseInt(element.style.top)==300 && parseInt(element.style.left)<270) {
+        			element.style.top = parseInt(element.style.top) + 1 + 'px';
+        			document.getElementById("block1").style.backgroundColor="darkgrey";
+        		}
+        	}
+
+        	//collision detection block2
+			if (parseInt(element.style.top)+10==parseInt(document.getElementById("block2").style.top)+parseInt(document.getElementById("block2").style.height)) {
+        		if (parseInt(element.style.left)+70
+        			>parseInt(document.getElementById("block2").style.left)
+        			&& parseInt(element.style.left)
+        				<parseInt(document.getElementById("block2").style.left)
+        				+parseInt(document.getElementById("block2").style.width)-30) 
+			        		{
+			        			element.style.top = parseInt(element.style.top) + 1 + 'px';
+			        			document.getElementById("block2").style.backgroundColor="darkgrey";
+							}
+			            	
+            }
+
         }
         
         function moverD(){
         	var element = document.getElementById("image1");
         	element.style.top = parseInt(element.style.top) + 1 + 'px';
 
+        	//collsion detection block1 
+        	if (parseInt(element.style.left)>115) {
+        		if (parseInt(element.style.top)==100 && parseInt(element.style.left)<270) {
+            		element.style.top = parseInt(element.style.top) - 1 + 'px';
+
+            		document.getElementById("block1").style.backgroundColor="darkgrey";
 
             		/*if (document.getElementById("block1").style.height!=="200px") {
             			document.getElementById("block1").style.height=parseInt(document.getElementById("block1").style.height)+1+"px";
             		}else{document.getElementById("block1").style.backgroundColor="grey"}*/
             		
+            	}
+            }
             //collision detection block2
-            for (var i = 1; i < blockCount; i++) {
-				if (parseInt(element.style.top)+parseInt(element.offsetHeight)-10==parseInt(document.getElementById("block"+i).style.top)) {
-	        		if (parseInt(element.style.left)+70
-	        			>parseInt(document.getElementById("block"+i).style.left)
-	        			&& parseInt(element.style.left)
-	        				<parseInt(document.getElementById("block"+i).style.left)
-	        				+parseInt(document.getElementById("block"+i).style.width)-30) 
-				        		{
-				        			element.style.top = parseInt(element.style.top) - 1 + 'px';
-				        			document.getElementById("block"+i).style.backgroundColor="darkgrey";
-								}
-				            	
-	            }
-	        }
+			if (parseInt(element.style.top)+parseInt(element.offsetHeight)-10==parseInt(document.getElementById("block2").style.top)) {
+        		if (parseInt(element.style.left)+70
+        			>parseInt(document.getElementById("block2").style.left)
+        			&& parseInt(element.style.left)
+        				<parseInt(document.getElementById("block2").style.left)
+        				+parseInt(document.getElementById("block2").style.width)-30) 
+			        		{
+			        			element.style.top = parseInt(element.style.top) - 1 + 'px';
+			        			document.getElementById("block2").style.backgroundColor="darkgrey";
+							}
+			            	
+            }
         }
         function checkr(){ //for problem solving don't need anymore
         	var element = document.getElementById("image1");
@@ -208,7 +242,7 @@
 
 	<style>
 		body{
-			background-color: #424242;
+			background-color: lightblue;
 		}
 		img {
 			/*transition-duration: 2000ms;
@@ -219,7 +253,7 @@
 			/*transition-duration: 2000ms;
 			transition-timing-function: ease-out;
 			transform: translate(-50%, -50%);*/
-			background-color: #424242;
+			background-color: lightblue ;
 			border-radius: 100px;
 			height:120px;
 			width:120px;
@@ -243,14 +277,12 @@
 			<div onclick="checkr()" class="insides">ʕ•ᴥ•ʔ</div>
 		</div>
 
-	<div id="block1" style="position: absolute;height: 200px; width: 100px; top:100px; left:200px;background-color: #f44336;"></div>
+	<div id="block1" style="position: relative;height: 100px; width: 100px; top:200px; left:200px;background-color: grey;"></div>
 
-	<div id="block2" style="position: absolute;height: 400px; width: 500px; top:500px; left:200px;background-color: #03a9f4;"></div>
+	<div id="block3" style="position: absolute;height: 100px; width: 100px; top:400px; left:400px;background-color: grey;"></div>
 
-	<div id="block3" style="position: absolute;height: 200px; width: 300px; top:100px; left:500px;background-color: #8bc34a;"></div>
+	<div id="block2" style="position: absolute;height: 100px; width: 300px; top:200px; left:500px;background-color: grey;"></div>
 	
-	<div id="block4" style="position: absolute;height: 400px; width: 300px; top:500px; left:900px;background-color: #ff9800;"></div>
-
 	</body>
 </html>
 
