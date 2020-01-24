@@ -64,19 +64,21 @@
 		}
 		.StartBTN2{
 			width: 110px;
-			height: 40px;
+			top: 0px;
+			position: relative;
+			height: 36px;
 			background-color: #e0e0e0;
 
 			color: black;
-			line-height: 40px;
+			line-height: 36px;
 			font-size: 11px;
 			text-align: center;
-
+			border-radius: 6px;
 			margin-left: 10px;
 			box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 3px inset;
 		}
 		#StartBTN:hover{background: #2196F3;}
-		#StartBTN:active{background: #3F51B5;}
+		#StartBTN:active{background: #3F51B5;box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 3px inset;}
 		#StartMenu{
 			/*width: 50%;*/
 			/*background-color: grey;*/
@@ -96,16 +98,19 @@
 			line-height: 13px;
 			margin: 2px;
 			/*overflow: hidden;*/
-			background-color: white;
-			border-radius: 2px;
-			box-shadow: 0px 1px 3px grey;
+			/*background-color: white;*/
+			background: linear-gradient(0deg, rgb(234, 234, 234) 0%, rgb(255, 255, 255) 100%);
+			border-radius: 12px;
+			box-shadow: 0px 1px 2px #00000057, inset 0px -1px 1px grey;
 			display: inline-flex;
+			margin-top: 10px;
 		}
 		.lilow:hover{
-			background-color: #e6e6e6;
+			background: white;
+			
 		}
 		.lilow:active{
-			background-color: darkgrey;
+			background-color: #dfdfdf;
 			box-shadow: 0px 0px 0px 0px lightgrey;
 		}
 		#lilow{
@@ -173,6 +178,7 @@
 			right: 0px;
 			top: 0px;
 			height: 25px;
+			border-radius: 0px 2px 0px 0px;
 			line-height: 25px;
 			position: absolute;
 			text-align: center;
@@ -336,6 +342,22 @@
 				opacity: 0.8;
 				box-shadow: inset 0px 0px 0px grey;
 			}
+			/*Color Picker*/
+			input[type="color"] {
+				-webkit-appearance: none;
+				border: none;
+			}
+			input[type="color"]::-webkit-color-swatch-wrapper {
+				padding: 0;
+				position: relative;
+				    height: 40px;
+				    width: 40px;
+				    text-align: center;
+				    line-height: 40px;
+			}
+			input[type="color"]::-webkit-color-swatch {
+				border: none;
+			}
 	</style>
 </head>
 	<body onload="startTime()">
@@ -352,6 +374,10 @@
 			</div>
 
 			<script type="text/javascript"> //get and set temp.
+				navigator.permissions.query({name:'geolocation'}).then(function(result) {
+				  if (result.state=="granted") {getLocation();}
+				}); //get location if already enabled
+
 				var weatherCOUNT=0;
 				var temp;
 				var loc;
@@ -501,41 +527,56 @@
 			<div id="bg2">
 				<div id="bg3"><span>Background Picker</span></div>
 
+
+
 				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#f44336">01</div>
 				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#e91e63">02</div>
 				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#9c27b0">03</div>
 				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#673ab7">04</div>
 				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#3f51b5">05</div>
 				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#2196f3">06</div>
-				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#03a9f4">07</div>
-				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#00bcd4">08</div>
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#00bcd4">07</div>
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#009688">08</div>
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#4caf50">09</div>	
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#ffeb3b">10</div>
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#ff9800">12</div>
 
-				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#009688">09</div>
-				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#4caf50">10</div>
-				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#8bc34a">11</div>
-				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#cddc39">12</div>
-				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#ffeb3b">13</div>
-				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#ffc107">14</div>
-				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#ff9800">15</div>
+				
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:url('bg1.jpg') no-repeat center center fixed">13</div>
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:url('bg2.jpg') no-repeat center center fixed">14</div>
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:url('bg3.jpg') no-repeat center center fixed">15</div>
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:url('bg4.jpg') no-repeat center center fixed">16</div>
+				
+				
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:linear-gradient( 121.7deg,  rgba(41,116,250,1) 22.9%, rgba(67,212,255,1) 69% );">17</div>
 
-				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:linear-gradient(45deg, #93a5cf 0%, #e4efe9 100%);">16</div>
-				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:linear-gradient(to right, #fa709a 0%, #fee140 100%);">17</div>
-				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:linear-gradient(45deg, #874da2 0%, #c43a30 100%);">18</div>
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:linear-gradient(to right, #3ab5b0 0%, #3d99be 31%, #56317a 100%);">18</div>
 				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:linear-gradient(to right, #74ebd5 0%, #9face6 100%);">19</div>
-				<div class="bgPickSmall" onclick="bgChanger(this)" style="background: linear-gradient(to right, #3ab5b0 0%, #3d99be 31%, #56317a 100%);">20</div>
-				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:linear-gradient(135deg, #4e4e4e 0%, #7b7b7b 100%);">21</div>
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:linear-gradient(to right, #fa709a 0%, #fee140 100%);">20</div>
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:linear-gradient(45deg, #874da2 0%, #c43a30 100%);">21</div>
 				
-				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:url('bg1.jpg') no-repeat center center fixed">22</div>
-				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:url('bg2.jpg') no-repeat center center fixed">23</div>
-				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:url('bg3.jpg') no-repeat center center fixed">24</div>
-				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:url('bg4.jpg') no-repeat center center fixed">25</div>
-				
+
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="top: -15px;background:linear-gradient(45deg, #93a5cf 0%, #e4efe9 100%);">22</div>
+				<div class="bgPickSmall" onclick="bgChanger(this)" style="top: -15px;background:linear-gradient(135deg, #4e4e4e 0%, #7b7b7b 100%);">23</div>
+
+				<input class="bgPickSmall" value="#9e9e9e" style="position:relative;top:1px;padding:0px;"type="color" id="color">
+				<div class="bgPickSmall" style="background-color: darkgrey;width: 87px;top: -15px; position: relative;" onclick="bgChanger(document.getElementById('color'))"> 
+					Custom
+				</div>
+
 			</div>
 		</div>
 		<script type="text/javascript">
+			if(localStorage.getItem("bg") != 'null'){
+			document.body.style.background = localStorage.getItem("bg");
+			document.body.style.backgroundSize = "cover";
+			}//set bg
+		
 		function bgChanger(that) {
+			 document.getElementById('color').style.background=document.getElementById('color').value;
 			 document.body.style.background = that.style.background;
 			 document.body.style.backgroundSize = "cover";
+			 localStorage.setItem("bg",that.style.background); //store bg choice
 		}
 	</script>
 		<script type="text/javascript">

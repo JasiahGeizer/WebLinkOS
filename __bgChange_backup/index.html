@@ -12,7 +12,7 @@
 				user-select: none;  
 				position: absolute;
 				background-color: white;
-				height: 240px;
+				height: 290px;
 				width: 290px;
 				bottom: 200px;
 				left: 50%;
@@ -52,12 +52,31 @@
 				opacity: 0.8;
 				box-shadow: inset 0px 0px 0px grey;
 			}
+			input[type="color"] {
+				-webkit-appearance: none;
+				border: none;
+			}
+			input[type="color"]::-webkit-color-swatch-wrapper {
+				padding: 0;
+				position: relative;
+				    height: 40px;
+				    width: 40px;
+				    text-align: center;
+				    line-height: 40px;
+				  
+				    
+			}
+			input[type="color"]::-webkit-color-swatch {
+				border: none;
+			}
 		</style>
 	</head>
 	<body>
 		<div id="bg1">
 			<div id="bg2">
+
 				<div id="bg3"><span>Background Picker</span></div>
+				
 
 				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#f44336">01</div>
 				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:#e91e63">02</div>
@@ -81,13 +100,27 @@
 				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:url('bg2.jpg') no-repeat center center fixed">18</div>
 				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:url('bg3.jpg') no-repeat center center fixed">19</div>
 				<div class="bgPickSmall" onclick="bgChanger(this)" style="background:url('bg4.jpg') no-repeat center center fixed">20</div>
+
+				<div class="bgPickSmall" style="top: -15px; position: relative; background:url('bg4.jpg') no-repeat center center fixed" onclick="bgChanger(this)">21</div>
+				<div class="bgPickSmall" style="top: -15px; position: relative; background:url('bg4.jpg') no-repeat center center fixed" onclick="bgChanger(this)">22</div>	
+
+				<input class="bgPickSmall" style="position:relative;top:1px;padding:0px;"type="color" id="color">
+				<div class="bgPickSmall" style="width: 87px;top: -15px; position: relative;" onclick="bgChanger(document.getElementById('color'))"> 
+					Custom
+				</div>
+
+
 			</div>
+			
 		</div>
+		
 	<script type="text/javascript">
 		function bgChanger(that) {
+			document.getElementById('color').style.background=document.getElementById('color').value;
 			 document.body.style.background = that.style.background;
 			 document.body.style.backgroundSize = "cover";
 		}
+
 	</script>
 
 	</body>
