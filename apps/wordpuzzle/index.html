@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 
 <!-- To Do:
-	- 
+	- Add sound on win
+	- Add difficulty curve
 -->
 <title>Word Puzzle</title>
 <html>
@@ -15,9 +16,9 @@
 				height: 99%;
 				user-select: none;
 				-moz-user-select: none;
-				background-color: #607b8b;
+				background: linear-gradient(to right, #2b5876, #4e4376); 
 				font-family: monospace;
-				color:black;
+				color:white;
 			}			
 			.dragStyle{
 				float: left;
@@ -60,14 +61,15 @@
 			}				
 			.grouped{
 				position: absolute;
-				background-color: #5a3232;
+				/*background-color: #5a3232;*/
+				background:linear-gradient(to right, #6e9dd0, #65c0d9);
 				width: 1000px;
 				height: 575px;
 				top: 100px;
 				left: 50%;
 				margin-left: -500px;
 				border-radius: 2px;
-				box-shadow: 0px 8px 5px #301d1d;	
+				box-shadow: 0px 6px 5px #0000003b;	
 				color: lightgrey;		
 			}
 			ul {
@@ -79,51 +81,33 @@
 			}	
 			p{
 				height: 25px;
+				color: black;
 
 			}		
 			.items{
-				/*background-color: #f0c897 !important;*/
+				background:linear-gradient(to right, #2bc0e43b, #bee2cd52);
 				float: left;
 				margin-bottom: 10px;
-				width: 71px;
+				width: 63px;
 				height: 71px;
 				font-size: 60px;
     			text-align: center;
-    			color: white;
-    			box-shadow: 0px 0px 0px 1px #8a552f;
+    			color: black;
+    			border:solid 1px #d1f8fb30;
+    			box-shadow: inset 0px 3px 4px #5080ab;
 			}
-			/*.items{*/
-				/*background-color: #715142 !important;*/
-				/*float: left;
-				margin-bottom: 10px;
-				width: 71px;
-				height: 71px;
-				font-size: 60px;
-    			text-align: center;
-    			color: white;
-    			box-shadow: 0px 0px 0px 1px #8a552f;
-			}*/
-			.PiecePosition{
-				position: absolute;
-				left: 50%;
-				margin-left: -510px;
-				padding-left: 10px;
-				height: 675px;
-				margin-top:75px; 
-				width: 140px !important;
-				background-color: #5a3232;
-				box-shadow: 0px 0px 13px 2px #424242;
-			}
+			
 			.PiecePositionTop{
 				position: absolute;
 				left: 50%;
 				margin-left: -500px;
-				/*padding-left: 10px;*/
+				line-height: 103px;
+				text-align: center;
 				height: 75px;
 				margin-top:680px; 
 				width: 1000px !important;
-				background-color: #5a3232;
-				box-shadow: 0px 0px 13px 2px #424242;
+				background: linear-gradient(to left, #6e9dd0, #65c0d9);
+				box-shadow: 0px 6px 5px #0000003b;
 			}
 		</style>
 	</head>
@@ -215,7 +199,7 @@
 			</div>
 		</div>
 				<br>
-				<div style="color: #000000b0; top: 800px; position: absolute;"><i>Drag the pieces to the two words correctly.</i></div>
+				<div style="color: white; top: 800px; position: absolute;"><i>Drag the pieces to the two words correctly.</i></div>
 
 		<script type="text/javascript">
 			function allowDrop(ev) {
@@ -249,9 +233,10 @@
 				//console.log(check2 + " " + s2);
 				
 				if (check2 == s2 && check == s) {
-					alert("Correct!"+"\n" + check + " " + check2);
+					
 					score1=score1+1;
 					document.getElementById("score").innerHTML=score1;
+					alert("Correct!"+"\n" + check + " " + check2);
 					newgame();
 				}
 			}
@@ -279,14 +264,19 @@
 						//console.log(i9);
 					}
 					var div = document.createElement("div");
-					div.style.width = "70px";
-					div.style.height = "70px";
-					div.style.background = "darkslategrey";
-					div.style.color = "#e6e6e6";
+					div.style.width = "58px";
+					div.style.height = "58px";
+					div.style.position = "relative";
+					div.style.top = "-2px";
+					div.style.boxShadow = "0px 2px 3px #37395c63";
+					div.style.background = "linear-gradient(to top, #bfbfbf, #ffffff)";
+					div.style.color = "black";
+					div.style.display = "inline-block";
 					div.innerHTML = "";
-					div.style.float = "left";
+					
+					div.style.borderRadius = "40px";
 					div.style.fontSize = "50px";
-					div.style.lineHeight = "64px";
+					div.style.lineHeight = "58px";
 					div.style.textAlign = "center";
 					div.setAttribute('draggable', true);
 					div.setAttribute('ondragstart', "drag(event)");

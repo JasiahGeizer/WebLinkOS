@@ -52,8 +52,8 @@
 		#StartBTN{
 			width: 50px;
 			height: 40px;
-			background: radial-gradient( circle farthest-corner at 10% 20%,  #2196F3 0%, #3F51B5 100.2% );
-
+			background: radial-gradient( circle farthest-corner at 10% 20%,  #2196F3 0%, #495dce 100.2% );
+			border-radius: 12px;
 			color: white;
 			line-height: 40px;
 			font-size: 11px;
@@ -656,7 +656,7 @@
 			function closeIt(counts){
 
 			if (counts=="empty") {
-				if (document.getElementById(itemBTN).style.backgroundColor == 'lightgrey') {
+				if (document.getElementById(itemBTN).style.backgroundColor == 'darkgrey') {
 					document.getElementById(itemBTN.substring(9)).parentNode.remove();
 					//if statement - minimize function - if no div - run program - "jwg"+name+"/"
 					document.getElementById(itemBTN).style.boxShadow = '0px 1px 2px rgba(0, 0, 0, 0.15)';
@@ -671,19 +671,17 @@
 				}	
 			}else{
 				//console.log(counts.id);
-				if (document.getElementById(counts.id).style.backgroundColor == 'lightgrey') {
-					document.getElementById(counts.id).style.boxShadow = '0px 1px 2px rgba(0, 0, 0, 0.15)';
-					document.getElementById(counts.id).style.color = 'grey';
-					document.getElementById(counts.id).style.backgroundColor="#dedede";
-					var dunno='StartBTN2'+counts.id;
+				var dunno='StartBTN2'+counts.id;
+				if (document.getElementById(dunno).style.backgroundColor == 'darkgrey') {
+					document.getElementById(dunno).style.boxShadow = '0px 1px 2px rgba(0, 0, 0, 0.15)';
+					document.getElementById(dunno).style.color = 'grey';
+					document.getElementById(dunno).style.backgroundColor="#dedede";
 					counts.parentNode.remove();
 				}else{
 					var dunno='StartBTN2'+counts.id;
 					document.getElementById(dunno).remove();
 					counts.parentNode.remove();
-					//count=count-1;//dont need?
-
-				}}//count=count+1;
+				}}
 			}
 
 
@@ -721,7 +719,7 @@
 
 							program2 = "https://www.jasiah.dev/apps/"+name2+"/";
 							if (name2=="contact") {program2 = "https://www.jasiah.dev/"+name2+"/";}
-
+							//need to add (if pinned), the pinned url and name back;
 							run(program2,name2);
 							BigNav();
 							var numR = parseInt(count)-1+"a";
@@ -733,7 +731,7 @@
 							dunno2='StartBTN2'+(parseInt(counts)+1)+"a";
 							document.getElementById(dunno2).style.boxShadow = 'rgba(0, 0, 0, 0.2) 0px 1px 3px inset';
 							document.getElementById(dunno2).style.color = 'black';
-							document.getElementById(dunno2).style.backgroundColor="lightgrey";
+							document.getElementById(dunno2).style.backgroundColor="darkgrey";
 							//document.getElementById(dunno2).onclick=function(){minimizeIt(numR)};
 
 						}
@@ -748,15 +746,50 @@
 				}
 			}
 
+			var PinSave=0;
+			var PinSaveURL;
+			var PinSaveTitle;
 			//pin app onto start menu [WIP]
-			function pinIt(){
-				if (document.getElementById(itemBTN).style.backgroundColor == 'lightgrey') {
+			function pinIt(){//unpin
+				if (document.getElementById(itemBTN).style.backgroundColor == 'darkgrey') {
 					document.getElementById(itemBTN).style.backgroundColor = '#e0e0e0';
-				}else{
-					document.getElementById(itemBTN).style.backgroundColor = 'lightgrey';
+
+					localStorage.removeItem(document.getElementById(itemBTN).getAttribute("PinURL"));
+					localStorage.removeItem(document.getElementById(itemBTN).getAttribute("PinNAM"));
+					//localStorage.removeItem("PinCount");
+
+				}else{//pin
+					document.getElementById(itemBTN).style.backgroundColor = 'darkgrey';
+
+					PinSave=PinSave+1;
+
+					PinSaveURL = document.getElementById(itemBTN.substring(9)).parentNode.childNodes[3].src;
+					PinSaveTitle = document.getElementById(itemBTN).innerHTML;
+					localStorage.setItem("PinURL"+PinSave,PinSaveURL);
+					localStorage.setItem("PinNAM"+PinSave,PinSaveTitle);
+					localStorage.setItem("PinCount",PinSave);
+					document.getElementById(itemBTN).setAttribute("PinURL", "PinURL"+PinSave);
+					document.getElementById(itemBTN).setAttribute("PinNAM", "PinNAM"+PinSave);
 				}
-				//when pinned add onclick function that runs the app but only when closed  
-					//document.getElementById(itemBTN).onclick = function() { yourjavascriptfunction();};
+			}
+
+			rePin();
+			function rePin() {
+			var pinLoopCount=0;
+				for (var i = 1; i < (parseInt(localStorage.getItem("PinCount"))+1); i++) {
+					if(localStorage.getItem("PinURL"+i) != null){
+
+						run(localStorage.getItem("PinURL"+i), localStorage.getItem("PinNAM"+i));
+						BigNav();
+						document.getElementById("StartBTN2"+(pinLoopCount)+"a").style.backgroundColor = 'darkgrey';
+
+						document.getElementById("StartBTN2"+(pinLoopCount)+"a").setAttribute("PinURL", "PinURL"+i);
+						document.getElementById("StartBTN2"+(pinLoopCount)+"a").setAttribute("PinNAM", "PinNAM"+i);
+
+						pinLoopCount=pinLoopCount+1;
+						
+					}
+				}if (pinLoopCount==0) {localStorage.setItem("PinCount",0);}
 			}
 
 			//maximise tab
@@ -1162,7 +1195,7 @@
 				if (backChk2-1==1) {backChk2=9;} //if at 1, move to next week
 				for (var i = 1; i <43; i++) { //going from back to forwards = broken
 					if (i<backChk2-1) {
-						document.getElementById(i).style.color="#00000052"; //lightgrey //before
+						document.getElementById(i).style.color="#00000052"; //light grey //before
 						document.getElementById(i).innerHTML=beforeCounter;
 						beforeCounter=beforeCounter+1;
 						aa=aa+1;
