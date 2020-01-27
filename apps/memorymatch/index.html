@@ -22,24 +22,32 @@
 				}
 
 			function decision(x) {
-				document.getElementById("aa").style.backgroundColor="#404040";
+				document.getElementById("aa").style.backgroundColor="#9C27B0";
 				var a = Array.from(Array(24).keys()).map(x => x + 1);
 				shuffle(a);
 				for(i = 0; i < 12; i++){
-					document.getElementById(a[i]).src="images/" + arr[i] + ".PNG";
+					//console.log(a[i]+" | "+i);
+					document.getElementById(a[i]).parentElement.setAttribute( "onClick", ("selected("+a[i]+")"));
+					document.getElementById(a[i]).src="images2/" + arr[i] + ".png";
 					document.getElementById(a[i]).style.opacity="0.0";
-					//document.getElementByClassNames().style.backgroundColor = "white";
+					document.getElementById(a[i]).parentElement.style.boxShadow = null;
+					document.getElementById(a[i]).parentElement.style.background = null;				
 
 				}
 				shuffle(arr);
 				for(i = 0; i < 12; i++){
-					document.getElementById(a[i+12]).src="images/" + arr[i] + ".PNG";
-					document.getElementById(a[i+12]).style.opacity="0.0";
-					scorecount = 0;
-					guessed = 0;
-					document.getElementById("score").innerHTML = scorecount;
-					document.getElementById("guesses").innerHTML = guessed;
+					//console.log(a[i+12]+" | "+(i+12));
+					document.getElementById(a[i+12]).parentElement.setAttribute( "onClick", ("selected("+(a[i+12])+")"));
+					document.getElementById(a[(i+12)]).src="images2/" + arr[i] + ".png";
+					document.getElementById(a[(i+12)]).style.opacity="0.0";
+					document.getElementById(a[i+12]).parentElement.style.boxShadow = null;
+					document.getElementById(a[i+12]).parentElement.style.background = null;
+					
 				}
+				scorecount = 0;
+				guessed = 0;
+				document.getElementById("score").innerHTML = scorecount;
+				document.getElementById("guesses").innerHTML = guessed;
 			}
 
 			function shuffle(array) {
@@ -51,30 +59,49 @@
 			var img2;
 			var num1;
 			var scorecount = 0;
-			var guessed = 1;
+			var guessed = 0;
 
 			function selected(num) { //needs fixing - it controls what is shown and what isn't
 				if (!audio.ended) {audio.currentTime = 0;}
 				audio.play();
 				document.getElementById(num).style.opacity = "1";
-				guessed = guessed + 0.5;
-				document.getElementById("guesses").innerHTML = guessed;
+				
 				if(total == "0"){
 					document.getElementById(num).style.opacity = "1";
 					total = total + 1;	
 					img1 = (document.getElementById(num).src);
 					num1 = num;
+					guessed = guessed + 0.5;
+					document.getElementById("guesses").innerHTML = guessed;
 				}else if(total == "1"){
 					total = 0;
 					img2 = (document.getElementById(num).src);
+					
 					if(img2 == img1){
-						document.getElementById(num).style.opacity = "0.7";
-						document.getElementById(num1).style.opacity = "0.7";
-						scorecount = scorecount + 1;
-						document.getElementById("score").innerHTML = scorecount;
+						if (num!=num1) {
+							document.getElementById(num).style.opacity = "0.7";
+							document.getElementById(num1).style.opacity = "0.7";
+
+							document.getElementById(num).parentElement.style.boxShadow = "8px 8px 16px #852196, inset 0px 0px 1px 5px #9b27af, inset 0px 0px 1px 7px #ffc500ab";
+							document.getElementById(num1).parentElement.style.boxShadow = "8px 8px 16px #852196, inset 0px 0px 1px 5px #9b27af, inset 0px 0px 1px 7px #ffc500ab";
+
+							document.getElementById(num).parentElement.style.background = "linear-gradient(145deg, #8c239e, #a72abc)";
+							document.getElementById(num1).parentElement.style.background = "linear-gradient(145deg, #8c239e, #a72abc)";
+
+							document.getElementById(num).parentElement.onclick = null;
+							document.getElementById(num1).parentElement.onclick = null;
+
+							scorecount = scorecount + 1;
+							document.getElementById("score").innerHTML = scorecount;
+							
+							guessed = guessed + 0.5;
+							document.getElementById("guesses").innerHTML = guessed;
+						}else{total=1;}
 					}else if (img2 !== img1){
 						document.getElementById(num).style.opacity = "1";
 						waiting(num, num1);
+						guessed = guessed + 0.5;
+						document.getElementById("guesses").innerHTML = guessed;
 					}
 				}
 				//if (scorecount==12) {audio2.play();}
@@ -94,22 +121,32 @@
 				height: 99%;
 				user-select: none;
 				-moz-user-select: none;
-				background-color: dodgerblue;
+				background: linear-gradient(145deg, rgba(108,39,176,1) 0%, rgba(46,0,126,1) 100%);
 				font-family: monospace;
 			}			
+			.items:active{
+				background: linear-gradient(145deg, #a72abc, #8c239e);
+				box-shadow: inset 8px 8px 16px #852196;
+			}
+			.items:hover{
+				background: linear-gradient(145deg, #8c239e, #a72abc);
+			}
 			.items{
 				float: left;
 				margin:2px;
+				background: linear-gradient(145deg, #a72abc, #8c239e);
+				box-shadow: 8px 8px 16px #852196;
+    			border-radius: 20px;
 			}
 			.grouped{
 				position: relative;
-				background-color: #404040;
+				background-color: #9C27B0;
 				width: 700px;
 				height: 500px;
 				top: 100px;
 				margin: 0 auto;
 				border-radius: 20px;
-				box-shadow: 0px 2px 13px grey;	
+				box-shadow: 8px 8px 13px #0000002e, -8px -8px 13px #ffffff1c;	
 				color: lightgrey;		
 			}
 
@@ -122,9 +159,10 @@
 			}
 
 			img {
-				height: 120px;
+				height: 100%;
 				line-height: 100px;
 				opacity: 0.0;
+				/*margin:-15px;*/
 			}
 
 			p{
@@ -143,60 +181,71 @@
 			}
 			span{
 				padding: 5px;
+				color:white;
 			}
 			button{
 				margin-left: 2px;
-				border:1px solid darkgrey;
+				border:0px solid #b444c7;
+				border-radius: 3px;
 				padding: 5px;
-				padding-left: 15px;
-				padding-right: 15px;
+				padding-left: 25px;
+				padding-right: 25px;
+				margin-bottom: 10px;
+				box-shadow: 2px 2px 4px #852196, -2px -2px 4px #b32dca;
+				color: white;
+				background: linear-gradient(145deg, #a72abc, #8c239e);
+			}
+			button:focus{outline: 0;}
+			button:active{
+				box-shadow: inset 2px 2px 4px #852196,inset -2px -2px 4px #b32dca;;
+				border:0px solid #b444c7;
 			}
 			#aa{
-				background-color: white;
+				background-color: #3e3e3e;
 			}
 		</style>
 	</head>
 
 
 	<body>
-		Pair Two - Memory Match
+		<span style="color: white;">Pair Two - Memory Match</span>
 		<div class="grouped" id="aa">
 			<br>
 			<ul >
-				<button onclick="decision()">Start</button><span></span>
+				<button onclick="decision()">Start</button><span>
 				Score: <span id="score">0</span> <span></span>
-				Guesses: <span id="guesses"> 0 </span>				
+				Guesses: <span id="guesses"> 0 </span>		</span>		
 				<br>
-				<li onclick="selected(1)"class="items"><img id="1" src="" draggable="false"></li>
-				<li onclick="selected(2)" class="items"><img id="2" src="" draggable="false"></li>
-				<li onclick="selected(3)" class="items"><img id="3" src="" draggable="false"></li>
-				<li onclick="selected(4)" class="items"><img id="4" src="" draggable="false"></li>
-				<li onclick="selected(5)" class="items"><img id="5" src="" draggable="false"></li>
-				<li onclick="selected(6)" class="items"><img id="6" src="" draggable="false"></li>
-				<li onclick="selected(7)" class="items"><img id="7" src="" draggable="false"></li>
-				<li onclick="selected(8)" class="items"><img id="8" src="" draggable="false"></li>				
+				<li class="items"><img id="1" src="" draggable="false"></li>
+				<li class="items"><img id="2" src="" draggable="false"></li>
+				<li class="items"><img id="3" src="" draggable="false"></li>
+				<li class="items"><img id="4" src="" draggable="false"></li>
+				<li class="items"><img id="5" src="" draggable="false"></li>
+				<li class="items"><img id="6" src="" draggable="false"></li>
+				<li class="items"><img id="7" src="" draggable="false"></li>
+				<li class="items"><img id="8" src="" draggable="false"></li>				
 			</ul>
 			
 			<ul>
-				<li onclick="selected(9)" class="items"><img id="9" src="" draggable="false"></li>
-				<li onclick="selected(10)" class="items"><img id="10" src="" draggable="false"></li>
-				<li onclick="selected(11)" class="items"><img id="11" src="" draggable="false"></li>
-				<li onclick="selected(12)" class="items"><img id="12" src="" draggable="false"></li>
-				<li onclick="selected(13)" class="items"><img id="13" src="" draggable="false"></li>
-				<li onclick="selected(14)" class="items"><img id="14" src="" draggable="false"></li>
-				<li onclick="selected(15)" class="items"><img id="15" src="" draggable="false"></li>
-				<li onclick="selected(16)" class="items"><img id="16"src="" draggable="false"></li>				
+				<li class="items"><img id="9" src="" draggable="false"></li>
+				<li  class="items"><img id="10" src="" draggable="false"></li>
+				<li  class="items"><img id="11" src="" draggable="false"></li>
+				<li  class="items"><img id="12" src="" draggable="false"></li>
+				<li  class="items"><img id="13" src="" draggable="false"></li>
+				<li  class="items"><img id="14" src="" draggable="false"></li>
+				<li  class="items"><img id="15" src="" draggable="false"></li>
+				<li  class="items"><img id="16"src="" draggable="false"></li>				
 			</ul>
 			
 			<ul>
-				<li onclick="selected(17)" class="items"><img id="17" src="" draggable="false"></li>
-				<li onclick="selected(18)" class="items"><img id="18" src="" draggable="false"></li>
-				<li onclick="selected(19)" class="items"><img id="19" src="" draggable="false"></li>
-				<li onclick="selected(20)" class="items"><img id="20" src="" draggable="false"></li>
-				<li onclick="selected(21)" class="items"><img id="21" src="" draggable="false"></li>
-				<li onclick="selected(22)" class="items"><img id="22" src="" draggable="false"></li>
-				<li onclick="selected(23)" class="items"><img id="23" src="" draggable="false"></li>
-				<li onclick="selected(24)" class="items"><img id="24" src="" draggable="false"></li>
+				<li  class="items"><img id="17" src="" draggable="false"></li>
+				<li  class="items"><img id="18" src="" draggable="false"></li>
+				<li  class="items"><img id="19" src="" draggable="false"></li>
+				<li  class="items"><img id="20" src="" draggable="false"></li>
+				<li  class="items"><img id="21" src="" draggable="false"></li>
+				<li  class="items"><img id="22" src="" draggable="false"></li>
+				<li  class="items"><img id="23" src="" draggable="false"></li>
+				<li  class="items"><img id="24" src="" draggable="false"></li>
 			</ul>
 
 			</div>
