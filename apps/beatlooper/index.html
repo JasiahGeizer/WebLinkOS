@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+
+<!-- To Do:
+	- Change speed to bpm
+	- Add reset button
+	- Change sounds to EDM/Electronic
+	- Highlight which one is getting played right now.
+	- Color Stop/Go buttons to green /red
+	- Increase color contrast & but not change from soft ui
+-->
+
+<html>
+	<head>
+		<script>
+			
+		</script>
+
+		<style type="text/css">
+			html, body {
+				height: 99%;
+				user-select: none;
+				-moz-user-select: none;
+				background-color: #4e4e4e;
+				font-family: monospace;
+				color:black;
+			}			
+			.dragStyle{
+				float: left;
+				/*margin:2px;*/
+				width: 70px;
+				height: 70px;
+				background-color: darkslategrey;
+				text-align: center;
+				color: #e6e6e6;
+				font-size: 60px;
+			}
+			.dragStyle:hover{
+				background-color: #2f2b2a;
+				border-color: #2f2b2a;
+			}
+			.dragStyle:active{
+				background-color: #615a54;
+				border-color: #615a54;
+				box-shadow: 0px 0px 13px 2px #424242;
+			}
+			.dragStyle2{
+				float: left;
+				width: 70px;
+				height: 70px;
+				background-color: darkslategrey;
+				text-align: center;
+				line-height: 64px;
+				color: #e6e6e6;
+				font-size: 50px;
+
+			}
+			.dragStyle2:hover{
+				background-color: #90614a;
+				border-color: #90614a;
+			}
+			.dragStyle2:active{
+				background-color: #ebb38e;
+				border-color: #ebb38e;
+				box-shadow: 0px 0px 13px 2px #424242;
+			}				
+			.grouped{
+				position: absolute;
+				background-color: #4e4e4e;
+				width: 650px;
+				height: 600px;
+				top: 100px;
+				left: 50%;
+				margin-left: -470px;
+				border-radius: 22px;
+				box-shadow: 8px 8px 16px #424242, -8px -8px 16px #5a5a5a;	
+				color: lightgrey;		
+			}
+			ul {
+			    margin: 0 auto;
+			    padding-top: 10px;
+			    list-style-type: none;
+			    display:block;
+
+			}	
+			p{
+				height: 25px;
+
+			}		
+			.items{
+				background:#4e4e4e;
+				float: left;
+				margin-bottom: 10px;
+				width: 71px;
+				height: 71px;
+				font-size: 60px;
+    			text-align: center;
+    			color: white;
+    			border-right:solid 1px #d1f8fb00;
+    			box-shadow: inset -4px -4px 4px #5f5f5f75, inset 4px 4px 4px #2323236b;
+			}
+			/*.items:first-child{
+				background: linear-gradient(145deg, #535353, #464646);
+			}*/
+			.items:active{
+				background: linear-gradient(145deg, #464646, #535353);
+			}
+			.PiecePositionTop2{
+				left: 50%;
+				margin-left: 210px;
+				padding-left: 10px;
+				float: left;
+				margin-top:75px; 
+				border-radius: 22px;
+				width: 240px !important;
+				box-shadow: 8px 8px 16px #424242, -8px -8px 16px #5a5a5a;	
+
+				height: 100px; 
+				top:500px; 
+				background:linear-gradient(145deg, #4e4e4e, #643b3bed); 
+				position: relative;
+			}
+			.PiecePositionTop{
+				position: absolute;
+				left: 50%;
+				margin-left: 210px;
+				padding-left: 10px;
+				float: left;
+				height: 470px;
+				margin-top:75px; 
+				border-radius: 22px;
+				width: 240px !important;
+				background: linear-gradient(145deg, #4e4e4e, #4e4e4e);
+				box-shadow: 8px 8px 16px #424242, -8px -8px 16px #5a5a5a;	
+			}
+			.drumpad{
+				padding: 2px;
+				font-size: 12px;
+				line-height: 55px;
+				text-align:center;
+				box-shadow: 4px 4px 8px #424242,-4px -4px 8px #5a5a5a;
+				color: #989898ed;
+				width: 55px;
+				height: 55px;
+				/*background: linear-gradient(145deg, #424242cf, #2e795a96);*/
+    			border: none; 
+    			overflow: hidden;
+    			float:left;
+    			border-radius: 10px;
+    			margin:6px;
+			}
+			.drumpad:active{
+				box-shadow: inset 4px 4px 8px #383838f7,inset -4px -4px 8px #5a5a5a;
+			}
+			button{
+				margin-left: 15px;
+			    border: 0px solid #b444c7;
+			    border-radius: 3px;
+			    padding: 5px;
+			    padding-left: 25px;
+			    padding-right: 25px;
+			    margin-bottom: 10px;
+			    box-shadow: 3px 3px 6px #424242, -3px -3px 6px #5a5a5a;
+			    color: darkgrey;
+			    background: linear-gradient(145deg, #535353, #464646);
+			}
+			button:focus{outline: 0;}
+			button:hover{
+				color:lightgrey;
+			}
+			button:active{
+				box-shadow: inset 3px 3px 6px #424242, inset -3px -3px 6px #5a5a5a;
+				border:0px solid #b444c7;
+			}
+		</style>
+	</head>
+
+
+	<body >
+		<span style="color: #cccccc;">Beat Looper</span> <br>
+
+		<div class="PiecePositionTop" id="div1"> 
+			<Span style="margin-top: 45px; margin-left: 10px; color:lightgrey; position: absolute;">Beats:</Span>
+				<p style="margin: 24px;"></p>
+
+			<div style="background: linear-gradient(145deg, #424242cf, #2e795a96);" draggable="true" ondragstart="drag(event)" id="1" class="drumpad" style="top: 220px;left: 70%;" onclick="playBeat(clap)">clap</div>
+			<div style="background: linear-gradient(145deg, #424242cf, #2e797996);" draggable="true" ondragstart="drag(event)" id="2" class="drumpad" style="top: 220px;left: 50%;" onclick="playBeat(kick)">kick</div>
+			<div style="background: linear-gradient(145deg, #424242cf, #792e7496);" draggable="true" ondragstart="drag(event)" id="3" class="drumpad" style="top: 220px;left: 30%;" onclick="playBeat(snare)">snare</div>
+			<div style="background: linear-gradient(145deg, #424242cf, #792e6296);" draggable="true" ondragstart="drag(event)" id="4" class="drumpad" style="top: 220px;left: 10%;" onclick="playBeat(crash)">crash</div>
+			<div style="background: linear-gradient(145deg, #424242cf, #792e2e96);" draggable="true" ondragstart="drag(event)" id="5" class="drumpad" style="top: 135px;left: 50%;" onclick="playBeat(hiHat)">hiHat</div>
+			<div style="background: linear-gradient(145deg, #424242cf, #75792e96);" draggable="true" ondragstart="drag(event)" id="6" class="drumpad" style="top: 135px;left: 30%;" onclick="playBeat(ride)">ride</div>
+			<div style="background: linear-gradient(145deg, #424242cf, #4b792e96);" draggable="true" ondragstart="drag(event)" id="7" class="drumpad" style="top: 135px;left: 10%;" onclick="playBeat(splash)">splash</div>
+			<div style="background: linear-gradient(145deg, #424242cf, #512e7996);" draggable="true" ondragstart="drag(event)" id="8" class="drumpad" style="top: 135px;left: 70%;" onclick="playBeat(block)">block</div>
+			<div style="background: linear-gradient(145deg, #424242cf, #2e457996);" draggable="true" ondragstart="drag(event)" id="9" class="drumpad" style="top: 305px;left: 50%;" onclick="playBeat(cowbell)">cowbell</div>
+			<div style="background: linear-gradient(145deg, #424242cf, #79542e96);" draggable="true" ondragstart="drag(event)" id="10" class="drumpad" style="top: 305px;left: 30%;" onclick="playBeat(eggShaker)">eggShaker</div>
+			<div style="background: linear-gradient(145deg, #424242cf, #2e617996);" draggable="true" ondragstart="drag(event)" id="11" class="drumpad" style="top: 305px;left: 10%;" onclick="playBeat(sleighBells)">sleighBells</div>
+			<div style="background: linear-gradient(145deg, #424242cf, #616161);" draggable="true" ondragstart="drag(event)" id="12" class="drumpad" style="top: 305px;left: 70%;" onclick="playBeat(stickHits)">stickHits</div>
+			<div style="background: linear-gradient(145deg, #424242cf, #793f2e96);" draggable="true" ondragstart="drag(event)" id="13" class="drumpad" style="top: 50px;left: 50%;" onclick="playBeat(floorTom)">floorTom</div>
+			<div style="background: linear-gradient(145deg, #424242cf, #792e4096);" draggable="true" ondragstart="drag(event)" id="14" class="drumpad" style="top: 50px;left: 30%;" onclick="playBeat(highTom)">highTom</div>
+			<div style="background: linear-gradient(145deg, #424242cf, #2e794596);" draggable="true" ondragstart="drag(event)" id="15" class="drumpad" style="top: 50px;left: 10%;" onclick="playBeat(midTom)">midTom</div>
+		</div>
+		<Span style="margin-top: 585px;z-index: 2; left:50%;margin-left: 230px; color:darkgrey; position: absolute;"><i>Remove</i></Span>
+			<div class="PiecePositionTop2" id="div2" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+		<div class="grouped">
+			<br>
+
+			<ul>
+				<p><span>Beat </span> <span id="score">Looper</span> 
+					<button onclick="prebeat(this)">Stop</button>
+					<span style="margin-left:20px;"> Speed:</span>
+					<button onclick="speed(1)">-</button>
+					<button id="s1">150</button>
+					<button onclick="speed(2)">+</button>
+
+				<br>
+				<li class="items" id="50" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li class="items" id="51" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li class="items" id="52" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li class="items" id="53" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li class="items" id="54" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li class="items" id="55" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li class="items" id="56" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li class="items" id="57" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li class="items" id="58" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="59" ondrop="drop(event)" ondragover="allowDrop(event)"></li>		
+			</ul>
+			<p></p>
+			<ul>
+				<li  class="items" id="60" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="61" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="62" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="63" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="64" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="65" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="66" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="67" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="68" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="69" ondrop="drop(event)" ondragover="allowDrop(event)"></li>		
+			</ul>
+			<p></p>
+			<ul>
+				<li  class="items" id="70" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="71" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="72" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="73" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="74" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="75" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="76" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="77" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="78" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="79" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+			</ul>
+			<p></p>
+			<ul>
+				<li  class="items" id="80" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="81" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="82" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="83" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="84" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="85" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="86" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="87" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="88" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="89" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+			</ul>
+			<p></p>
+			<ul>
+				<li  class="items" id="90" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="91" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="92" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="93" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="94" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="95" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="96" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="97" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+			</ul>
+			<p></p>
+			
+			</div>
+		</div>
+				<br>
+				<div style="color: #b3b3b3; top: 710px; position: absolute;"><i>Drag the beat to the board</i></div>
+<script language="Javascript" >
+	//define sounds
+	var clap = new Audio('clap.wav');
+	var kick = new Audio('kick.wav');
+	var snare = new Audio('snare.wav');
+	var crash = new Audio('crash.wav');
+	var hiHat = new Audio('hiHat.wav');
+	var ride = new Audio('ride.wav');
+	var splash = new Audio('splash.wav');
+	var block = new Audio('block.wav');
+	var cowbell = new Audio('cowbell.wav');
+	var eggShaker = new Audio('eggShaker.wav');
+	var sleighBells = new Audio('sleighBells.wav');
+	var stickHits = new Audio('stickHits.wav');
+	var floorTom = new Audio('floorTom.wav');
+	var highTom = new Audio('highTom.wav');
+	var midTom = new Audio('midTom.wav');
+
+	clap.preload = 'auto';
+	kick.preload = 'auto';
+	snare.preload = 'auto';
+	crash.preload = 'auto';
+	hiHat.preload = 'auto';
+	splash.preload = 'auto';
+	block.preload = 'auto';
+	cowbell.preload = 'auto';
+	eggShaker.preload = 'auto';
+	sleighBells.preload = 'auto';
+	stickHits.preload = 'auto';
+	floorTom.preload = 'auto';
+	highTom.preload = 'auto';
+	midTom.preload = 'auto';
+
+
+	function docReady(){ //setup key press as on down press
+        window.addEventListener('keydown', pressBeat);
+    }
+	function pressBeat(evt){ //play audio on key press
+		switch (evt.keyCode) {
+		    case 81://q
+		    	playBeat(splash);
+		    break;
+		    case 87: //w
+		    	playBeat(ride);
+		    break;
+		    case 69://e
+		    	playBeat(hiHat);
+		    break;
+		    case 82: //r
+		    	playBeat(block);
+		    break;
+		    case 65://a
+		    	playBeat(crash);
+		    break;
+		    case 83: //s
+		    	playBeat(snare);
+		    break;
+		    case 68://d
+		    	playBeat(kick);
+		    break;
+		    case 70: //f
+		    	playBeat(clap);
+		    break;
+		    case 90://z
+		    	playBeat(sleighBells);
+		    break;
+		    case 88: //x
+		    	playBeat(eggShaker);
+		    break;
+		    case 67://c
+		    	playBeat(cowbell);
+		    break;
+		    case 86: //b
+		    	playBeat(stickHits);
+		    break;
+		    case 49://1
+		    	playBeat(midTom);
+		    break;
+		    case 50: //2
+		    	playBeat(highTom);
+		    break;
+		    case 51://3
+		    	playBeat(floorTom);
+		    break;
+		    }
+	}
+	var myBeat = setInterval(beat, 150); //set beat
+	//clearInterval(beat); //clear beat
+	var beatGo = true;
+	function prebeat(that) {
+
+		if (beatGo == true) {
+			clearInterval(myBeat); //clear beat
+			beatGo = false;
+			that.innerHTML = "Go";
+		}else if (beatGo==false) {
+			myBeat = setInterval(beat, 150); //set beat
+			beatGo = true;
+			that.innerHTML = "Stop";
+		}
+	}
+
+	//set speed
+	var realSpeed=150;
+	function speed(that){
+		if (that==1) {
+			realSpeed=realSpeed-10;
+			clearInterval(myBeat);
+			myBeat = setInterval(beat, realSpeed);
+			document.getElementById("s1").innerHTML=realSpeed;
+		}else{
+			realSpeed=realSpeed+10;
+			clearInterval(myBeat);
+			myBeat = setInterval(beat, realSpeed);
+			document.getElementById("s1").innerHTML=realSpeed;
+		}
+	}
+
+	var numset=50;
+	function beat(){
+		for (var i = numset; i < 98; i=i+8) {
+			//console.log(document.getElementById(i).childNodes[0]);
+			if (document.getElementById(i).firstChild) {
+				//console.log(document.getElementById(i).childNodes[0].innerHTML);
+				playBeat(eval(document.getElementById(i).childNodes[0].innerHTML));
+			}
+		}numset=numset+1; if (numset==58) {numset=50;}
+	}
+
+	function playBeat(beat){ //play audio
+		if (!beat.ended) {beat.currentTime = 0;}
+		beat.play();
+	}
+
+
+
+		/*Movement / Drag*/
+
+			function allowDrop(ev) {
+			  ev.preventDefault();
+			}
+			var PreDrag;
+			function drag(ev) {
+			  ev.dataTransfer.setData("text", ev.target.id);
+			  PreDrag = ev.toElement.parentNode.className;
+			}
+			var score1=0;
+			function drop(ev) {
+			  ev.preventDefault();
+			  var data = ev.dataTransfer.getData("text");
+			  ev.target.appendChild(document.getElementById(data));
+			  //console.log(ev.toElement.id);
+
+				if (PreDrag == "PiecePositionTop") {
+					var div = document.getElementById(ev.toElement.childNodes[0].id),
+					clone = div.cloneNode(true); // true means clone all childNodes and all event handlers
+					clone.id = ("a"+ev.toElement.childNodes[0].id);
+					document.getElementById("div1").appendChild(clone);
+				}
+				if (ev.toElement.id == "div2") {
+					(ev.toElement.childNodes[0]).remove();
+				}
+			}
+
+			
+		</script>
+	</body>
+</html>
