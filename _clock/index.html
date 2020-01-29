@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<!--
+	To Do:
+
+-->
+
+<html>
+	<head>
+		<style type="text/css">
+			*{
+				font-family: monospace;
+
+			}
+			body{
+				background-color: lightblue;
+			}
+			#timer1{
+				user-select: none;  
+				position: absolute;
+				background-color: white;
+				height: 235px;
+				width: 300px;
+				bottom: 200px;
+				left: 50%;
+				box-shadow: 0px 1px 5px #00000059;
+				border-radius:2px;
+
+			}
+			#timer2{
+				position: absolute;
+				height: 181px;
+				width: 218px;
+				left: 30px;
+			}
+			#timer3{
+				width:240px;
+				height: 30px;
+				font-style: italic;
+				line-height: 30px;
+				border-bottom: 1px solid lightgrey;
+			}
+			.smalls2{
+				position: absolute;
+				width: 100px; 
+				height: 50px;
+				/*box-shadow: 0px 1px 2px lightgrey;*/
+				background-color: #f3f3f3;
+				text-align: center;
+				line-height: 50px;
+				display: inline-block;
+				margin-top:5px; 
+				border: 1px solid lightgrey;
+			}
+			.smalls2:hover{
+				background-color: grey;
+				color: white;
+				box-shadow: 0px 1px 2px grey;
+				border: 1px solid grey;
+			}
+			.smalls2:active{
+				background-color: black;
+				border: 1px solid black;
+			}
+			.smalls2LBL{
+				position: absolute;
+				border-bottom: 1px solid lightgrey;
+				width: 218px; 
+				height: 50px;
+				/*box-shadow: 0px 1px 2px lightgrey;*/
+				text-align: center;
+				line-height: 50px;
+				user-select:all;
+				display: inline-block;
+				font-size:20px;
+				white-space: pre-line; 
+				overflow: auto;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="timer1">
+			<div id="timer2">
+				<div id="timer3"><span>Stopwatch</span></div>
+
+				<div style="width:240px" class="smalls2LBL" id="tt0">00:00.0</div>
+				<div style="top:90px;" class="smalls2" onclick="start(this)">Start</div>
+				<div style="line-height:10px; text-align:left; top:95px; font-size:13px;left:110px; width: 130px; height: 115px;" class="smalls2LBL" id="tt2"><i>Laps:</i></div>
+				<div style="top:155px;" class="smalls2" onclick="reset(this)" id="tt3">Reset</div>
+			</div>
+		</div>
+	</body>
+
+	<script type="text/javascript">
+		var timeVar;
+		function start(that){
+			if (that.innerHTML == "Start") {
+				that.innerHTML = "Stop";
+				document.getElementById("tt3").innerHTML = "Lap";
+				timeVar = setInterval(timer, 100);
+			}
+			else {
+				that.innerHTML = "Start";
+				document.getElementById("tt3").innerHTML = "Reset";
+				clearInterval(timeVar);
+			}
+		}
+		var counterLap=0;
+		function reset(that){
+			if (that.innerHTML=="Reset") {
+				document.getElementById("tt0").innerHTML = "00:00.0";
+				document.getElementById("tt2").innerHTML = "<i>Laps:</i>";
+				counterLap=0;
+				milli = 0;
+		 		seconds = 0;
+				minutes = 0;
+			}
+			else{
+				counterLap=counterLap+1;
+				document.getElementById("tt2").innerHTML = document.getElementById("tt2").innerHTML+"\n" + " lap "+counterLap+": "+document.getElementById("tt0").innerHTML;
+			}
+		}
+		var milli = 0;
+		var seconds = 0;
+		var minutes = 0;
+		var seconds2;
+		var minutes2;
+		function timer(){
+			milli=milli+1;
+			if (milli>9) {milli=0; seconds=seconds+1;}
+			if (seconds<10) {seconds2="0"+seconds;}else{seconds2=seconds;}
+			if (seconds>59) {seconds=0; minutes=minutes+1;}
+			if (minutes<10) {minutes2="0"+minutes;}else{minutes2=minutes;}
+			document.getElementById("tt0").innerHTML = minutes2+":"+seconds2+"."+milli;
+		}
+	</script>
+</html>

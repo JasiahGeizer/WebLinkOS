@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<!--
+	To Do:
+
+-->
+
+<html>
+	<head>
+		<style type="text/css">
+			*{
+				font-family: monospace;
+
+			}
+			body{
+				background-color: lightblue;
+			}
+			#taskbar1{
+				user-select: none;  
+				position: absolute;
+				background-color: white;
+				height: 155px;
+				width: 230px;
+				bottom: 200px;
+				left: 50%;
+				box-shadow: 0px 1px 5px #00000059;
+				border-radius:2px;
+
+			}
+			#taskbar2{
+				position: absolute;
+				height: 181px;
+				left: 5px;
+				padding: 5px; 
+			}
+			.smallsBTN{
+				position: relative;
+				width: 100px; 
+				height: 40px;
+				/*box-shadow: 0px 1px 2px lightgrey;*/
+				background-color: #f3f3f3;
+				text-align: center;
+				line-height: 40px;
+				display: inline-block;
+				margin-top:5px; 
+				border: 1px solid lightgrey;
+			}
+			.smallsBTN:hover{
+				background-color: grey;
+				color: white;
+				box-shadow: 0px 1px 2px grey;
+				border: 1px solid grey;
+			}
+			.smallsBTN:active{
+				background-color: black;
+				border: 1px solid black;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="taskbar1">
+			<div id="taskbar2">
+					<div class="smallsBTN" onclick="start(this)">Background</div>
+					<div class="smallsBTN" onclick="reset(this)">Stopwatch</div>
+					<div class="smallsBTN" onclick="start(this)">Temp. Format</div>
+					<div class="smallsBTN" onclick="reset(this)">Calendar</div>
+					<div class="smallsBTN" onclick="start(this)">Time Format</div>
+					<div class="smallsBTN" onclick="reset(this)">Contact</div>
+			</div>
+		</div>
+	</body>
+</html>

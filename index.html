@@ -358,6 +358,111 @@
 			input[type="color"]::-webkit-color-swatch {
 				border: none;
 			}
+			/*Task Bar*/
+			#taskbar1{
+				display: none;
+				user-select: none;  
+				position: absolute;
+				background-color: white;
+				height: 155px;
+				width: 230px;
+				bottom: 55px;
+				right: 100px;
+				box-shadow: 0px 1px 5px #00000059;
+				border-radius:2px;
+				background-color: #ffffffd4;
+			}
+			#taskbar2{
+				position: absolute;
+				height: 181px;
+				left: 5px;
+				padding: 5px; 
+			}
+			.smallsBTN{
+				position: relative;
+				width: 100px; 
+				height: 40px;
+				/*box-shadow: 0px 1px 2px lightgrey;*/
+				background-color: #f3f3f3;
+				text-align: center;
+				line-height: 40px;
+				display: inline-block;
+				margin-top:5px; 
+				border: 1px solid lightgrey;
+			}
+			.smallsBTN:hover{
+				background-color: grey;
+				color: white;
+				box-shadow: 0px 1px 2px grey;
+				border: 1px solid grey;
+			}
+			.smallsBTN:active{
+				background-color: black;
+				border: 1px solid black;
+			}
+			/* Stopwatch Timer */
+			#timer1{
+				user-select: none; 
+				display: none; 
+				position: absolute;
+				background-color: #ffffffd4;
+				height: 235px;
+				width: 300px;
+				bottom: 55px;
+				right: 100px;
+				box-shadow: 0px 1px 5px #00000059;
+				border-radius:2px;
+				backdrop-filter:blur(2px);
+			}
+			#timer2{
+				position: absolute;
+				height: 181px;
+				width: 218px;
+				left: 30px;
+			}
+			#timer3{
+				width:240px;
+				height: 30px;
+				font-style: italic;
+				line-height: 30px;
+				border-bottom: 1px solid lightgrey;
+			}
+			.smalls2{
+				position: absolute;
+				width: 100px; 
+				height: 50px;
+				/*box-shadow: 0px 1px 2px lightgrey;*/
+				background-color: #f3f3f3d4;
+				text-align: center;
+				line-height: 50px;
+				display: inline-block;
+				margin-top:5px; 
+				border: 1px solid lightgrey;
+			}
+			.smalls2:hover{
+				background-color: grey;
+				color: white;
+				box-shadow: 0px 1px 2px grey;
+				border: 1px solid grey;
+			}
+			.smalls2:active{
+				background-color: black;
+				border: 1px solid black;
+			}
+			.smalls2LBL{
+				position: absolute;
+				border-bottom: 1px solid lightgrey;
+				width: 218px; 
+				height: 50px;
+				/*box-shadow: 0px 1px 2px lightgrey;*/
+				text-align: center;
+				line-height: 50px;
+				user-select:all;
+				display: inline-block;
+				font-size:20px;
+				white-space: pre-line; 
+				overflow: auto;
+			}
 	</style>
 </head>
 	<body onload="startTime()">
@@ -369,8 +474,8 @@
 				</li>
 				<li onclick="alertLocation()" oncontextmenu="alertLocation2()" id="txt"></li>
 				<li onclick="getLocation()" id="location">--°</li>
-				<li onclick="getColor()" id="location">^</li>
-				
+				<!--<li onclick="getColor()" id="location">^</li>-->
+				<li onclick="getTaskBar()" id="location">^</li>
 			</div>
 
 			<script type="text/javascript"> //get and set temp.
@@ -452,14 +557,16 @@
 
 			<div id="menu" style="width: 120px;box-shadow: 0 4px 5px 3px rgba(0, 0, 0, 0.2); position: relative;z-index: 20;background-color: white; display: none;">
 			  <ul class="menu-options" style="list-style: none;padding: 5px 00px 00px 5px;line-height: 15px; width: 100%;">
-			    <li class="menu-option" onclick="closeIt('empty')">Close</li><p>
+			    
 			    <li class="menu-option" onclick="minimizeIt('empty')">Show/Hide</li></p>
-			    <li class="menu-option" onclick="pinIt()">Pin </li><p>
 			    <li class="menu-option" onclick="run2('https://www.jasiah.dev/apps/minesweeper','minesweeper')">Create Icon</li><p>
+			    <li class="menu-option" onclick="pinIt()">Pin </li><p>
+			    <li class="menu-option" onclick="closeIt('empty')">Close</li><p>
 			    <!--<li class="menu-option">Restart</li></p>
 			    <li class="menu-option">Save to Desktop</li>-->
 			  </ul>
 			</div>
+
 		<!-- Calendar -->
 			<div id="a1">
 			<div id="a2">
@@ -567,6 +674,28 @@
 
 			</div>
 		</div>
+
+		<div id="taskbar1">
+			<div id="taskbar2">
+					<div class="smallsBTN" onclick="getColor()">Background</div>
+					<div class="smallsBTN" onclick="getStopwatch()">Stopwatch</div>
+					<div class="smallsBTN" onclick="getLocation(this)">Temp. Format</div>
+					<div class="smallsBTN" onclick="alertLocation(this)">Calendar</div>
+					<div class="smallsBTN" onclick="alertLocation2(this)">Time Format</div>
+					<div class="smallsBTN" onclick="BigNav(),run('https://www.jasiah.dev/contact','contact')">Contact</div>
+			</div>
+		</div>
+		<div id="timer1">
+			<div id="timer2">
+				<div id="timer3"><span>Stopwatch</span></div>
+
+				<div style="width:240px" class="smalls2LBL" id="tt0">00:00.0</div>
+				<div style="top:90px;" class="smalls2" onclick="start(this)">Start</div>
+				<div style="line-height:10px; text-align:left; top:95px; font-size:13px;left:110px; width: 130px; height: 115px;" class="smalls2LBL" id="tt2"><i>Laps:</i></div>
+				<div style="top:155px;" class="smalls2" onclick="reset(this)" id="tt3">Reset</div>
+			</div>
+		</div>
+
 		<script type="text/javascript">
 			if(localStorage.getItem("bg") != 'null'){
 			document.body.style.background = localStorage.getItem("bg");
@@ -599,6 +728,7 @@
 			}
 			var count=0;
 			function run(program,name){
+				down();
 				BigNav();
 				count = count+"a";
 				var div = document.createElement("div");
@@ -971,6 +1101,7 @@
 			}
 			var CalPop=false;
 			function alertLocation(){
+				down();
 				if (CalPop==false) {
 					document.getElementById('a1').style.display='block';
 					CalPop=true;
@@ -984,8 +1115,13 @@
 				 event.preventDefault();
 				 changeTime();
 			}
+			function down(){
+				document.getElementById('taskbar1').style.display='none';
+				ColPop2=false;
+			}
 			var ColPop=false;
 			function getColor(){
+				down();
 				if (ColPop==false) {
 					document.getElementById('bg1').style.display='block';
 					ColPop=true;
@@ -995,7 +1131,30 @@
 				}
 				
 			}
-
+			var ColPop2=false;
+			function getTaskBar(){ //taskbar options
+				if (ColPop2==false) {
+					document.getElementById('taskbar1').style.display='block';
+					ColPop2=true;
+					//test
+					if (ColPop==true) {getColor();}
+					if (CalPop==true) {alertLocation();}
+					if (ColPop3==true) {getStopwatch();}
+				}else{
+					down();
+				}
+			}
+			var ColPop3=false;
+			function getStopwatch(){ //taskbar options
+				down();
+				if (ColPop3==false) {
+					document.getElementById('timer1').style.display='block';
+					ColPop3=true;
+				}else{
+					document.getElementById('timer1').style.display='none';
+					ColPop3=false;
+				}
+			}
 			//replace right click on nav bar
 					//fix but where right click lowers fist app
 			var mouseX = 0;
@@ -1259,6 +1418,50 @@
 		}
 
 		initalizeDate();
+
+
+		/*Stopwatch Timer*/
+		var timeVar;
+		function start(that){
+			if (that.innerHTML == "Start") {
+				that.innerHTML = "Stop";
+				document.getElementById("tt3").innerHTML = "Lap";
+				timeVar = setInterval(timer, 100);
+			}
+			else {
+				that.innerHTML = "Start";
+				document.getElementById("tt3").innerHTML = "Reset";
+				clearInterval(timeVar);
+			}
+		}
+		var counterLap=0;
+		function reset(that){
+			if (that.innerHTML=="Reset") {
+				document.getElementById("tt0").innerHTML = "00:00.0";
+				document.getElementById("tt2").innerHTML = "<i>Laps:</i>";
+				counterLap=0;
+				milli = 0;
+		 		seconds = 0;
+				minutes = 0;
+			}
+			else{
+				counterLap=counterLap+1;
+				document.getElementById("tt2").innerHTML = document.getElementById("tt2").innerHTML+"\n" + " lap "+counterLap+": "+document.getElementById("tt0").innerHTML;
+			}
+		}
+		var milli = 0;
+		var seconds = 0;
+		var minutes = 0;
+		var seconds2;
+		var minutes2;
+		function timer(){
+			milli=milli+1;
+			if (milli>9) {milli=0; seconds=seconds+1;}
+			if (seconds<10) {seconds2="0"+seconds;}else{seconds2=seconds;}
+			if (seconds>59) {seconds=0; minutes=minutes+1;}
+			if (minutes<10) {minutes2="0"+minutes;}else{minutes2=minutes;}
+			document.getElementById("tt0").innerHTML = minutes2+":"+seconds2+"."+milli;
+		}
 	</script>
 	</body>
 </html>
