@@ -111,6 +111,7 @@
 	function saveTextAsFile()
 	{
 	    var textToSave = document.getElementById("inputTextToSave").value;
+	    textToSave = textToSave.replace(/([^\r])\n/g, "$1\r\n");
 	    var textToSaveAsBlob = new Blob([textToSave], {type:"text/plain"});
 	    var textToSaveAsURL = window.URL.createObjectURL(textToSaveAsBlob);
 	    var fileNameToSaveAs = document.getElementById("inputFileNameToSaveAs").value;
