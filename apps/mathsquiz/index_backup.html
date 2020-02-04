@@ -113,26 +113,6 @@
 			#restarting:active{
 				box-shadow: 0px -1px 1px black;
 			}
-			#type{
-				height: 50px;
-			    width: 120px;
-			    padding: 10px;
-			    margin: 2px;
-			    overflow: hidden;
-			    background-color: #4a4a4a;
-			    color:white;
-			    font-size: 25px;
-			    border-radius: 0px;
-			    box-shadow: 0px 1px 1px black;
-			    display: inline-block;
-			    border:0px;
-			    outline:0;
-
-			    
-			}
-			#type:hover{
-				box-shadow: 0px 2px 1px black;
-			}
 		</style>
 	</head>
 	<body>
@@ -142,19 +122,13 @@
 			<div id="score"></div>
 			<div id="wrongScore"></div>
 			<div id="wrongWords">Incorrect:</div>
-
-			<button style="margin-left: 20px;" id="type">Multiplication</button>
-			<button id="type">Division</button>
-			<button id="type">Subtraction</button>
-			<button id="type">Addition</button>
-
 		</div>
 			<button id="enter" onclick="check()"> Go! </button>
 			<button id="restarting" onclick="restart()">Restart</button>
 			<br>
 			<div id="bgTime"></div>
-
 			
+
 		<script type="text/javascript">
 			document.getElementById("wordTXT").addEventListener("keyup", function(event) {
 			  if (event.keyCode === 13) {
@@ -207,10 +181,8 @@
 					}
 				}
 				if(start==true){
-					i = Math.floor((Math.random() * 12) + 1);  
-					val = cal * i;  //need to put in rand from 1 to max 4 (how many btn pressed) and set *,/,+,- as 1 to 4, each question select and use one.
-					//create function for btn press, setting which variables 
-					//create new class for new button position and size
+					i = Math.floor((Math.random() * 12) + 1);
+					val = cal * i;
 					document.getElementById("ToSpell").innerHTML = cal + " x " + i + " =";
 					document.getElementById("wordTXT").value ="";
 				}

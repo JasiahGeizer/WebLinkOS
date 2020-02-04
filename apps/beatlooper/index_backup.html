@@ -2,6 +2,7 @@
 
 <!-- To Do:
 	- Change speed to bpm
+	- Add reset button
 	- Change sounds to EDM/Electronic
 	- Highlight which one is getting played right now.
 	- Color Stop/Go buttons to green /red
@@ -207,9 +208,8 @@
 					<button onclick="prebeat(this)">Stop</button>
 					<span style="margin-left:20px;"> Speed:</span>
 					<button onclick="speed(1)">-</button>
-					<span style="padding-left: 15px;" id="s1">150</span>
+					<button id="s1">150</button>
 					<button onclick="speed(2)">+</button>
-					<button style="margin-left: 36px; background: linear-gradient(145deg, #4e4e4e, #643b3bed);" onclick="clearAll()">Clear</button>
 
 				<br>
 				<li class="items" id="50" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
@@ -223,7 +223,7 @@
 				<li class="items" id="58" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
 				<li  class="items" id="59" ondrop="drop(event)" ondragover="allowDrop(event)"></li>		
 			</ul>
-			<p></p> 
+			<p></p>
 			<ul>
 				<li  class="items" id="60" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
 				<li  class="items" id="61" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
@@ -274,18 +274,7 @@
 				<li  class="items" id="97" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
 			</ul>
 			<p></p>
-
-			<button style="margin-left: 40px; background: linear-gradient(145deg, #5c485d, #3b5664ed);" onclick="opens(1)">1</button>
-			<button style="margin-left: 10px; background: linear-gradient(145deg, #485d5a, #3b4764ed);" onclick="opens(2)">2</button>
-			<button style="margin-left: 10px; background: linear-gradient(145deg, #0cefef2e, #4a613c);" onclick="opens(3)">3</button>
-
-
-			<button style="margin-left: 84px; background: linear-gradient(145deg, #5c485d, #3b5664ed);" onclick="save(1)">Set 1</button>
-			<button style="margin-left: 10px; background: linear-gradient(145deg, #485d5a, #3b4764ed);" onclick="save(2)">Set 2</button>
-			<button style="margin-left: 10px; background: linear-gradient(145deg, #0cefef2e, #4a613c);" onclick="save(3)">Set 3</button>
 			
-			<!-- Save to internal storage, create load function-->
-
 			</div>
 		</div>
 				<br>
@@ -454,83 +443,7 @@
 				}
 			}
 
-			function clearAll(){
-				for (var i = 50; i < 98; i++) {
-					if (document.getElementById(i).childNodes[0] !== undefined && document.getElementById(i).childNodes[0] !== null) {
-						document.getElementById(i).childNodes[0].remove(); 
-					}
-				}
-			}
-
-			var storeCount=0;
-			var storeData=[0,0];
-			var storeData2=[0,0];
-
-			var storeCountB=0;
-			var storeDataB=[0,0];
-			var storeData2B=[0,0];
-
-			var storeCountC=0;
-			var storeDataC=[0,0];
-			var storeData2C=[0,0];
-
-			function save(num){
-				if (num==1) {
-						storeCount=0;
-						storeData.length = 0;
-						storeData2.length = 0;
-					for (var i = 50; i < 98; i++) {
-						if (document.getElementById(i).childNodes[0] !== undefined && document.getElementById(i).childNodes[0] !== null) { 
-							storeCount=storeCount+1;
-							storeData[storeCount]=(/*i+*/document.getElementById(i).childNodes[0]/*.innerHTML*/);
-							storeData2[storeCount]=i;
-						}
-					}
-				}
-				if (num==2) {
-						storeCountB=0;
-						storeDataB.length = 0;
-						storeData2B.length = 0;
-					for (var i = 50; i < 98; i++) {
-						if (document.getElementById(i).childNodes[0] !== undefined && document.getElementById(i).childNodes[0] !== null) { 
-							storeCountB=storeCountB+1;
-							storeDataB[storeCountB]=(/*i+*/document.getElementById(i).childNodes[0]/*.innerHTML*/);
-							storeData2B[storeCountB]=i;
-						}
-					}
-				}
-
-				if (num==3) {
-						storeCountC=0;
-						storeDataC.length = 0;
-						storeData2C.length = 0;
-					for (var i = 50; i < 98; i++) {
-						if (document.getElementById(i).childNodes[0] !== undefined && document.getElementById(i).childNodes[0] !== null) { 
-							storeCountC=storeCountC+1;
-							storeDataC[storeCountC]=(/*i+*/document.getElementById(i).childNodes[0]/*.innerHTML*/);
-							storeData2C[storeCountC]=i;
-						}
-					}
-				}
-			}
-			function opens(nums){
-				clearAll();
-				if (nums==1) {
-					for (var i = 0; i < storeCount; i++) {
-							document.getElementById(storeData2[i+1]).appendChild(storeData[i+1]);
-					}
-				}
-				if (nums==2) {
-					for (var i = 0; i < storeCountB; i++) {
-							document.getElementById(storeData2B[i+1]).appendChild(storeDataB[i+1]);
-					}		
-				}
-				if (nums==3) {
-					for (var i = 0; i < storeCountC; i++) {
-							document.getElementById(storeData2C[i+1]).appendChild(storeDataC[i+1]);
-					}		
-				}
-			}
+			
 		</script>
 	</body>
 </html>
