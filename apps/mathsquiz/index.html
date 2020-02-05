@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <!--
 	To Do:
-		- Add Subtraction and Addition
 		- Better graphical representation of question 
 -->
 <html>
@@ -97,8 +96,8 @@
 			    width: 120px;
 			    padding: 10px;
 			    margin: 2px;
-			    overflow: hidden;
 			    background-color: #4a4a4a;
+			    overflow: hidden;
 			    color:white;
 			    font-size: 25px;
 			    border-radius: 0px;
@@ -113,9 +112,9 @@
 			#restarting:active{
 				box-shadow: 0px -1px 1px black;
 			}
-			#type{
+			.type{
 				height: 50px;
-			    width: 120px;
+			    /*width: 120px;*/
 			    padding: 10px;
 			    margin: 2px;
 			    overflow: hidden;
@@ -127,10 +126,8 @@
 			    display: inline-block;
 			    border:0px;
 			    outline:0;
-
-			    
 			}
-			#type:hover{
+			.type:hover{
 				box-shadow: 0px 2px 1px black;
 			}
 		</style>
@@ -143,17 +140,16 @@
 			<div id="wrongScore"></div>
 			<div id="wrongWords">Incorrect:</div>
 
-			<button style="margin-left: 20px;" id="type">Multiplication</button>
-			<button id="type">Division</button>
-			<button id="type">Subtraction</button>
-			<button id="type">Addition</button>
+			<button onclick="select(this)" id="1" class="type" style="margin-left: 30px; background-color: #4a4a4a;" >Multiplication</button>
+			<button onclick="select(this)" id="2" class="type" style="background-color: #4a4a4a;">Division</button>
+			<button onclick="select(this)" id="3" class="type" style="background-color: #4a4a4a;">Subtraction</button>
+			<button onclick="select(this)" id="4" class="type" style="background-color: #4a4a4a;">Addition</button>
 
 		</div>
 			<button id="enter" onclick="check()"> Go! </button>
 			<button id="restarting" onclick="restart()">Restart</button>
 			<br>
 			<div id="bgTime"></div>
-
 			
 		<script type="text/javascript">
 			document.getElementById("wordTXT").addEventListener("keyup", function(event) {
@@ -163,21 +159,26 @@
 			  }
 			});
 
-			var i ="";
-			var score=0;
-			var wrong=0;
-			var s = false;
-			var start = false;
-			var val;
-			var cal;
-			var audio = new Audio('correct.wav');
-			var audio2 = new Audio('wrong.wav');
-			var Nana=false;
-			var myVar;
-			var highscore=0;
+				var i ="";
+				var score=0;
+				var wrong=0;
+				var s = false;
+				var start = false;
+				var val;
+				var cal;
+				var audio = new Audio('correct.wav');
+				var audio2 = new Audio('wrong.wav');
+				var Nana=false;
+				var myVar;
+				var highscore=0;
+				var symbol;
 			function check(){
+				if (selectedNum==0 || selectFromCount==0) {
+						selectFrom=["*","/","-","+"];
+						selectedNum=4;
+					}
 				if (start==true) {
-					if (Nana==true) {cal=Math.floor(Math.random() * 12) + 1}
+					if (Nana==true) {cal=Math.floor(Math.random() * 12) + 1} //first number all others
 					if(document.getElementById("wordTXT").value == val){
 						score=score+1;
 						document.body.style.backgroundColor = "#20b257";
@@ -198,21 +199,39 @@
 				}
 				if(start==false){
 					cal = document.getElementById("wordTXT").value;
-					if (isNaN(parseInt(cal))) {Nana=true;cal=Math.floor(Math.random() * 11) + 1}
+					if (isNaN(parseInt(cal))) {Nana=true;cal=Math.floor(Math.random() * 11) + 1} //first question - first number
 					
 					if (!isNaN(cal)) {
 						myVar = setInterval(myTimer, 200);
 						start=true;
-						
 					}
+					document.getElementById("1").style.display="none";
+					document.getElementById("2").style.display="none";
+					document.getElementById("3").style.display="none";
+					document.getElementById("4").style.display="none";
 				}
 				if(start==true){
-					i = Math.floor((Math.random() * 12) + 1);  
-					val = cal * i;  //need to put in rand from 1 to max 4 (how many btn pressed) and set *,/,+,- as 1 to 4, each question select and use one.
-					//create function for btn press, setting which variables 
-					//create new class for new button position and size
-					document.getElementById("ToSpell").innerHTML = cal + " x " + i + " =";
+					i = Math.floor((Math.random() * 12) + 1);
+					symbol = Math.floor((Math.random() * selectFrom.length));
+					//console.log(symbol+" "+selectFrom.length);
+
+					var cal2=cal;
+					var i2=i;
+
+					if (selectFrom[symbol]=="*") {val = parseInt(cal) * parseInt(i); }
+					if (selectFrom[symbol]=="/") {
+						val = parseInt(cal) * parseInt(i); 
+						var val2=val;
+						val=i2;
+						i=cal2;
+						cal=val2;
+					}
+					if (selectFrom[symbol]=="-") {val = parseInt(cal) - parseInt(i); }
+					if (selectFrom[symbol]=="+") {val = parseInt(cal) + parseInt(i); }
+
+					document.getElementById("ToSpell").innerHTML = cal + " " +selectFrom[symbol] + " " + i + " ="; //display for all questions
 					document.getElementById("wordTXT").value ="";
+					i=i2;cal=cal2;
 				}
 			}
 
@@ -252,9 +271,87 @@
 					document.getElementById("ToSpell").innerHTML="Enter a no. from 1 to 12:";
 					document.getElementById('wordTXT').value ="";
 					document.body.style.backgroundColor="#8c8c8c";
+					document.getElementById("1").style.display="inline-block";
+					document.getElementById("2").style.display="inline-block";
+					document.getElementById("3").style.display="inline-block";
+					document.getElementById("4").style.display="inline-block";
+			}
+				var selectFrom=["*","/","-","+"];
+				var selectFromCount=4;
+				var selectedNum=0;
+				var plus = false;
+				var minus = false;
+				var divide = false;
+				var times = false;
+			function select(that){
+					selectFromCount=0;
+					selectFrom=[];
+				if (that.style.backgroundColor=="rgb(74, 74, 74)") {
+					that.style.backgroundColor="#31632d";
+					selectedNum=selectedNum+1;
+					switch (that.innerHTML){
+						case "Addition":
+							plus = true;
+							break;
+						case "Multiplication":
+							times = true;
+							break;
+						case "Division":
+							divide = true;
+							break;
+						case "Subtraction":
+							minus = true;
+							break;
+					}
+				}else{
+					that.style.backgroundColor="rgb(74, 74, 74)";
+					selectedNum=selectedNum-1;
+					switch (that.innerHTML){
+						case "Addition":
+							plus = false;
+							break;
+						case "Multiplication":
+							times = false;
+							break;
+						case "Division":
+							divide = false;
+							break;
+						case "Subtraction":
+							minus = false;
+							break;
+					}
+				}
+
+				for (var i = 0; i < 4; i++) {
+					if (i==0){
+						if (times==true) {
+							selectFrom[selectFromCount]="*";
+							selectFromCount=selectFromCount+1;
+						}
+					}
+					if (i==1){
+						if (divide==true) {
+							selectFrom[selectFromCount]="/";
+							selectFromCount=selectFromCount+1;
+						}
+					}
+					if (i==2){
+						if (minus==true) {
+							selectFrom[selectFromCount]="-";
+							selectFromCount=selectFromCount+1;
+						}
+					}
+					if (i==3){
+						if (plus==true) {
+							selectFrom[selectFromCount]="+";
+							selectFromCount=selectFromCount+1;
+						}
+					}
+					
+				}
+				//console.log(selectFrom,selectFrom.length); 
 			}
 		</script>
 	</body>
 </html>
-
 
