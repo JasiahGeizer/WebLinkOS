@@ -20,7 +20,7 @@
 				position: relative;
 				background-color: #bdbdbd;
 				width: 540px;
-				height: 530px;
+				height: 600px; /*530px;*/
 				top: 50px;
 				margin: 0 auto;
 				border-radius: 20px;
@@ -30,6 +30,7 @@
 			textarea{
 				margin: 0 auto;
 			    padding: 3px; 
+			    margin-top: 25px;
 			    list-style-type: none;
 			    resize:none;
 			    display:block;
@@ -40,7 +41,6 @@
 
 			    font-family: monospace;
 			    font-size: 14px;
-
 			}
 			textarea:focus{
 				outline: none;
@@ -65,7 +65,6 @@
 				outline: none;
     			border: none;
 			}
-			
 			input[type="file" i] {
 				background-color: white;
 				box-shadow: 0px 3px 3px grey;
@@ -82,6 +81,14 @@
 				color: #353535;
 				outline: none;
     			border: none; 
+    			font-size: 13.5px; 
+    			height: 21px;
+    			width: 220px;
+			}
+			.saveBtn{
+				margin-bottom:7px; 
+				position: relative;
+				width: 86px;
 			}
 		</style>
 	</head>
@@ -90,24 +97,93 @@
 	<body>
 		Notes
 		<div class="grouped">
-		<br>
-		<span style="padding-left: 20px;">Filename:</span>
-        <input id="inputFileNameToSaveAs"></input>
-        <button onclick="saveTextAsFile()" style="position: relative;top: -1px;">Save</button><br>
-
-		<span style="margin-left:27px"></span> 
-		<textarea id="inputTextToSave" cols="80" rows="25"></textarea>
 		
-		<ul style="left:0px;position: relative;top: 5px;">
+		<ul style="left:-22px;position: relative;top: 12px;">
 	        <span>Select a File to Load:</span>
-	        <input type="file" id="fileToLoad" style="width: 40%;">
+	        <input type="file" id="fileToLoad" style="width: 220px;">
 	        <button onclick="loadFileAsText()">Load File</button>
-		</ul>
+	    </ul>
+
+		<textarea id="inputTextToSave" cols="80" rows="25"></textarea>
+		<ul>
+			<span>Download:</span>
+	        <input id="inputFileNameToSaveAs" value="File Name"></input>
+	        <button onclick="saveTextAsFile()" style="position: relative;">Download</button><br>
+    	</ul>
+		
+	    <ul style="position: relative;top: -3px;">Local Storage:<br><ul>
+	        <button class="saveBtn" onclick="localSave(1, 1)" id="F1a" style="margin-top:7px;">File 1 Save</button>
+	        <button class="saveBtn" onclick="localSave(2, 1)" id="F1b" style="display:none;" >File 1 Load</button>
+	        <button class="saveBtn" onclick="localSave(3, 1)" id="F1c" style="color:white;display:none; width: 25px; background: #e4382c;" >X</button>
+	        <br>
+	        <button class="saveBtn" onclick="localSave(1, 2)" id="F2a" >File 2 Save</button>
+	        <button class="saveBtn" onclick="localSave(2, 2)" id="F2b" style="display:none;" >File 2 Load</button>
+	        <button class="saveBtn" onclick="localSave(3, 2)" id="F2c" style="color:white;display:none; width: 25px; background: #e4382c;" >X</button>
+		</ul></ul>
 
 		</div>	
 
 
 <script language="Javascript" >
+	/*Checking local storage for files*/
+	if (localStorage.getItem("bg1") != null) {
+		document.getElementById("F1a").innerHTML="File 1 Modify";
+		document.getElementById("F1b").style.display="inline-block";
+		document.getElementById("F1c").style.display="inline-block";
+
+	}
+	if (localStorage.getItem("bg2") != null) {
+		document.getElementById("F2a").innerHTML="File 2 Modify";
+		document.getElementById("F2b").style.display="inline-block";
+		document.getElementById("F2c").style.display="inline-block";
+
+	}
+	/*Local storage save,load, delete functions*/
+	function localSave(btn,dial){
+		if (dial==1) {
+			if (btn==1) {
+				var textToSave2 = document.getElementById("inputTextToSave").value;
+		    	textToSave2 = textToSave2.replace(/([^\r])\n/g, "$1\r\n");
+				localStorage.setItem("bg1",textToSave2);
+				document.getElementById("F1a").innerHTML="File 1 Modify";
+				document.getElementById("F1b").style.display="inline-block";
+				document.getElementById("F1c").style.display="inline-block";
+			}
+			else if (btn==2){
+				if(localStorage.getItem("bg1") != null){
+					document.getElementById("inputTextToSave").value = localStorage.getItem("bg1")
+				}
+			}
+			else if (btn==3){
+				localStorage.removeItem("bg1");
+				document.getElementById("F1a").innerHTML="File 1 Save";
+				document.getElementById("F1b").style.display="none";
+				document.getElementById("F1c").style.display="none";
+			}
+		}else if (dial==2) {
+			if (btn==1) {
+				var textToSave2 = document.getElementById("inputTextToSave").value;
+		    	textToSave2 = textToSave2.replace(/([^\r])\n/g, "$1\r\n");
+				localStorage.setItem("bg2",textToSave2);
+				document.getElementById("F2a").innerHTML="File 2 Modify";
+				document.getElementById("F2b").style.display="inline-block";
+				document.getElementById("F2c").style.display="inline-block";
+			}
+			else if (btn==2){
+				if(localStorage.getItem("bg2") != null){
+					document.getElementById("inputTextToSave").value = localStorage.getItem("bg2")
+				}
+			}
+			else if (btn==3){
+				localStorage.removeItem("bg2");
+				document.getElementById("F2a").innerHTML="File 2 Save";
+				document.getElementById("F2b").style.display="none";
+				document.getElementById("F2c").style.display="none";
+			}
+		}
+		
+	}
+
 	function saveTextAsFile()
 	{
 	    var textToSave = document.getElementById("inputTextToSave").value;
