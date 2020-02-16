@@ -81,6 +81,7 @@
 			body{
 				background-color: #8c8c8c;
 				font-family: sans-serif;
+				overflow-x: hidden;
 			}
 			#wrongWords{
 				font-size: 25px;
@@ -91,7 +92,29 @@
 				display: none;
 				white-space:pre;
 			}
-			#restarting{
+			.restarting{
+				/*height: 50px;*/
+			    width: 120px;
+			    text-align: center;
+			    padding: 10px;
+			    margin: 2px;
+			    background-color: #4a4a4a;
+			    overflow: hidden;
+			    color:white;
+			    font-size: 25px;
+			    border-radius: 0px;
+			    box-shadow: 0px 1px 1px black;
+			    display: inline-block;
+			    border:0px;
+			    outline:0;
+			}
+			.restarting:hover{
+				box-shadow: 0px 2px 1px black;
+			}
+			.restarting:active{
+				box-shadow: 0px -1px 1px black;
+			}
+			#speeding{
 				height: 50px;
 			    width: 120px;
 			    padding: 10px;
@@ -105,11 +128,16 @@
 			    display: inline-block;
 			    border:0px;
 			    outline:0;
+
+			   	display: none;
+			    position:absolute;
+			    right: 90px;
+			    top: 23px
 			}
-			#restarting:hover{
+			#speeding:hover{
 				box-shadow: 0px 2px 1px black;
 			}
-			#restarting:active{
+			#speeding:active{
 				box-shadow: 0px -1px 1px black;
 			}
 			.type{
@@ -147,7 +175,10 @@
 
 		</div>
 			<button id="enter" onclick="check()"> Go! </button>
-			<button id="restarting" onclick="restart()">Restart</button>
+			<button id="restarting" class="restarting" onclick="restart()">Restart</button>
+			<span class="restarting" id="level" style="position:absolute;left: 50%;transform:translate(-50%, 0);top: 23px;background-color: #4a4a4a00;box-shadow: 0px 0px black;">Level 1</span>
+			<button id="speeding" onclick="faster()">Faster</button>
+			<span style="color: lightgrey;font-style: italic;top: 85px;position: absolute; left: 50%;transform:translate(-50%, 0);">Unlock next level at a score of 10</span>
 			<br>
 			<div id="bgTime"></div>
 			
@@ -234,11 +265,12 @@
 					i=i2;cal=cal2;
 				}
 			}
-
+			var speedLVL=1;
+			var speedr=0.5;
 			var widthr=0;
 			function myTimer() {
 				if(widthr < 100){
-					widthr = widthr + 1;
+					widthr = widthr + speedr;
 			    	document.getElementById("bgTime").style.width = widthr + '%';
 				}else{
 					clearInterval(myVar);
@@ -250,10 +282,41 @@
 					document.getElementById("wordTXT").style.opacity = 0;
 					document.getElementById("ToSpell").style.opacity = 0;
 					document.getElementById("wrongWords").style.display="block";
+					if (score>9) {
+						document.getElementById("speeding").style.display="block";
+					}
 				}
 			}
-
+			function faster(){
+					speedLVL=speedLVL+1;
+					document.getElementById("level").innerHTML="Level "+speedLVL;
+					speedr=speedr+0.40;
+					document.getElementById("speeding").style.display="none";
+					clearInterval(myVar);
+					widthr=0;
+					score=0;
+					wrong=0;
+					start=false;
+					Nana=false;
+					document.getElementById("bgTime").style.width = '1%';
+					document.getElementById("bgTime").style.opacity = 1;
+					document.getElementById("wordTXT").disabled = false;
+					document.getElementById("wordTXT").style.opacity = 1;
+					document.getElementById("ToSpell").style.opacity = 1;
+					document.getElementById("wrongWords").style.display="none";
+					document.getElementById("wrongWords").innerHTML="Incorrect:";
+					document.getElementById("score").innerHTML="";
+					document.getElementById("wrongScore").innerHTML="";
+					document.getElementById("ToSpell").innerHTML="Enter a no. from 1 to 12:";
+					document.getElementById('wordTXT').value ="";
+					document.body.style.backgroundColor="#8c8c8c";
+					document.getElementById("1").style.display="inline-block";
+					document.getElementById("2").style.display="inline-block";
+					document.getElementById("3").style.display="inline-block";
+					document.getElementById("4").style.display="inline-block";
+			}
 			function restart(){
+					clearInterval(myVar);
 					widthr=0;
 					score=0;
 					wrong=0;
