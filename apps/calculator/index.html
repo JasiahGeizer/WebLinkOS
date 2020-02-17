@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<title>Calculator</title>
+<html>
+	<head>
+		<style type="text/css">		
+			html, body {
+				height: 99%;
+				user-select: none;
+				-moz-user-select: none;
+				background-color: lightsteelblue;
+				font-family: monospace;
+				color:black;	
+			}
+			.grouped{
+				position: relative;
+				background-color: #bdbdbd;
+				width: 300px;
+				height: 440px;
+				top: 50px;
+				margin: 0 auto;
+				border-radius: 20px;
+				box-shadow: 0px 2px 13px grey;	
+				color: white;		
+			}
+			ul {
+			    margin: 0 auto;
+			    padding: 3px; 
+			    list-style-type: none;
+			    display:block;
+			    font-family: monospace;
+			    height: 325px;
+			    width: 270px;
+			    background: darkgrey;
+			}
+			.screen {
+			    margin: 0 auto;
+			    margin-bottom: 5px;
+			    padding: 3px; 
+			    list-style-type: none;
+			    display:block;
+			    font-family: monospace;
+			    font-size: 15px;
+			    height: 25px;
+			    width: 270px;
+			    background:whitesmoke;
+			    text-align: center;
+			    line-height: 25px;
+			    border:1px solid darkgrey;
+			}
+			.results {
+			    margin: 0 auto;
+			    margin-bottom: 5px;
+			    padding: 3px; 
+			    list-style-type: none;
+			    display:block;
+			    font-family: monospace;
+			    height: 50px;
+			    width: 270px;
+			    background:lightgrey;
+			    resize: none;
+			    height: 300px;
+			}
+			input:focus{
+				outline:0px;
+			}
+			textarea:focus{
+				outline:0px;
+			}				
+		</style>
+	</head>
+
+	<body>
+		Calculator
+		<div class="grouped">	<br>
+			<span style="margin-left:27px"></span> <br>
+			<input id="a1" type="textarea" value="Calculate Here:" name="asdf" class="screen"onfocus="clearit()" onchange="calculate()" oninput="quickcalc()">
+			<div id="a3" type="" class="screen" style="margin-bottom:5px; margin-top:15px;border:0px;background: #636363;color:white;">...</div>
+			<textarea id="a2" class="results" cols="80" rows="25">Results:</textarea>
+		<br>
+		</div>	
+		<script type="text/javascript">
+			var a1 = document.getElementById("a1");
+			var a2 = document.getElementById("a2");
+			var a3 = document.getElementById("a3");
+			var first=true;
+			function clearit(){
+				if (first==true) {
+					a1.value="";
+					first=false;
+				}
+			}
+			function calculate(){
+				if (a1.value.substring(a1.value.length-1)=="=") {
+					a1.value = a1.value.substring(0, a1.value.length-1);
+				}
+				try{
+					a2.value = a2.value
+						+"\n"
+						+a1.value
+						+" = "
+						+eval(a1.value);
+					a1.value=eval(a1.value);
+				}
+				catch(err){
+					a2.value = a2.value
+						+"\n"
+						+a1.value+" is not calculable.";
+				};
+			}
+			var lastcalc="";
+			function quickcalc(){
+				try{
+					a3.innerHTML =eval(a1.value);
+					lastcalc=eval(a1.value);
+			}
+				catch(err){a3.innerHTML=lastcalc;};
+			}
+		</script>
+	</body>
+</html>

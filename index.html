@@ -540,7 +540,7 @@
 				</ul>
 				<ul>
 					<span style="line-height: 25px;">Apps</span><p></p>
-					<li class="lilow" >Calculator [WIP]</li>
+					<li class="lilow" onclick="run('https://www.jasiah.dev/apps/calculator','calculator')">Calculator</li>
 					<li class="lilow" onclick="run('https://www.jasiah.dev/apps/notes','notes')">Notes</li>
 					<li class="lilow" onclick="run('https://www.jasiah.dev/apps/painter','painter')">Painter</li>
 					<li class="lilow" onclick="run('https://www.jasiah.dev/apps/drummachine','drummachine')">Drum Machine</li>
@@ -682,7 +682,7 @@
 					<div class="smallsBTN" onclick="getLocation(this)">Temp. Format</div>
 					<div class="smallsBTN" onclick="alertLocation(this)">Calendar</div>
 					<div class="smallsBTN" onclick="alertLocation2(this)">Time Format</div>
-					<div class="smallsBTN" onclick="BigNav(),run('https://www.jasiah.dev/contact','contact')">Contact</div>
+					<div class="smallsBTN" onclick="openFullscreen()">Fullscreen</div>
 			</div>
 		</div>
 		<div id="timer1">
@@ -710,6 +710,18 @@
 		}
 	</script>
 		<script type="text/javascript">
+			/*fullscreen*/
+			function openFullscreen(){ 
+				if (!isFullScreen()) {
+					document.documentElement.requestFullscreen(); 
+				}else {
+					document.exitFullscreen();
+				}
+			}
+			function isFullScreen() {
+			  return (document.webkitIsFullScreen && document.webkitIsFullScreen !== null);
+			}
+
 			var mode=0;
 			var nav;
 			function BigNav() {
