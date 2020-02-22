@@ -129,7 +129,7 @@
 				width:150px;
 				top: 40%;
 				position: absolute;
-				/*background: grey;*/
+				background: #80808000;
 				transform: translate(0%, -50%);
 				z-index: -1;
 
@@ -171,12 +171,12 @@
 										50%{left:22%;filter:invert(45%);} 
 										75%{left:21%;} 
 										100%{left:21%;}}
-			@keyframes shieldYou {		0%{}
-										80%{filter:drop-shadow(0px 0px 30px blue) opacity(80%);} 
-										100% {}}
-			@keyframes shieldYou2 {		0%{} 
-										80%{filter:drop-shadow(0px 0px 30px blue) opacity(80%);}
-										100% {}}
+			@keyframes shieldYou {		0%{border-radius:200px;}
+										50%{filter:drop-shadow(0px 0px 20px #cc00ff8a);background-color:#cc00ff8a;} 
+										100% {border-radius:200px;}}
+			@keyframes shieldYou2 {		0%{border-radius:200px;} 
+										50%{filter:drop-shadow(0px 0px 20px #cc00ff8a);background-color:#cc00ff8a;}
+										100% {border-radius:200px;}}
 			@keyframes forward {		30%{left: 21%;} 
 										100%{left:110%;}}	
 		</style>
@@ -201,7 +201,7 @@
 			<div id="endturn" onclick="turnEnd()">End Turn</div>
 
 			<div class="character" id="ally" style="left: 21%; background-image:url('char/p1.png')">Player</div>
-			<div class="character" id="enemy" style="right: 21%;background-image:url('char/p5.png')">Enemy</div>
+			<div class="character" id="enemy" style="right: 21%;background-image:url('char/p2.png')">Enemy</div>
 
 			<div 
 				id="1"
@@ -447,7 +447,8 @@
 		}
 
 		var turnPly=0
-		var randAttac=0;
+		var randAttack=0;
+		var randAttackMax=15;
 		function enemyTurn(){
 			playerStats.dataset.shield=parseInt(playerStats.dataset.shield)-parseInt(randAttack);
 			if (playerStats.dataset.shield<0) {
@@ -455,7 +456,7 @@
 			}
 			playerStats.dataset.shield=0;
 			updateStats();
-			randAttack =  Math.floor((Math.random() * 15) + 1);
+			randAttack =  Math.floor((Math.random() * randAttackMax) + 1);
 			document.getElementById("0c").innerHTML="Next Turn:\nDamage: "+randAttack;
 
 			if (randAttack>0) {
@@ -489,7 +490,7 @@
 		updateStats();
 		newCards();
 
-		randAttack =  Math.floor((Math.random() * 15) + 1);
+		randAttack =  Math.floor((Math.random() * randAttackMax) + 1);
 		document.getElementById("0c").innerHTML="Next Turn:\nDamage: "+randAttack;
 
 		function checkWin(){
@@ -500,7 +501,7 @@
 				allyID.id="ally5";
 				document.getElementById("menu1").style.display="block";
 
-				document.getElementById("b1").disabled = false;document.getElementById("b1").style.opacity = 1;
+			document.getElementById("b1").disabled = false;document.getElementById("b1").style.opacity = 1;
 			document.getElementById("b2").disabled = false;document.getElementById("b2").style.opacity = 1;
 			document.getElementById("b3").disabled = false;document.getElementById("b3").style.opacity = 1;
 			document.getElementById("b4").disabled = false;document.getElementById("b4").style.opacity = 1;
@@ -508,20 +509,43 @@
 		}
 
 	var levelOn=1;
+	var enemyHealth=100;
 	function nextLevel(){
 		levelOn=levelOn+1;
-		/* Change Boss */
-		enemyID.style.backgroundImage="url('char/p4.png')";
-		/* Change Background */
-		document.body.style.backgroundImage="url('bgs/bg3.png')";
-		/* Choose Upgrade */
+		/* Change Boss & Background */
+		if (levelOn==2) {
+			enemyID.style.backgroundImage="url('char/p3.png')";
+			document.body.style.backgroundImage="url('bgs/bg2.png')";
+		}else if (levelOn==3) {
+			enemyID.style.backgroundImage="url('char/p4.png')";
+			document.body.style.backgroundImage="url('bgs/bg3.png')";
+		}else if (levelOn==4) {
+			enemyID.style.backgroundImage="url('char/p5.png')";
+			document.body.style.backgroundImage="url('bgs/bg4.png')";
+		}else if (levelOn==5) {
+			enemyID.style.backgroundImage="url('char/p6.png')";
+			document.body.style.backgroundImage="url('bgs/bg5.png')";
+		}else if (levelOn==6) {
+			enemyID.style.backgroundImage="url('char/p7.png')";
+			document.body.style.backgroundImage="url('bgs/bg3b.png')";
+		}else {
+			enemyID.style.backgroundImage="url('char/p6.png')";
+			document.body.style.backgroundImage="url('bgs/bg3b.png')";
+		}
+		
+
+
 		/* Update Stats */
-		enemyStats.dataset.health=110;
+		randAttackMax=parseInt(randAttackMax)+5;
+		enemyHealth=enemyHealth+10;
+		enemyStats.dataset.health=enemyHealth;
 		newCards();
 		updateStats();
 		document.getElementById("menu1").style.display="none";
 		enemyID.id="enemy";
 		allyID.id="ally";
+		turnCPU=0;
+		turnPly=0;
 	}
 
 	function upgrade(count){
@@ -566,13 +590,12 @@
 <!--
 	To Do: 
 		- Show attack points near character for 2 seconds.
-		- get enemy shield working.
-		- Get new boss and background at each level
+		- get enemy shield working & increase boss shield with each level
 		- difference damage motion for attacking just shield vs attacking health as well
-		- increase boss difficulty with each level
-		- Show level
+		- Show level in text
 
 		Long Term:
+			- Create a health bar for ally and enemy
 			- Add sound effects (for attack, take damage, gain shield, win, lose)
 			- Create game over screen, implement death animation, and add die sound effect
 			- Create top-view map for between battles
@@ -590,6 +613,7 @@
 				- double attack for rest of turn
 				- poision (damage over mutiple turns)
 				- 1 shield every turn for rest of battle.
+			- More rewards (new cards)
 -->
 
 </html>
