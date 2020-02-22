@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<style type="text/css">
+			*{
+				user-select: none;
+				font-family: monospace;
+			}
+			body{
+				background-color: darkslateblue; /*lightblue*/
+			}
+			img{
+				width: 100px;
+				user-drag: none;
+				user-select: none;
+				position: absolute;
+				top: 5px; 
+				left: 5px;
+				visibility: hidden;
+			}
+			.spot{
+				width:80px;
+				height: 130px;
+				padding:10px;
+				background: grey;
+				border-radius:7px; 
+			}
+		</style>
+	</head>
+	<body>
+		<div>
+			<div class="spot" style="position: relative;top: 593px;left: 492px;" onclick="generateCard(this)">Click here to generate new card</div>
+			<div class="spot" style="position: relative;top: 143px;left: 492px;" onclick="enemyTurn(this)">Click here to generate new enemy card</div>
+			<div class="spot" style="position: relative;top: 143px;left: 492px; background:#f44336;" ondblclick="clearAll()">Drag here to remove card<p>Double click to clear all</div>
+			<img id="1" src="img/2D.png" ondrag="drag(this)" ondragend="drag2()">
+			<img id="2" src="img/3D.png" ondrag="drag(this)" ondragend="drag2()">
+
+			<img id="3" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/4D.png">
+			<img id="4" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/5D.png">
+			<img id="5" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/6D.png">
+			<img id="6" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/7D.png">
+			<img id="7" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/8D.png">
+			<img id="8" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/9D.png">
+			<img id="9" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/10D.png">
+			<img id="10" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/JD.png">
+			<img id="11" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/QD.png">
+			<img id="12" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/KD.png">
+			<img id="13" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/AD.png">
+
+			<img id="14" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/2H.png">
+			<img id="15" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/3H.png">
+			<img id="16" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/4H.png">
+			<img id="17" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/5H.png">
+			<img id="18" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/6H.png">
+			<img id="19" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/7H.png">
+			<img id="20" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/8H.png">
+			<img id="21" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/9H.png">
+			<img id="22" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/10H.png">
+			<img id="23" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/JH.png">
+			<img id="24" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/QH.png">
+			<img id="25" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/KH.png">
+			<img id="26" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/AH.png">
+
+			<img id="27" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/2S.png">
+			<img id="28" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/3S.png">
+			<img id="29" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/4S.png">
+			<img id="30" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/5S.png">
+			<img id="31" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/6S.png">
+			<img id="32" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/7S.png">
+			<img id="33" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/8S.png">
+			<img id="34" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/9S.png">
+			<img id="35" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/10S.png">
+			<img id="36" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/JS.png">
+			<img id="37" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/QS.png">
+			<img id="38" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/KS.png">
+			<img id="39" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/AS.png">
+
+			<img id="40" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/2C.png">
+			<img id="41" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/3C.png">
+			<img id="42" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/4C.png">
+			<img id="43" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/5C.png">
+			<img id="44" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/6C.png">
+			<img id="45" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/7C.png">
+			<img id="46" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/8C.png">
+			<img id="47" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/9C.png">
+			<img id="48" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/10C.png">
+			<img id="49" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/JC.png">
+			<img id="50" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/QC.png">
+			<img id="51" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/KC.png">
+			<img id="52" onclick="newCard(this)" ondrag="drag(this)" ondragend="drag2()" src="img/AC.png">
+		</div>
+		
+	</body>
+	<script type="text/javascript">
+		function drag(it,e) {
+			//e.preventDefault();
+			event.target.style.top=Math.round((event.clientY-100)/150)*150+'px';
+			event.target.style.left=Math.round((event.clientX-50)/100)*100+'px';
+		}
+		function drag2(it){
+			event.target.style.top=Math.round((event.clientY-100)/150)*150+'px';
+			event.target.style.left=Math.round((event.clientX-50)/100)*100+'px';
+			console.log(event.target.style.left+"|"+event.target.style.top);
+			if (event.target.style.left=="500px" && event.target.style.top=="450px") {
+				event.target.style.top="5px";
+				event.target.style.left="5px";
+				event.target.style.visibility="hidden";
+				cardsOpened=cardsOpened-1;
+				console.log(cardsOpened);
+			}
+		}
+		function newCard(that){
+			if (that.style.filter=="brightness(0)") {
+				that.style.filter="brightness(1)";
+			}else{
+				that.style.filter="brightness(0)";
+			}
+			
+		}
+		var cardsOpened=0;
+		function generateCard(that){
+			console.log("new card");
+			var cardPick = Math.floor((Math.random() * 52) + 1);
+			if (document.getElementById(cardPick).style.top!=="") /*.style.visibility=="visible")*/
+				{
+					if (cardsOpened!==52) {
+						if (that.style.top=="143px") {enemyCount=enemyCount-1;enemyTurn(that);}
+						else{generateCard(that);}
+						
+					}else{console.log("no more cards")}
+					
+				}
+			else{
+					document.getElementById(cardPick).style.visibility="visible";
+					cardsOpened=cardsOpened+1;
+					console.log(cardsOpened+" | "+cardPick);
+				}
+			return cardPick;
+		}
+		function clearAll(){
+			for (var i = 1; i < 53; i++) {
+				if (document.getElementById(i).style.visibility=="visible") {
+					document.getElementById(i).style.top="5px";
+					document.getElementById(i).style.left="5px";
+					document.getElementById(i).style.filter="brightness(1)";
+					document.getElementById(i).style.visibility="hidden";
+					cardsOpened=cardsOpened-1;
+					console.log(cardsOpened);
+
+				}
+			}enemyCount=0;
+		}
+		var enemyCount=0;
+		function enemyTurn(that){
+			var cardEnemy = generateCard(that);
+			console.log(cardEnemy+"|");
+			document.getElementById(cardEnemy).style.filter="brightness(0)";
+			enemyCount=enemyCount+1;
+			switch(enemyCount){
+				case 1:
+					document.getElementById(cardEnemy).style.left="0px";
+					document.getElementById(cardEnemy).style.top="300px";
+					break;
+				case 2:
+					document.getElementById(cardEnemy).style.left="100px";
+					document.getElementById(cardEnemy).style.top="300px";
+					break;
+				case 3:
+					document.getElementById(cardEnemy).style.left="200px";
+					document.getElementById(cardEnemy).style.top="300px";
+					break;
+				case 4:
+					document.getElementById(cardEnemy).style.left="300px";
+					document.getElementById(cardEnemy).style.top="300px";
+					break;
+				case 5:
+					document.getElementById(cardEnemy).style.left="400px";
+					document.getElementById(cardEnemy).style.top="300px";
+					break;
+			}
+
+			
+
+		}
+	</script>
+</html>
