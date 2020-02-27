@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<style>
+			*{
+				background: whitesmoke;
+				font-family: monospace; 
+			}
+			#a1{
+				width: 100px;
+				height: 100px;
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				background: lightblue; 
+				text-align: center;
+				line-height: 100px;
+			}
+			#a2{
+				width: 25px;
+				height: 25px;
+				position: absolute;
+				background: lightgreen; 
+				text-align: center;
+				line-height: 25px;
+			}
+			body{
+				width: 100%;
+				height: 100%;
+				overflow: hidden;
+			}		
+		</style>
+	</head>
+	<body>
+
+		<div id="a1">Player</div>
+		<div id="a2" style="top: 500px;left: 500px;">Shot</div>
+
+		<script type="text/javascript">
+			document.onclick = trigger;
+
+			var shot = document.getElementById("a2");
+			var Xsub;
+			var Ysub;
+			var YMouse=0;
+			var XMouse=0; 
+			var count=0;
+			function trigger(event){
+				console.log(event.clientX+" "+event.clientY);
+				YMouse = event.clientY;
+				XMouse = event.clientX;
+				if (count==0) {
+					Xsub = parseInt(shot.style.left)/parseInt(XMouse);
+					Ysub = parseInt(shot.style.top)/parseInt(YMouse);
+					if (Xsub>1) {Xsub=Xsub-1;console.log("AAAAA");}
+					if (Ysub>1) {Ysub=Ysub-1;console.log("BBBBB");}
+					if (Xsub>1) {Xsub=Xsub-1;console.log("CCCCC");}
+					if (Ysub>1) {Ysub=Ysub-1;console.log("DDDDD");}
+					setInterval(shooter,10);
+					count=count+1;
+					
+				}
+			}
+			
+			function shooter(){
+					//console.log(window.innerHeight+" "+window.innerWidth+" "+parseInt(shot.style.left)+" "+XMouse);
+					
+
+				if (parseInt(shot.style.left)>parseInt(XMouse)) {
+					shot.style.left=parseInt(shot.style.left)-(10*Xsub)+"px";
+				}else{
+					shot.style.left=parseInt(shot.style.left)+(10*Xsub)+"px";
+				}
+				if (parseInt(shot.style.top)>parseInt(YMouse)) {
+					shot.style.top=parseInt(shot.style.top)-(10*Ysub)+"px";
+				}else{
+					shot.style.top=parseInt(shot.style.top)+(10*Ysub)+"px";
+				}
+			}
+  		</script>
+	</body>
+</html>
+
+

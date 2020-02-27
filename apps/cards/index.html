@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<style type="text/css">
+			*{
+				/*cursor: grab !important;*/
+				user-select: none;
+				font-family: monospace;
+				overflow: hidden;
+			}
+			*:active{
+				cursor: grabbing;
+			}
+			body{
+				background-color: black; /*lightblue*/
+				background-image:url('bgs/bg1.png');
+        		background-position: 50% 50%;
+        		background-repeat: no-repeat;
+        		background-attachment: fixed;
+				
+			}
+			img{
+				width: 100px;
+				/*position: absolute;*/
+				top: 5px; 
+				left: 5px;
+				/*visibility: hidden;*/
+				padding: 1px;
+				margin: 1px;
+			}
+			.menu{
+				background:lightgrey;
+				position: absolute;
+				width:300px;
+				height:330px;
+				left:50%;
+				top: 50%;
+				transform: translate(-50%, -50%);
+				z-index: 2;
+				box-shadow: 1px 1px 2px black;
+				border-radius: 7px;
+				padding: 10px;
+				display: none;
+			}
+			button{
+				left: 50%;
+				transform: translate(-50%, 0%);
+				position: relative;
+				/*box-shadow: 1px 1px 2px black;*/
+				/*border:0px;*/
+				padding: 10px;
+			}
+			button:focus{
+				outline: none;
+			}
+			button:hover{
+				background-color: white;
+			}
+			button:active{
+				box-shadow: 0px 0px black;
+			}
+			span{
+				font-size: 16px;
+				font-weight: bold;
+				color: grey;
+			}
+			.card{
+				width: 75px;
+				height: 125px;
+				position: absolute;
+				color: whitesmoke;
+				bottom: 5px; 
+				left: 5px;
+				visibility: hidden;
+				padding: 1px;
+				margin: 1px;
+				background-size: cover;
+				/*background-image:url('bg.jpg');*/
+				background: linear-gradient(45deg, #423338 0%, #E91E63 100%);
+				border-radius: 7px;
+				padding: 10px;
+				line-height: 20px;
+				border:1px solid #00000033;
+				box-shadow: 1px 1px 2px black;
+			}
+			.card:hover{
+				margin-bottom: 10px;
+				margin-left: 1px;
+				margin-right: 1px;
+				box-shadow: 2px 2px 40px black;
+				transform: rotate(0deg) !important;
+				z-index: 6 !important;
+			}
+			.card2{
+				width: 75px;
+				height: 125px;
+				position: absolute;
+				color: whitesmoke;
+				bottom: 5px; 
+				left: 5px;
+				visibility: hidden;
+				padding: 1px;
+				margin: 1px;
+				background-size: cover;
+				/*background-image:url('bg.jpg');*/
+				background: linear-gradient(45deg, #423338 0%, #E91E63 100%);
+				border-radius: 7px;
+				padding: 10px;
+				line-height: 20px;
+				border:1px solid #00000033;
+				box-shadow: 1px 1px 2px black;
+			}
+			.card2:hover{
+				margin-bottom: 10px;
+				margin-left: 1px;
+				margin-right: 1px;
+				box-shadow: 2px 2px 40px black;
+				transform: rotate(0deg) !important;
+				z-index: 6 !important;
+			}
+			.card:active{
+				margin-bottom: 10px;
+				margin-left: 1px;
+				margin-right: 1px;
+				box-shadow: 2px 2px 40px black;
+				transform: rotate(0deg) !important;
+				z-index: 6 !important;
+			}
+			.spot{
+				width:80px;
+				height: 130px;
+				padding:10px;
+				background: grey;
+				border-radius:7px; 
+			}
+			#endturn{
+				background: grey; 
+				position: absolute;
+				width: 100px; 
+				height: 50px;
+				bottom: 40px; 
+				right: 40px; 
+				box-shadow: 3px 3px 3px black;
+				text-align: center;
+				line-height: 50px;
+				background-image: linear-gradient(225deg, #545353, #7d7d7d);
+				border-radius: 5px;
+			}
+			#endturn:hover{
+				background: #909090;
+			}
+			#endturn:active{
+				background-image: linear-gradient(225deg, #545353, #7d7d7d);
+				box-shadow: 1px 1px 2px black;
+			}
+			#endturnGlow{
+				position: absolute;
+				width: 100px; 
+				height: 50px;
+				bottom: 40px; 
+				right: 40px; 
+				box-shadow: 3px 3px 3px black;
+				text-align: center;
+				line-height: 50px;
+				background: linear-gradient(225deg, #921d15, #F44336);
+				border-radius: 5px;
+				position: absolute;
+				animation: endGlow 1s 1;
+				animation-iteration-count: infinite;
+			}
+			@keyframes endGlow{	0%   {}
+								50%  {box-shadow: 3px 3px 3px black,2px 2px 50px #921d15, inset 20px 0px 50px #921d15;}
+								100% {box-shadow: 3px 3px 3px black}}
+			.stats{
+				box-shadow: 2px 2px 4px black;
+				width: 100px;
+				padding: 5px;
+				color: whitesmoke;
+				background-image: linear-gradient(225deg, #545353, #7d7d7d);
+				border-radius: 5px;
+			}
+			div:active{
+				cursor: grabbing;
+				cursor: -moz-grabbing;
+        		cursor: -webkit-grabbing;
+			}
+			.character{
+				height: 205px;
+				width:175px;
+				top: 40%;
+				color: white;
+				position: absolute;
+				background: #80808000;
+				transform: translate(0%, -50%);
+				z-index: -1;
+				background-repeat: no-repeat;
+				background-position: 50% 50%;
+				overflow: visible;
+				/*position: absolute;
+			  	animation: hit 0.5s 1;
+			  	animation-direction: alternate;*/
+			}
+			#enemy1{position: absolute;animation: hita 0.5s 1;}
+			#enemy2{position: absolute;animation: hit 0.5s 1;}
+			#enemy3{/*Die*/position: absolute;animation: die 2s 1;animation-fill-mode: forwards;}
+			@keyframes hit {	0%   {right: 21%;}
+								25%  {right: 22%;}
+								50%  {right: 20%;filter:invert(45%);}
+								75%  {right: 21%;}
+								100% {right: 21%;}}
+			@keyframes hita {	0%   {right: 21%;}
+								25%  {right: 20%;}
+								50%  {right: 22%;filter:invert(45%);}
+								75%  {right: 21%;}
+								100% {right: 21%;}}
+			@keyframes die { 	from {fitler:blur(0px);}
+								to   {filter:blur(100px); opacity: 0%;}}
+
+			#ally{position: absolute;animation: forwardStart 1.5s 1;animation-fill-mode: forwards;}
+			#ally1{position: absolute;animation: hitYou 0.5s 1;animation-direction: alternate;}
+			#ally2{position: absolute;animation: hitYou2 0.5s 1;animation-direction: alternate;}
+			#ally3{position: absolute;animation: shieldYou 1s 1;animation-fill-mode: forwards;}
+			#ally4{position: absolute;animation: shieldYou2 1s 1;animation-fill-mode: forwards;}
+			#ally5{/*win*/position: absolute;animation:forward 3s 1;animation-direction:alternate;animation-fill-mode:forwards;}
+			@keyframes forwardStart {	0%{left:-20%;} 
+										100%{left:21%;}}
+			@keyframes hitYou {			0% {left:21%;} 
+										25%{left:22%;} 
+										50%{left:20%;filter:invert(45%);} 
+										75%{left: 21%;} 
+										100%{left: 21%;}}
+			@keyframes hitYou2 {		0%{left: 21%;} 
+										25%{left:20%;} 
+										50%{left:22%;filter:invert(45%);} 
+										75%{left:21%;} 
+										100%{left:21%;}}
+			@keyframes shieldYou {		0%{border-radius:200px;}
+										50%{} 
+										100% {border-radius:200px;filter:drop-shadow(0px 0px 20px #cc00ff8a);background-color:#cc00ff8a;}}
+			@keyframes shieldYou2 {		0%{border-radius:200px;} 
+										50%{}
+										100% {border-radius:200px;filter:drop-shadow(0px 0px 20px #cc00ff8a);background-color:#cc00ff8a;}}
+			@keyframes forward {		30%{left: 21%;} 
+										100%{left:110%;}}
+
+			#cardAttack{position: absolute;animation:cardFly 1s 1;animation-direction:alternate;animation-fill-mode:forwards;}
+			@keyframes cardFly {		0%{} 
+										50%{bottom:50%;height: 0px;left: 50%;transform:rotate(0deg);}
+										99%{bottom: 50%;height: 0px;left: 78%;opacity: 100%;transform:rotate(0deg);}
+										100%{bottom: 50%;height: 0px;left: 78%;opacity: 0%;transform:rotate(0deg);}}	
+			/*document.getElementById("4").id="cardAttack";*/
+			/*@keyframes cardFly2 {		0%{} 
+										50%{bottom:50%;height: 0px;left: 50%;}
+										99%{bottom: 50%;height: 0px;left: 78%;opacity: 100%;}
+										100%{bottom: 50%;height: 0px;left: 78%;opacity: 0%;transform:rotate(0deg);}}*/
+			.card{position: absolute;animation:cardIn 1s 1;animation-direction:alternate;animation-fill-mode:forwards;}
+			@keyframes cardIn {		0%{bottom:10%;left: -20%;} 
+									100%{}}
+			.card2{position: absolute;animation:cardOut 1s 1;animation-direction:alternate;animation-fill-mode:forwards;}
+			@keyframes cardOut {	0%{} 
+									100%{bottom:10%;left: 120%;}}
+
+			#enemyHit{
+			    text-align: center;
+			    background: linear-gradient(225deg, #ff005e, #9e1c1c);
+			    margin-left: 75px;
+			    position: relative;
+			    padding: 5px;
+			    top: -65px;
+			    width: 15px;
+			    border-radius: 50px;
+			    box-shadow: 2px 2px 5px #000000b0;
+			}
+			.HealthShield{
+				border-radius: 10px;
+				text-align: center;
+				transform: translate(165px, 110px);
+				left: 21%;
+				z-index: 1;
+				height: 15px;
+				background: linear-gradient(225deg, #61094b, #ff00db);
+				width: 15px;
+				border: 3px ridge #b100ac;
+				margin: -3px;
+				box-shadow: black 0px 0px 0px inset;
+				color: white;
+				top: 40%;
+				position: absolute;
+				display:none;
+			}
+			.HealthShieldEnemy{
+				border-radius: 10px;
+				text-align: center;
+				transform:translate(15px, 110px);
+				right: 21%;
+				z-index: 1;
+				height: 15px;
+				background: linear-gradient(225deg, #61094b, #ff00db);
+				width: 15px;
+				border: 3px ridge #b100ac;
+				margin: -3px;
+				box-shadow: black 0px 0px 0px inset;
+				color: white;
+				top: 40%;
+				position: absolute;
+				display:none;
+			}
+			#b0{
+				box-shadow: 2px 2px 4px black;
+			    height: 30px; 
+			    line-height: 30px;
+			    padding: 5px;
+			    border-radius: 50px;
+			    font-size: 18px;
+			    color: whitesmoke;
+			    background-image: linear-gradient(225deg, #d1215d, #FF5722);
+			    border-radius: 50px;
+			}	
+			#enemy4{position: absolute;animation: shieldYou 1s 1;animation-fill-mode: forwards;}
+			#enemy5{position: absolute;animation: shieldYou2 1s 1;animation-fill-mode: forwards;}
+		</style>
+	</head>
+	<body>
+		<div>
+			<div class="menu" id="menu1">
+				<span>Upgrade Selection</span><p style="padding-top: 20px;">
+				<button id="b1" onclick="upgrade(1);">+20 Health.</button></p>
+				<button id="b2" onclick="upgrade(2);">+1 mana each turn</button><p>
+				<button id="b3" onclick="upgrade(3);">Upgrade all damage by 1 point.</button></p>
+				<button id="b4" onclick="upgrade(4);">Upgrade all shield by 1 point.</button><p style="padding-top: 25px; padding-left: 50%">
+				<button onclick="nextLevel();">Next Level</button>
+
+			</div>
+
+			<div style="position: absolute;top: 40px;right: 40px; display: none;" class="stats" id="0" data-shield="0" data-health="100"></div>
+			<div style="position: absolute;bottom: 40px;left: 40px;" id="b0" data-shield="0" data-health="100" data-mana="3"></div>
+
+			<!--<div style="position: absolute;top: 40px;right: 160px;" class="stats" id="0c"></div>Next Turn-->
+
+			<div id="endturn" onclick="turnEnd()">End Turn</div>
+
+			<div class="character" id="ally" style="left: 21%; background-image:url('char/p1.png')">Player</div>
+			<div class="character" id="enemy" style="right: 21%;background-image:url('char/p2.png')">
+				<p id="enemyText">The Aardvark</p>
+				<p id="enemyHit">7</p></div>
+
+			<p id="allyHealthShield" class="HealthShield"> </p>
+			<div class="character" id="allyHealth" style="border-radius:10px;padding-left: 10px;transform:translate(10px, 120px);left: 21%; height: 15px;background:linear-gradient(#ff0101,#a51010); width: 150px;">
+				<p id="allyHealthTXT" style="margin: 0px;">Health: 100</p>
+				
+			</div>
+
+			<p id="enemyHealthShield" class="HealthShieldEnemy" style="display: block;">1</p>
+			<div class="character" id="enemyHealth" style="border-radius:10px;padding-left: 10px;transform:translate(7px, 120px);right: 21%; height: 15px;background:linear-gradient(#ff0101,#a51010);width: 150px;">
+				<p id="enemyHealthTXT" style="margin: 0px;">Health: 100</p>
+				
+			</div>
+
+			<div 
+				id="1"
+				data-mana="1" 
+				data-attack="6" 
+				data-shield="0" 
+				data-atktime="false" 
+				class="card" 
+				draggable="true"  
+				ondrag="drag(this)" 
+				ondragend="drag2()"
+			>Card</div>
+
+			<div 
+				id="2"
+				data-mana="1" 
+				data-attack="0" 
+				data-shield="5" 
+				data-atktime="false" 
+				class="card" 
+				draggable="true"  
+				ondrag="drag(this)" 
+				ondragend="drag2()"
+			>Card</div>
+
+			<div 
+				id="3"
+				data-mana="2" 
+				data-attack="8" 
+				data-shield="2" 
+				data-atktime="false" 
+				class="card" 
+				draggable="true"  
+				ondrag="drag(this)" 
+				ondragend="drag2()"
+			>Card</div>
+
+			<div 
+				id="4"
+				data-mana="2" 
+				data-attack="0" 
+				data-shield="14" 
+				data-atktime="false" 
+				class="card" 
+				draggable="true"  
+				ondrag="drag(this)" 
+				ondragend="drag2()"
+				>Card</div>
+
+			<div 
+				id="5"
+				data-mana="2" 
+				data-attack="14" 
+				data-shield="0" 
+				data-atktime="false" 
+				class="card" 
+				draggable="true"  
+				ondrag="drag(this)" 
+				ondragend="drag2()"
+				>Card</div>
+
+			<div 
+				id="6"
+				data-mana="1" 
+				data-attack="5" 
+				data-shield="5" 
+				data-atktime="false" 
+				class="card" 
+				draggable="true"  
+				ondrag="drag(this)" 
+				ondragend="drag2()"
+			>Card</div>
+
+			<div 
+				id="7"
+				data-mana="1" 
+				data-attack="9" 
+				data-shield="0" 
+				data-atktime="false" 
+				class="card" 
+				draggable="true"  
+				ondrag="drag(this)" 
+				ondragend="drag2()"
+			>Card</div>
+
+			<div 
+				id="8"
+				data-mana="1" 
+				data-attack="0" 
+				data-shield="8" 
+				data-atktime="false" 
+				class="card" 
+				draggable="true"  
+				ondrag="drag(this)" 
+				ondragend="drag2()"
+			>Card</div>
+
+			<div 
+				id="9"
+				data-mana="1" 
+				data-attack="0" 
+				data-shield="0" 
+				data-atktime="true" 
+				class="card" 
+				draggable="true"  
+				ondrag="drag(this)" 
+				ondragend="drag2()"
+			>Card</div>
+
+		</div>
+		
+	</body>
+	<script type="text/javascript">
+		var cards = 10;
+		var cards2 = cards-1;
+		var audio1 = new Audio('audio/hit.wav');
+		var audio2 = new Audio('audio/shield_up.wav');
+		var audio3 = new Audio('audio/4.mp3');
+		var audio4 = new Audio('audio/woosh.wav');
+
+		var manaUsed=1;
+		function drag(it,e) {
+			manaUsed=event.target.dataset.mana;
+			if (manaUsed<=playerStats.dataset.mana) {
+				if (playerStats.dataset.mana>0) {
+					//e.preventDefault();
+					event.target.style.bottom=Math.round(((window.innerHeight)-event.clientY-50)/50)*50+'px';
+					event.target.style.left=Math.round((event.clientX-50)/100)*100+'px';
+				}
+			}
+		}
+		var enemyID=document.getElementById("enemy");
+		var allyID=document.getElementById("ally");
+		var turnCPU=0;
+		function drag2(it){
+			if (manaUsed<=playerStats.dataset.mana) {
+				if (playerStats.dataset.mana>0) {
+
+					if (event.target.dataset.attack>0) {
+							audio1.play();
+							if (document.getElementById("enemy")) {
+								document.getElementById("enemy").id="enemy2";
+								enemyID=document.getElementById("enemy2");
+							}
+							else if (document.getElementById("enemy2")) {
+								document.getElementById("enemy2").id="enemy1";
+								enemyID=document.getElementById("enemy1");
+							}
+							else if (document.getElementById("enemy1")) {
+								document.getElementById("enemy1").id="enemy2";
+								enemyID=document.getElementById("enemy2");	
+							}
+							//console.log(event.target.dataset.attack+" asdf "+enemyStats.dataset.shield);
+							if (parseInt(event.target.dataset.attack)>=parseInt(enemyStats.dataset.shield)) {
+								if (document.getElementById("enemy4")) {
+									document.getElementById("enemy4").id="enemy1";
+									enemyID=document.getElementById("enemy1");
+								}
+								else if (document.getElementById("enemy5")) {
+									document.getElementById("enemy5").id="enemy1";
+									enemyID=document.getElementById("enemy1");	
+								}
+							}
+						}
+
+
+					event.target.style.bottom=Math.round(((window.innerHeight)-event.clientY-50)/50)*50+'px';
+					event.target.style.left=Math.round((event.clientX-50)/100)*100+'px';
+					//console.log(event.target.style.left+"|"+event.target.style.bottom+"");
+					//console.log(event.target.dataset.mana);
+					//console.log(event.target.dataset.shield);
+					//console.log(event.target.dataset.attack);
+
+					if (event.target.style.bottom!=="50px") {
+						playerStats.dataset.mana=playerStats.dataset.mana-manaUsed;
+
+						enemyStats.dataset.shield=parseInt(enemyStats.dataset.shield)-parseInt(event.target.dataset.attack);
+						if (enemyStats.dataset.shield<0) {
+							enemyStats.dataset.health=parseInt(enemyStats.dataset.health)+parseInt(enemyStats.dataset.shield);
+							enemyStats.dataset.shield=0;
+							updateHealthBars();
+						}
+						/*enemyStats.dataset.health=enemyStats.dataset.health-event.target.dataset.attack;*/
+
+
+						enemyStats.innerHTML = "Shield: "+enemyStats.dataset.shield+"\nHealth: "+enemyStats.dataset.health;
+
+						playerStats.dataset.shield=parseInt(playerStats.dataset.shield)+parseInt(event.target.dataset.shield);
+						
+
+						event.target.style.bottom="5px";
+						event.target.style.left="5px";
+
+						event.target.style.visibility="hidden";
+
+						if (event.target.dataset.atktime=="true") {
+							if (randAttack>0) {
+								randAttack = randAttack / 2;
+								randAttack = randAttack.toFixed(0);
+								document.getElementById("enemyHit").innerHTML = randAttack;
+							}else if (randShield>0) {
+								randShield = randShield / 2;
+								randShield = randShield.toFixed(0);
+								document.getElementById("enemyHit").innerHTML = randShield;
+							}			
+							
+						}
+						
+						if (event.target.dataset.shield>0) {/*Fix Ally Animaion Delaying by one turn[?]*/
+							audio2.play();
+							if (turnPly==0) {
+								document.getElementById("ally").id="ally3";
+								turnPly=1;
+							}else if (turnPly==1) {
+								if (document.getElementById("ally3")) {
+									document.getElementById("ally3").id="ally4";
+									allyID=document.getElementById("ally4");
+								}
+								else if (document.getElementById("ally4")) {
+									document.getElementById("ally4").id="ally3";
+									allyID=document.getElementById("ally3");
+								}
+								else if (document.getElementById("ally2")) {
+									document.getElementById("ally2").id="ally3";
+									allyID=document.getElementById("ally3");
+								}
+								else if (document.getElementById("ally1")) {
+									document.getElementById("ally1").id="ally3";
+									allyID=document.getElementById("ally3");
+								}
+								else if (document.getElementById("ally6")) {
+									document.getElementById("ally6").id="ally3";
+									allyID=document.getElementById("ally3");
+								}
+								turnPly=1;
+							}
+						}
+						if (playerStats.dataset.mana==0) {
+							document.getElementById("endturn").id="endturnGlow";
+							//document.getElementById("endturn").style.backgroundImage="linear-gradient(225deg, #921d15, #F44336)";
+						}
+						updateStats();
+						checkWin();
+					}
+				}
+			}
+		}
+
+		updateCards();
+
+		var enemyStats=document.getElementById("0");
+		var playerStats=document.getElementById("b0");
+		function updateStats(){
+			/*enemyStats.innerHTML = "Shield: "+enemyStats.dataset.shield+"\nHealth: "+enemyStats.dataset.health;*/
+			playerStats.innerHTML = playerStats.dataset.mana+"/"+startingMana;
+			updateHealthBars();
+		}
+
+
+		var cardCount=0;
+		function generateCard(){
+			//console.log("new card");
+			var cardPick = Math.floor((Math.random() * cards2) + 1);
+			var cardPickr=document.getElementById(cardPick);
+			if (cardPickr.style.bottom!=="50px"){
+					cardPickr.style.bottom="50px";
+					cardPickr.style.visibility="visible";
+					cardPickr.className="card";
+					cardCount=cardCount+1;
+				switch(cardCount){
+					case 1:
+						cardPickr.style.left="200px";
+						cardPickr.style.transform="rotate(340deg)";
+						cardPickr.style.zIndex="5";
+						break;
+					case 2:
+						cardPickr.style.left="300px";
+						cardPickr.style.transform="rotate(350deg)";
+						cardPickr.style.zIndex="4";
+						break;
+					case 3:
+						cardPickr.style.left="400px";
+						cardPickr.style.transform="rotate(0deg)";
+						cardPickr.style.zIndex="3";
+						break;
+					case 4:
+						cardPickr.style.left="500px";
+						cardPickr.style.transform="rotate(10deg)";
+						cardPickr.style.zIndex="2";
+						break;
+					case 5:
+						cardPickr.style.left="600px";
+						cardPickr.style.transform="rotate(20deg)";
+						cardPickr.style.zIndex="1";
+						break;
+				}
+				if (cardPickr.dataset.attack==0){
+					cardPickr.style.background="linear-gradient(45deg, #423338 0%, #a70cce 100%)";
+				}
+				if (cardPickr.dataset.shield>0) {
+					cardPickr.style.background="linear-gradient(45deg, #423338 0%, #9c27b0 100%)"
+				}
+				if (cardPickr.dataset.mana==2 && cardPickr.dataset.shield>0){
+					cardPickr.style.background="linear-gradient(45deg, #211a1c 0%, #792c81 100%)";
+				}
+				if (cardPickr.dataset.mana==2 && cardPickr.dataset.attack>0){
+					cardPickr.style.background="linear-gradient(45deg, #211a1c 0%, #a52020 100%)";
+				}
+			}else{generateCard();}
+			
+		}
+		var startingMana=3;
+		function newCards(){
+			cardCount=0;
+			for (var i = 1; i < cards; i++) {
+				document.getElementById(i).style.left="5px";
+				document.getElementById(i).style.bottom="5px";
+				document.getElementById(i).style.visibility="hidden";
+			}
+			for (var i = 0; i < 5; i++) {
+				generateCard();
+			}
+			playerStats.dataset.mana=startingMana;
+			//document.getElementById("endturn").style.backgroundImage="linear-gradient(225deg, #545353, #7d7d7d)";
+			
+		}
+		function turnEnd(){
+			audio4.play();
+			for (var i = 1; i < cards; i++) { /*card fly2*/
+				if (document.getElementById(i).style.bottom=="50px") {
+					document.getElementById(i).className="card2";
+				}else{document.getElementById(i).className="card3";}
+				document.getElementById(i).addEventListener("transitionend", myEndFunction);
+			}
+		try{document.getElementById("endturnGlow").id="endturn";}
+		catch{console.log("first");}
+		setTimeout(function(){ myEndFunction()}, 600);
+		}
+		function myEndFunction() {
+			newCards();
+			updateStats();
+			enemyTurn();
+		}
+
+		var turnPly=0
+		var randAttack=0;
+		var randAttackMax=15;
+		var ShieldOrAttack=0;
+		var randShield=0;
+		function enemyTurn(){
+			if (ShieldOrAttack==1) {
+				if (randShield>0) {
+							audio2.play();/*If No Shield*/
+								if (document.getElementById("enemy")) {
+									document.getElementById("enemy").id="enemy4";
+								}
+								else if (document.getElementById("enemy1")) {
+									document.getElementById("enemy1").id="enemy4";
+								}
+								else if (document.getElementById("enemy2")) {
+									document.getElementById("enemy2").id="enemy4";
+								}/*If Shield Already*/
+								else if (document.getElementById("enemy4")) {
+									document.getElementById("enemy4").id="enemy5";
+									allyID=document.getElementById("enemy5");
+								}
+								else if (document.getElementById("enemy5")) {
+									document.getElementById("enemy5").id="enemy4";
+									allyID=document.getElementById("enemy4");
+								}
+							}
+			}else{
+				if (randAttack>playerStats.dataset.shield) {
+					audio1.play();}else{audio1.play();
+				}if (document.getElementById("enemy4")) {
+					document.getElementById("enemy4").id="enemy";
+					allyID=document.getElementById("enemy");
+				}
+				else if (document.getElementById("enemy5")) {
+					document.getElementById("enemy5").id="enemy";
+					allyID=document.getElementById("enemy");
+				}
+			}
+
+			//console.log(ShieldOrAttack+"|||");
+
+			if (randAttack>0) {
+				/*if (turnPly==0) {
+					document.getElementById("ally").id="ally2";
+					turnPly=1;
+				}else if (turnPly==1) {*/
+					if (document.getElementById("ally2")) {
+						document.getElementById("ally2").id="ally1";
+						allyID=document.getElementById("ally1");
+					}
+					/*else if (document.getElementById("ally1")) {
+						document.getElementById("ally1").id="ally2";
+						allyID=document.getElementById("ally2");
+					}*/
+					else if (document.getElementById("ally3")) {
+						document.getElementById("ally3").id="ally1";
+						allyID=document.getElementById("ally1");
+					}
+					else if (document.getElementById("ally4")) {
+						document.getElementById("ally4").id="ally1";
+						allyID=document.getElementById("ally1");
+					}
+					else if (document.getElementById("ally6")) {
+						document.getElementById("ally6").id="ally1";
+						allyID=document.getElementById("ally1");
+					}
+					//turnPly=1;
+				}else{
+					if (document.getElementById("ally2")) {
+						document.getElementById("ally2").id="ally6";
+						allyID=document.getElementById("ally6");
+					}
+					/*else if (document.getElementById("ally1")) {
+						document.getElementById("ally1").id="ally2";
+						allyID=document.getElementById("ally2");
+					}*/
+					else if (document.getElementById("ally3")) {
+						document.getElementById("ally3").id="ally6";
+						allyID=document.getElementById("ally6");
+					}
+					else if (document.getElementById("ally4")) {
+						document.getElementById("ally4").id="ally6";
+						allyID=document.getElementById("ally6");
+					}
+				}
+			//}
+
+			enemyStats.dataset.shield=randShield;
+
+			playerStats.dataset.shield=parseInt(playerStats.dataset.shield)-parseInt(randAttack);
+			if (playerStats.dataset.shield<0) {
+				playerStats.dataset.health=parseInt(playerStats.dataset.health)+parseInt(playerStats.dataset.shield);
+				updateHealthBars();
+			}
+
+			playerStats.dataset.shield=0;
+			updateStats();
+			randAttack =  Math.floor((Math.random() * randAttackMax) + 1);
+			document.getElementById("enemyHit").innerHTML=randAttack;
+
+			ShieldOrAttack = Math.floor((Math.random() * 2));
+			//console.log(ShieldOrAttack);
+			if (ShieldOrAttack==1) {
+				/*Shield Mode*/
+				randShield = randAttack;
+				randAttack=0;
+				document.getElementById("enemyHit").style.background="linear-gradient(225deg, #ad00ff, #3a1c9e)";
+
+			}else if (ShieldOrAttack==0){
+				/*Attack Mode*/
+				randShield=0;
+				//randAttack=randAttack;
+				document.getElementById("enemyHit").style.background="linear-gradient(225deg, #ff005e, #9e1c1c)";
+				/*put different damage animation here, for not removing any health*/
+				/*get different damage sound for player (dont enemy one)*/
+			}
+
+			
+			checkWin();
+		}
+
+		updateStats();
+		newCards();
+
+		randAttack =  Math.floor((Math.random() * randAttackMax) + 1);
+		document.getElementById("enemyHit").innerHTML=randAttack;
+
+		function checkWin(){
+			if (playerStats.dataset.health<=0) {alert("player lost")}
+			else if (enemyStats.dataset.health<=0) {
+				//alert("you won!");
+				enemyID.id="enemy3";
+				allyID.id="ally5";
+				document.getElementById("menu1").style.display="block";
+
+			document.getElementById("b1").disabled = false;document.getElementById("b1").style.opacity = 1;
+			document.getElementById("b2").disabled = false;document.getElementById("b2").style.opacity = 1;
+			document.getElementById("b3").disabled = false;document.getElementById("b3").style.opacity = 1;
+			document.getElementById("b4").disabled = false;document.getElementById("b4").style.opacity = 1;
+			}
+		}
+
+	var levelOn=1;
+	var enemyHealth=100;
+	function nextLevel(){
+		levelOn=levelOn+1;
+		/* Change Boss & Background */
+		if (levelOn==2) {
+			enemyID.style.backgroundImage="url('char/p3.png')";
+			document.body.style.backgroundImage="url('bgs/bg2.png')";
+			document.getElementById("enemyText").innerHTML="An indoor bear";
+		}else if (levelOn==3) {
+			enemyID.style.backgroundImage="url('char/p4.png')";
+			document.body.style.backgroundImage="url('bgs/bg3.png')";
+			document.getElementById("enemyText").innerHTML="Aliens";
+		}else if (levelOn==4) {
+			enemyID.style.backgroundImage="url('char/p5.png')";
+			document.body.style.backgroundImage="url('bgs/bg4.png')";
+			document.getElementById("enemyText").innerHTML="Sir Piggy";
+		}else if (levelOn==5) {
+			enemyID.style.backgroundImage="url('char/p6.png')";
+			document.body.style.backgroundImage="url('bgs/bg5.png')";
+			document.getElementById("enemyText").innerHTML="Evil Clone";
+		}else if (levelOn==6) {
+			enemyID.style.backgroundImage="url('char/p7.png')";
+			document.body.style.backgroundImage="url('bgs/bg3b.png')";
+			document.getElementById("enemyText").innerHTML="The Programmer";
+		}else {
+			enemyID.style.backgroundImage="url('char/p6.png')";
+			document.body.style.backgroundImage="url('bgs/bg3b.png')";
+			document.getElementById("enemyText").innerHTML="Moon Penguin";
+		}
+		
+
+
+		/* Update Stats */
+		randAttackMax=parseInt(randAttackMax)+5;
+		enemyHealth=enemyHealth+10;
+		enemyStats.dataset.health=enemyHealth;
+		newCards();
+		updateStats();
+		document.getElementById("menu1").style.display="none";
+		enemyID.id="enemy";
+		allyID.id="ally";
+		turnCPU=0;
+		turnPly=0;
+	}
+	var allyHealthMax=100;
+	function upgrade(count){
+		audio3.play();
+		switch(count){
+			case 1:
+				playerStats.dataset.health=parseInt(playerStats.dataset.health)+20;
+				if (parseInt(playerStats.dataset.health)>=allyHealthMax) {allyHealthMax = playerStats.dataset.health;}
+				updateHealthBars();
+				break;
+			case 2:
+				startingMana=startingMana+1;
+				break;
+			case 3:
+				for (var i = 1; i < cards; i++) {
+					if (document.getElementById(i).dataset.attack>0) {
+						document.getElementById(i).dataset.attack=parseInt(document.getElementById(i).dataset.attack)+1;
+					}
+				}
+				break;
+			case 4:
+				for (var i = 1; i < cards; i++) {
+					if (document.getElementById(i).dataset.shield>0) {
+						document.getElementById(i).dataset.shield=parseInt(document.getElementById(i).dataset.shield)+1;
+					}
+				}
+				break;	
+		}
+			document.getElementById("b1").disabled = true;document.getElementById("b1").style.opacity = 0.5;
+			document.getElementById("b2").disabled = true;document.getElementById("b2").style.opacity = 0.5;
+			document.getElementById("b3").disabled = true;document.getElementById("b3").style.opacity = 0.5;
+			document.getElementById("b4").disabled = true;document.getElementById("b4").style.opacity = 0.5;
+		updateCards();
+		updateStats();
+
+	}
+	function updateCards(){
+		for (var i = 1; i < cards; i++) {
+			var i2 = document.getElementById(i);
+			i2.innerHTML="Mana: "+i2.dataset.mana+"\nShield: "+i2.dataset.shield+"\nAttack: "+i2.dataset.attack+"\n";
+			if (i2.dataset.atktime=="true") {
+				i2.innerHTML="Mana: "+i2.dataset.mana+"\nShield: "+i2.dataset.shield+"\nAttack: "+i2.dataset.attack+"\n<i>Reduces enemy move potential.</i>";
+			}
+		}
+	}
+
+	function updateHealthBars(){
+		var x1a = playerStats.dataset.health;
+		document.getElementById("allyHealthTXT").innerHTML="Health: "+x1a;
+
+		var x1c= (1-(parseInt(playerStats.dataset.health)/allyHealthMax))*160;
+		var x1b="inset -"+x1c+"px 0px 0px #520000";
+		document.getElementById("allyHealth").style.boxShadow=x1b;
+
+		var x2 = enemyStats.dataset.health;
+		document.getElementById("enemyHealthTXT").innerHTML="Health: "+x2;
+
+		var x2c=(1-(parseInt(enemyStats.dataset.health)/enemyHealth))*160;
+		var x2b="inset -"+x2c+"px 0px 0px #520000";
+		document.getElementById("enemyHealth").style.boxShadow=x2b;
+
+		document.getElementById("allyHealthShield").innerHTML=playerStats.dataset.shield;
+		if (document.getElementById("allyHealthShield").innerHTML==0) {
+			document.getElementById("allyHealthShield").innerHTML="";
+			document.getElementById("allyHealth").style.border="0px ridge #9e0099c9";
+			document.getElementById("allyHealth").style.margin="0px";
+			document.getElementById("allyHealthShield").style.display="none";
+		}else{
+			document.getElementById("allyHealth").style.border="4px ridge #9e0099c9";
+			document.getElementById("allyHealth").style.margin="-4px";
+			document.getElementById("allyHealthShield").style.display="block";
+		}
+
+		document.getElementById("enemyHealthShield").innerHTML=enemyStats.dataset.shield;
+		if (document.getElementById("enemyHealthShield").innerHTML==0) {
+			document.getElementById("enemyHealthShield").innerHTML="";
+			document.getElementById("enemyHealth").style.border="0px ridge #9e0099c9";
+			document.getElementById("enemyHealth").style.margin="0px";
+			document.getElementById("enemyHealthShield").style.display="none";
+		}else{
+			document.getElementById("enemyHealth").style.border="4px ridge #9e0099c9";
+			document.getElementById("enemyHealth").style.margin="-4px";
+			document.getElementById("enemyHealthShield").style.display="block";
+		}
+	}
+
+	</script>
+
+<!--
+	To Do: 
+		- Reset shield on next level
+		- Pre-load the background images
+		- Add (more) sound effects for: card woosh, take damage, win, lose, next level btn, walk [?].
+
+		- [Fix] on next level, "end turn" glows and cards don't fully retreat
+		- [Fix] next level animations don't show correctly, doesn't detect loss until card grab
+
+		- Make enemy attack fly towards player and hit them.
+		- get enemy shield working & increase boss shield with each level
+			- rand 0 or 1, if 1 - put random number into shield, not attack
+		- difference damage motion for attacking just shield vs attacking health as well
+		- Show level in text
+	
+		Mid Term
+			- Make shield pulse (?) | Increase shield size when mutiple shield cards used (?)
+			- Finish card put down effects (instead of disappearing)
+			- nothing in top right corner (show enemy shield in bubble and change bg to purple)
+
+		Long Term:
+			- Create game over screen, create death animation, and add death sound effect
+			- Create top-view map for between battles
+				- Building for each boss.
+				- Move around to each builing
+				- Shop Station
+				- Chance Station
+				- Heal/Upgrade Station
+			- Custom design for each card
+			- Improve bear character design
+			- Add more characters / backgrounds
+			- Reprise our roles and record voice over audio sound bites
+			- create cards that:
+				- give you mana next turn
+				- double attack for rest of turn
+				- poision (damage over mutiple turns)
+				- 1 shield every turn for rest of battle.
+				- draw 1 card
+			- More rewards (new cards, +1 card each turn)
+-->
+
+</html>
+

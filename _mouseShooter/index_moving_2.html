@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<!--
+	To Do:
+		- Change colision values to a single variable (or block height/length/position)
+
+		-  You're a fish in the ocean, change all divs to square jellfish, that still match to the boundary
+-->
+
+<html>
+	<head>
+		<script type="text/javascript">
+			var moverLeft;
+			var moverRight;
+			var moverUp;
+			var moverDown;
+
+			var fired1=false;
+			var fired2=false;
+			var fired3=false;
+			var fired4=false;
+
+            function leftArrowPressed() {
+            	if (fired1==false) {
+            		moverLeft = setInterval(moverL, 1);
+            		fired1=true;
+            	}
+            	
+            }
+
+            function rightArrowPressed() {
+            	if (fired2==false) {
+            		moverRight = setInterval(moverR, 1);
+            		fired2=true;
+            	}
+            }
+
+            function upArrowPressed() {
+            	if (fired3==false) {
+            		moverUp = setInterval(moverU, 1);
+            		fired3=true;
+            	}
+            }
+
+            function downArrowPressed() {
+            	if (fired4==false) {
+            		moverDown = setInterval(moverD, 1);
+            		fired4=true;
+            	}
+            }
+
+            function moveSelection(evt) {
+                switch (evt.keyCode) {
+                    case 37:
+                    leftArrowPressed();
+                    break;
+                    case 39:
+                    rightArrowPressed();
+                    break;
+                    case 38:
+                    upArrowPressed();
+                    break;
+                    case 40:
+                    downArrowPressed();
+                    break;
+                    }
+                };
+
+            function moveSelection2(evt) {
+                switch (evt.keyCode) {
+                    case 37:
+                    clearInterval(moverLeft);
+                    fired1=false;
+                    break;
+                    case 39:
+                    clearInterval(moverRight);
+                    fired2=false;
+                    break;
+                    case 38:
+                    clearInterval(moverUp);
+                    fired3=false;
+                    break;
+                    case 40:
+                    clearInterval(moverDown);
+                    fired4=false;
+                    break;
+                    }
+                };
+
+        function docReady()
+        {
+          window.addEventListener('keydown', moveSelection);
+          window.addEventListener('keyup', moveSelection2);
+
+        }
+        var blockCount=6;
+        function moverL(){
+        	var element = document.getElementById("image1");
+        	if (parseInt(element.style.left)!==0) {
+        		element.style.left = parseInt(element.style.left) - 1 + 'px';
+        	}
+            //collision detection blocks
+            for (var i = 1; i < blockCount; i++) {
+				if (parseInt(element.style.left)+10==parseInt(document.getElementById("block"+i).style.left)+parseInt(document.getElementById("block"+i).style.width)) {
+	        		if (parseInt(element.style.top)+70
+	        			>parseInt(document.getElementById("block"+i).style.top) 
+	        			&& parseInt(element.style.top)
+	        				<parseInt(document.getElementById("block"+i).style.top)
+	        				+parseInt(document.getElementById("block"+i).style.height)-40) 
+				        		{
+				        			if (i=="5") {
+				        				newPos();console.log("got");
+				        			}else{
+				        				//element.style.left = parseInt(element.style.left) + 1 + 'px';
+				        				document.getElementById("block"+i).style.backgroundColor="darkgrey";
+				        			}
+				        			
+								}  	
+	            }
+            }
+        }
+        function moverR(){
+        	var element = document.getElementById("image1");
+        	element.style.left = parseInt(element.style.left) + 1 + 'px';
+
+            //collsion detection blocks
+            for (var i = 1; i < blockCount; i++) {
+	            if ((parseInt(element.style.left)+parseInt(element.offsetWidth))-10==parseInt(document.getElementById("block"+i).style.left)) {
+	        		if (parseInt(element.style.top)+70
+	        			>parseInt(document.getElementById("block"+i).style.top) 
+	        			&& parseInt(element.style.top)
+	        				<parseInt(document.getElementById("block"+i).style.top)
+	        				+parseInt(document.getElementById("block"+i).style.height)-40) 
+				        		{
+				        			if (i=="5") {
+				        				newPos();console.log("got");
+				        			}else{
+				        			//element.style.left = parseInt(element.style.left) - 1 + 'px';
+				        			document.getElementById("block"+i).style.backgroundColor="darkgrey";
+				        			}
+								}
+	            }
+	        }
+        }
+        function moverU(){
+        	var element = document.getElementById("image1");
+        	if (parseInt(element.style.top)!==0) {
+            	element.style.top = parseInt(element.style.top) - 1 + 'px';
+            }
+        	//collision detection blocks
+        	for (var i = 1; i < blockCount; i++) {
+				if (parseInt(element.style.top)+10==parseInt(document.getElementById("block"+i).style.top)+parseInt(document.getElementById("block"+i).style.height)) {
+	        		if (parseInt(element.style.left)+70
+	        			>parseInt(document.getElementById("block"+i).style.left)
+	        			&& parseInt(element.style.left)
+	        				<parseInt(document.getElementById("block"+i).style.left)
+	        				+parseInt(document.getElementById("block"+i).style.width)-30) 
+				        		{
+				        			if (i=="5") {
+				        				newPos();console.log("got");
+				        			}else{
+				        			//element.style.top = parseInt(element.style.top) + 1 + 'px';
+				        			document.getElementById("block"+i).style.backgroundColor="darkgrey";
+									}
+								}   	
+	            }
+	        }
+        }
+        
+        function moverD(){
+        	var element = document.getElementById("image1");
+        	element.style.top = parseInt(element.style.top) + 1 + 'px';
+            //collision detection block2
+            for (var i = 1; i < blockCount; i++) {
+            	console.log((document.getElementById("block"+i).style.left));
+            	console.log(i);
+
+				if (parseInt(element.style.top)+parseInt(element.offsetHeight)-10==parseInt(document.getElementById("block"+i).style.top)) {
+	        		if (parseInt(element.style.left)+70
+	        			>parseInt(document.getElementById("block"+i).style.left)
+	        			&& parseInt(element.style.left)
+	        				<parseInt(document.getElementById("block"+i).style.left)
+	        				+parseInt(document.getElementById("block"+i).style.width)-30) 
+				        		{
+				        			if (i=="5") {console.log(i);
+				        				newPos();
+				        				console.log("got");
+				        			}else{
+				        			//element.style.top = parseInt(element.style.top) - 1 + 'px';
+				        			document.getElementById("block"+i).style.backgroundColor="darkgrey";
+									}
+								}
+	            }
+	        }
+        }
+        function checkr(){ //for problem solving don't need anymore
+        	var element = document.getElementById("image1");
+        	console.log(
+	        		"top: "
+	        		+document.getElementById("image1").style.top
+	        		+"\n"
+	        		+"left: "
+	        		+document.getElementById("image1").style.left
+        		);
+        }
+        var times2 = setInterval(times, 500);
+
+        function times(){
+        	var block1 = document.getElementById("block1");
+        	var block2 = document.getElementById("block2");
+        	var block3 = document.getElementById("block3");
+        	var block4 = document.getElementById("block4");
+        	var block5 = document.getElementById("block5");
+
+        	var randVar1a = (Math.floor(Math.random() * 300) - 150);
+        	block1.style.left = parseInt(block1.style.left) + randVar1a+"px";
+        	var randVar1b = (Math.floor(Math.random() * 200) - 100);
+        	block1.style.top = parseInt(block1.style.top) + randVar1b+"px";
+
+        	var randVar3a = (Math.floor(Math.random() * 300) - 150);
+        	block3.style.left = parseInt(block3.style.left) + randVar3a+"px";
+        	var randVar3a = (Math.floor(Math.random() * 200) - 100);
+        	block3.style.top = parseInt(block3.style.top) + randVar3a+"px";
+
+        	var randVar2a = (Math.floor(Math.random() * 300) - 150);
+        	block2.style.left = parseInt(block2.style.left) + randVar2a+"px";
+        	var randVar2b = (Math.floor(Math.random() * 100) - 50);
+        	block2.style.top = parseInt(block2.style.top) + randVar2b+"px";
+
+        	var randVar4a = (Math.floor(Math.random() * 300) - 150);
+        	block4.style.left = parseInt(block4.style.left) + randVar4a+"px";
+        	var randVar4a = (Math.floor(Math.random() * 200) - 100);
+        	block4.style.top = parseInt(block4.style.top) + randVar4a+"px";
+
+        	var randVar5a = (Math.floor(Math.random() * 30) -15);
+        	block5.style.left = parseInt(block5.style.left) + randVar5a+"px";
+        	var randVar5a = (Math.floor(Math.random() * 30) - 15);
+        	block5.style.top = parseInt(block5.style.top) + randVar5a+"px";
+        }
+
+
+        	var tLeft;
+			var tTop;
+			var iLeft;
+			var iTop;
+        function newPos(){
+			
+					iTop = Math.floor((Math.random() * 800) + 1);
+					iLeft = Math.floor((Math.random() * 800) + 1);
+					
+					document.getElementById('block5').style.top = iTop + "px";
+					document.getElementById('block5').style.left = iLeft + "px";
+			}
+  </script>
+
+</head>
+
+<body onload="docReady()" onkeydown="" onkeyup="">
+
+	<style>
+		*{
+			/*transition: width 0.5s, height 0.5s;*/
+			overflow:hidden;
+		}
+		body{
+			background-color: #2882d8;
+		}
+		#block4 {
+			transition-duration: 1000ms;
+		}
+		#block3 {
+			transition-duration: 1000ms;
+		}
+		#block2 {
+			transition-duration: 1000ms;
+		}
+		#block1 {
+			transition-duration: 1000ms;
+		}
+		.interacter {
+			/*transition-duration: 2000ms;
+			transition-timing-function: ease-out;
+			transform: translate(-50%, -50%);*/
+			background-color: #2882d8;
+			border-radius: 100px;
+			height:120px;
+			width:120px;
+			vertical-align:50% !important;
+			text-align: center;
+			opacity: 0.75;
+			line-height: 100px;
+		}
+		.insides{
+			position:relative;
+			background-color:brown; 
+			height:100px;width:100px; 
+			border-radius: 100px; 
+			left:10px;top:10px;
+			font-size: 35px;
+		}
+		.block5{
+			transition-duration: 1000ms;
+		}
+		.block5:active {
+				background-color: orangered;
+		}
+	</style>
+
+		<div class="block5" style="z-index:20; position: absolute;height: 150px; width: 150px; top:300px; left:300px;background-color: coral;color:white;line-height: 100px;text-align: center;" onclick="newPos()" id="block5">Target</div>
+
+		<div class="interacter" id="image1" style="position:absolute;left:0; top:0;" height="150px" width="150px">
+			<div onclick="checkr()" class="insides">ʕ•ᴥ•ʔ</div>
+		</div>
+
+	<div id="block1" style="position: absolute;height: 200px; width: 100px; top:100px; left:200px;background-color: #f44336;"></div>
+
+	<div id="block2" style="position: absolute;height: 300px; width: 400px; top:500px; left:200px;background-color: #b953ff;"></div>
+
+	<div id="block3" style="position: absolute;height: 200px; width: 200px; top:100px; left:500px;background-color: #8bc34a;"></div>
+	
+	<div id="block4" style="position: absolute;height: 300px; width: 300px; top:500px; left:900px;background-color: #673ab7;"></div>
+
+
+
+	</body>
+</html>
+
+
