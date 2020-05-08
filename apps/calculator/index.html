@@ -73,7 +73,7 @@
 		Calculator
 		<div class="grouped">	<br>
 			<span style="margin-left:27px"></span> <br>
-			<input id="a1" type="textarea" value="Calculate Here:" name="asdf" class="screen"onfocus="clearit()" onchange="calculate()" oninput="quickcalc()">
+			<input id="a1" type="textarea" value="Calculate Here:" name="asdf" class="screen"onfocus="clearit()" onchange="calculate2()" oninput="quickcalc()">
 			<div id="a3" type="" class="screen" style="margin-bottom:5px; margin-top:15px;border:0px;background: #636363;color:white;">...</div>
 			<textarea id="a2" class="results" cols="80" rows="25">Results:</textarea>
 		<br>
@@ -89,7 +89,7 @@
 					first=false;
 				}
 			}
-			function calculate(){
+			function calculate2(){
 				if (a1.value.substring(a1.value.length-1)=="=") {
 					a1.value = a1.value.substring(0, a1.value.length-1);
 				}
@@ -98,8 +98,8 @@
 						+"\n"
 						+a1.value
 						+" = "
-						+eval(a1.value);
-					a1.value=eval(a1.value);
+						+calculate(a1.value);
+					a1.value=calculate(a1.value);
 				}
 				catch(err){
 					a2.value = a2.value
@@ -110,10 +110,56 @@
 			var lastcalc="";
 			function quickcalc(){
 				try{
-					a3.innerHTML =eval(a1.value);
-					lastcalc=eval(a1.value);
+					a3.innerHTML =calculate(a1.value);
+					lastcalc=calculate(a1.value);
 			}
 				catch(err){a3.innerHTML=lastcalc;};
+			}
+
+			function calculate(input){
+			   var f = { add : '+'
+			           , sub : '-' 
+			           , div : '/'
+			           , mlt : '*'
+			           , mod : '%'
+			           , exp : '^' };
+			    
+			   // Create array for Order of Operation and precedence
+			   f.ooo = [[ [f.mlt] , [f.div] , [f.mod] , [f.exp] ],
+			            [ [f.add] , [f.sub] ]];
+
+			   input = input.replace(/[^0-9%^*\/()\-+.]/g,'');           // clean up unnecessary characters
+
+			   var output;
+			   for(var i=0, n=f.ooo.length; i<n; i++ ){
+			       
+			      // Regular Expression to look for operators between floating numbers or integers
+			      var re = new RegExp('(\\d+\\.?\\d*)([\\'+f.ooo[i].join('\\')+'])(\\d+\\.?\\d*)');
+			      re.lastIndex = 0;                                     // be cautious and reset re start pos
+			        
+			      // Loop while there is still calculation for level of precedence
+			      while( re.test(input) ){
+			         //document.write('<div>' + input + '</div>');
+			         output = calc_internal(RegExp.$1,RegExp.$2,RegExp.$3);
+			         if (isNaN(output) || !isFinite(output)) return output;   // exit early if not a number
+			         input  = input.replace(re,output);
+			      }
+			   }
+
+			   return output;
+
+			   function calc_internal(a,op,b){
+			      a=a*1; b=b*1;
+			      switch(op){
+			         case f.add: return a+b; break;
+			         case f.sub: return a-b; break;
+			         case f.div: return a/b; break;
+			         case f.mlt: return a*b; break;
+			         case f.mod: return a%b; break;
+			         case f.exp: return Math.pow(a,b); break;
+			         default: null;
+			      }
+			   }
 			}
 		</script>
 	</body>

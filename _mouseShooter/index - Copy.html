@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<style>
+			*{
+				background: whitesmoke;
+				font-family: monospace; 
+			}
+			#a1{
+				width: 100px;
+				height: 100px;
+				position: absolute;
+				
+				background: lightblue; 
+				text-align: center;
+				line-height: 100px;
+				transform: translate(-50%, -50%);
+			}
+			#a2{
+				width: 25px;
+				height: 25px;
+				position: absolute;
+				background: black;
+				border-radius: 30px; 
+				text-align: center;
+				line-height: 25px;
+				transform: translate(-50%, -50%);
+			}
+			body{
+				width: 100%;
+				height: 100%;
+				overflow: hidden;
+			}		
+		</style>
+	</head>
+	<body>
+
+		<div id="a1" style="top: 50%;left: 50%;">Player</div>
+		<div id="a2" style="top: 500px;left: 500px;">Shot</div>
+
+		<script type="text/javascript">
+			var a1 = document.getElementById('a1');
+			var a2 = document.getElementById('a2');
+
+			var LEFT=false;
+			var RIGHT=false;
+			var UP=false;
+			var DOWN=false;
+
+			var lastPressed="N/A";
+			var intervalMove;
+
+			function shooter(direction){
+
+				a2.style.top=a1.style.top;
+				a2.style.left=a1.style.left;
+
+				switch(direction){
+					case 'Left':
+						intervalMove = setInterval(function(){ bullet(direction)}, 10);
+						break;
+					case 'Right':
+						intervalMove = setInterval(function(){ bullet(direction)}, 10);
+						break;
+					case 'Up':
+						intervalMove = setInterval(function(){ bullet(direction)}, 10);
+						break;
+					case 'Down':
+						intervalMove = setInterval(function(){ bullet(direction)}, 10);
+						break;
+				}
+			}
+
+			function bullet(direction2){
+				switch(direction2){
+					case 'Left':
+						a2.style.left=parseInt(a2.style.left)-1+"%";
+						break;
+					case 'Right':
+						a2.style.left=parseInt(a2.style.left)+1+"%";
+						break;
+					case 'Up':
+						a2.style.top=parseInt(a2.style.top)-1+"%";
+						break;
+					case 'Down':
+						a2.style.top=parseInt(a2.style.top)+1+"%";
+						break;
+				}	
+			}
+
+			function mover(directional){
+				if (DOWN == true) {
+					a1.style.top=parseInt(a1.style.top)+1+"%";
+					lastPressed=("Down");
+				}
+				if (UP == true) {
+					a1.style.top=parseInt(a1.style.top)-1+"%";
+					lastPressed=("Up");
+				}
+				if (LEFT == true) {
+					a1.style.left=parseInt(a1.style.left)-1+"%";
+					lastPressed=("Left");
+				}
+				if (RIGHT == true) {
+					a1.style.left=parseInt(a1.style.left)+1+"%";
+					lastPressed=("Right");
+				}
+
+			}
+
+
+			document.body.onkeydown = function(e){
+			    if(e.key == " "){
+			    	if (intervalMove) {
+			    		clearInterval(intervalMove);
+			    	}
+			        //alert(lastPressed);
+			        shooter(lastPressed);
+			    }
+			    if(e.key == "ArrowRight"){lastPressed=("Right");RIGHT=true;}
+			    if(e.key == "ArrowLeft"){lastPressed=("Left");LEFT=true;}
+			    if(e.key == "ArrowUp"){lastPressed=("Up");UP=true;}
+			    if(e.key == "ArrowDown"){lastPressed=("Down");DOWN=true;}
+			}
+			document.body.onkeyup = function(e){
+				if(e.key == "ArrowRight"){lastPressed=("Right");RIGHT=false;}
+			    if(e.key == "ArrowLeft"){lastPressed=("Left");LEFT=false;}
+			    if(e.key == "ArrowUp"){lastPressed=("Up");UP=false;}
+			    if(e.key == "ArrowDown"){lastPressed=("Down");DOWN=false;}
+			}
+
+			setInterval (mover, 20);
+
+  		</script>
+	</body>
+</html>
+
+

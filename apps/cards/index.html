@@ -17,12 +17,12 @@
         		background-position: 50% 50%;
         		background-repeat: no-repeat;
         		background-attachment: fixed;
-				
+
 			}
 			img{
 				width: 100px;
 				/*position: absolute;*/
-				top: 5px; 
+				top: 5px;
 				left: 5px;
 				/*visibility: hidden;*/
 				padding: 1px;
@@ -69,7 +69,7 @@
 				height: 125px;
 				position: absolute;
 				color: whitesmoke;
-				bottom: 5px; 
+				bottom: 5px;
 				left: 5px;
 				visibility: hidden;
 				padding: 1px;
@@ -96,7 +96,7 @@
 				height: 125px;
 				position: absolute;
 				color: whitesmoke;
-				bottom: 5px; 
+				bottom: 5px;
 				left: 5px;
 				visibility: hidden;
 				padding: 1px;
@@ -131,15 +131,15 @@
 				height: 130px;
 				padding:10px;
 				background: grey;
-				border-radius:7px; 
+				border-radius:7px;
 			}
 			#endturn{
-				background: grey; 
+				background: grey;
 				position: absolute;
-				width: 100px; 
+				width: 100px;
 				height: 50px;
-				bottom: 40px; 
-				right: 40px; 
+				bottom: 40px;
+				right: 40px;
 				box-shadow: 3px 3px 3px black;
 				text-align: center;
 				line-height: 50px;
@@ -155,10 +155,10 @@
 			}
 			#endturnGlow{
 				position: absolute;
-				width: 100px; 
+				width: 100px;
 				height: 50px;
-				bottom: 40px; 
-				right: 40px; 
+				bottom: 40px;
+				right: 40px;
 				box-shadow: 3px 3px 3px black;
 				text-align: center;
 				line-height: 50px;
@@ -182,7 +182,7 @@
 			div:active{
 				cursor: grabbing;
 				cursor: -moz-grabbing;
-        		cursor: -webkit-grabbing;
+        cursor: -webkit-grabbing;
 			}
 			.character{
 				height: 205px;
@@ -222,42 +222,42 @@
 			#ally3{position: absolute;animation: shieldYou 1s 1;animation-fill-mode: forwards;}
 			#ally4{position: absolute;animation: shieldYou2 1s 1;animation-fill-mode: forwards;}
 			#ally5{/*win*/position: absolute;animation:forward 3s 1;animation-direction:alternate;animation-fill-mode:forwards;}
-			@keyframes forwardStart {	0%{left:-20%;} 
+			@keyframes forwardStart {	0%{left:-20%;}
 										100%{left:21%;}}
-			@keyframes hitYou {			0% {left:21%;} 
-										25%{left:22%;} 
-										50%{left:20%;filter:invert(45%);} 
-										75%{left: 21%;} 
+			@keyframes hitYou {			0% {left:21%;}
+										25%{left:22%;}
+										50%{left:20%;filter:invert(45%);}
+										75%{left: 21%;}
 										100%{left: 21%;}}
-			@keyframes hitYou2 {		0%{left: 21%;} 
-										25%{left:20%;} 
-										50%{left:22%;filter:invert(45%);} 
-										75%{left:21%;} 
+			@keyframes hitYou2 {		0%{left: 21%;}
+										25%{left:20%;}
+										50%{left:22%;filter:invert(45%);}
+										75%{left:21%;}
 										100%{left:21%;}}
 			@keyframes shieldYou {		0%{border-radius:200px;}
-										50%{} 
-										100% {border-radius:200px;filter:drop-shadow(0px 0px 20px #cc00ff8a);background-color:#cc00ff8a;}}
-			@keyframes shieldYou2 {		0%{border-radius:200px;} 
 										50%{}
 										100% {border-radius:200px;filter:drop-shadow(0px 0px 20px #cc00ff8a);background-color:#cc00ff8a;}}
-			@keyframes forward {		30%{left: 21%;} 
+			@keyframes shieldYou2 {		0%{border-radius:200px;}
+										50%{}
+										100% {border-radius:200px;filter:drop-shadow(0px 0px 20px #cc00ff8a);background-color:#cc00ff8a;}}
+			@keyframes forward {		30%{left: 21%;}
 										100%{left:110%;}}
 
 			#cardAttack{position: absolute;animation:cardFly 1s 1;animation-direction:alternate;animation-fill-mode:forwards;}
-			@keyframes cardFly {		0%{} 
+			@keyframes cardFly {		0%{}
 										50%{bottom:50%;height: 0px;left: 50%;transform:rotate(0deg);}
 										99%{bottom: 50%;height: 0px;left: 78%;opacity: 100%;transform:rotate(0deg);}
-										100%{bottom: 50%;height: 0px;left: 78%;opacity: 0%;transform:rotate(0deg);}}	
+										100%{bottom: 50%;height: 0px;left: 78%;opacity: 0%;transform:rotate(0deg);}}
 			/*document.getElementById("4").id="cardAttack";*/
-			/*@keyframes cardFly2 {		0%{} 
+			/*@keyframes cardFly2 {		0%{}
 										50%{bottom:50%;height: 0px;left: 50%;}
 										99%{bottom: 50%;height: 0px;left: 78%;opacity: 100%;}
 										100%{bottom: 50%;height: 0px;left: 78%;opacity: 0%;transform:rotate(0deg);}}*/
 			.card{position: absolute;animation:cardIn 1s 1;animation-direction:alternate;animation-fill-mode:forwards;}
-			@keyframes cardIn {		0%{bottom:10%;left: -20%;} 
+			@keyframes cardIn {		0%{bottom:10%;left: -20%;}
 									100%{}}
 			.card2{position: absolute;animation:cardOut 1s 1;animation-direction:alternate;animation-fill-mode:forwards;}
-			@keyframes cardOut {	0%{} 
+			@keyframes cardOut {	0%{}
 									100%{bottom:10%;left: 120%;}}
 
 			#enemyHit{
@@ -307,7 +307,7 @@
 			}
 			#b0{
 				box-shadow: 2px 2px 4px black;
-			    height: 30px; 
+			    height: 30px;
 			    line-height: 30px;
 			    padding: 5px;
 			    border-radius: 50px;
@@ -315,7 +315,7 @@
 			    color: whitesmoke;
 			    background-image: linear-gradient(225deg, #d1215d, #FF5722);
 			    border-radius: 50px;
-			}	
+			}
 			#enemy4{position: absolute;animation: shieldYou 1s 1;animation-fill-mode: forwards;}
 			#enemy5{position: absolute;animation: shieldYou2 1s 1;animation-fill-mode: forwards;}
 		</style>
@@ -347,125 +347,125 @@
 			<p id="allyHealthShield" class="HealthShield"> </p>
 			<div class="character" id="allyHealth" style="border-radius:10px;padding-left: 10px;transform:translate(10px, 120px);left: 21%; height: 15px;background:linear-gradient(#ff0101,#a51010); width: 150px;">
 				<p id="allyHealthTXT" style="margin: 0px;">Health: 100</p>
-				
+
 			</div>
 
 			<p id="enemyHealthShield" class="HealthShieldEnemy" style="display: block;">1</p>
 			<div class="character" id="enemyHealth" style="border-radius:10px;padding-left: 10px;transform:translate(7px, 120px);right: 21%; height: 15px;background:linear-gradient(#ff0101,#a51010);width: 150px;">
 				<p id="enemyHealthTXT" style="margin: 0px;">Health: 100</p>
-				
+
 			</div>
 
-			<div 
+			<div
 				id="1"
-				data-mana="1" 
-				data-attack="6" 
-				data-shield="0" 
-				data-atktime="false" 
-				class="card" 
-				draggable="true"  
-				ondrag="drag(this)" 
+				data-mana="1"
+				data-attack="6"
+				data-shield="0"
+				data-atktime="false"
+				class="card"
+				draggable="true"
+				ondrag="drag(this)"
 				ondragend="drag2()"
 			>Card</div>
 
-			<div 
+			<div
 				id="2"
-				data-mana="1" 
-				data-attack="0" 
-				data-shield="5" 
-				data-atktime="false" 
-				class="card" 
-				draggable="true"  
-				ondrag="drag(this)" 
+				data-mana="1"
+				data-attack="0"
+				data-shield="5"
+				data-atktime="false"
+				class="card"
+				draggable="true"
+				ondrag="drag(this)"
 				ondragend="drag2()"
 			>Card</div>
 
-			<div 
+			<div
 				id="3"
-				data-mana="2" 
-				data-attack="8" 
-				data-shield="2" 
-				data-atktime="false" 
-				class="card" 
-				draggable="true"  
-				ondrag="drag(this)" 
+				data-mana="2"
+				data-attack="8"
+				data-shield="2"
+				data-atktime="false"
+				class="card"
+				draggable="true"
+				ondrag="drag(this)"
 				ondragend="drag2()"
 			>Card</div>
 
-			<div 
+			<div
 				id="4"
-				data-mana="2" 
-				data-attack="0" 
-				data-shield="14" 
-				data-atktime="false" 
-				class="card" 
-				draggable="true"  
-				ondrag="drag(this)" 
+				data-mana="2"
+				data-attack="0"
+				data-shield="14"
+				data-atktime="false"
+				class="card"
+				draggable="true"
+				ondrag="drag(this)"
 				ondragend="drag2()"
 				>Card</div>
 
-			<div 
+			<div
 				id="5"
-				data-mana="2" 
-				data-attack="14" 
-				data-shield="0" 
-				data-atktime="false" 
-				class="card" 
-				draggable="true"  
-				ondrag="drag(this)" 
+				data-mana="2"
+				data-attack="14"
+				data-shield="0"
+				data-atktime="false"
+				class="card"
+				draggable="true"
+				ondrag="drag(this)"
 				ondragend="drag2()"
 				>Card</div>
 
-			<div 
+			<div
 				id="6"
-				data-mana="1" 
-				data-attack="5" 
-				data-shield="5" 
-				data-atktime="false" 
-				class="card" 
-				draggable="true"  
-				ondrag="drag(this)" 
+				data-mana="1"
+				data-attack="5"
+				data-shield="5"
+				data-atktime="false"
+				class="card"
+				draggable="true"
+				ondrag="drag(this)"
 				ondragend="drag2()"
 			>Card</div>
 
-			<div 
+			<div
 				id="7"
-				data-mana="1" 
-				data-attack="9" 
-				data-shield="0" 
-				data-atktime="false" 
-				class="card" 
-				draggable="true"  
-				ondrag="drag(this)" 
+				data-mana="1"
+				data-attack="9"
+				data-shield="0"
+				data-atktime="false"
+				class="card"
+				draggable="true"
+				ondrag="drag(this)"
 				ondragend="drag2()"
 			>Card</div>
 
-			<div 
+			<div
 				id="8"
-				data-mana="1" 
-				data-attack="0" 
-				data-shield="8" 
-				data-atktime="false" 
-				class="card" 
-				draggable="true"  
-				ondrag="drag(this)" 
+				data-mana="1"
+				data-attack="0"
+				data-shield="8"
+				data-atktime="false"
+				class="card"
+				draggable="true"
+				ondrag="drag(this)"
 				ondragend="drag2()"
 			>Card</div>
 
-			<div 
+			<div
 				id="9"
-				data-mana="1" 
-				data-attack="0" 
-				data-shield="0" 
-				data-atktime="true" 
-				class="card" 
-				draggable="true"  
-				ondrag="drag(this)" 
+				data-mana="1"
+				data-attack="0"
+				data-shield="0"
+				data-atktime="true"
+				class="card"
+				draggable="true"
+				ondrag="drag(this)"
 				ondragend="drag2()"
 			>Card</div>
 
 		</div>
-		
+
 	</body>
 	<script type="text/javascript">
 		var cards = 10;
@@ -505,7 +505,7 @@
 							}
 							else if (document.getElementById("enemy1")) {
 								document.getElementById("enemy1").id="enemy2";
-								enemyID=document.getElementById("enemy2");	
+								enemyID=document.getElementById("enemy2");
 							}
 							//console.log(event.target.dataset.attack+" asdf "+enemyStats.dataset.shield);
 							if (parseInt(event.target.dataset.attack)>=parseInt(enemyStats.dataset.shield)) {
@@ -515,7 +515,7 @@
 								}
 								else if (document.getElementById("enemy5")) {
 									document.getElementById("enemy5").id="enemy1";
-									enemyID=document.getElementById("enemy1");	
+									enemyID=document.getElementById("enemy1");
 								}
 							}
 						}
@@ -543,7 +543,7 @@
 						enemyStats.innerHTML = "Shield: "+enemyStats.dataset.shield+"\nHealth: "+enemyStats.dataset.health;
 
 						playerStats.dataset.shield=parseInt(playerStats.dataset.shield)+parseInt(event.target.dataset.shield);
-						
+
 
 						event.target.style.bottom="5px";
 						event.target.style.left="5px";
@@ -559,10 +559,10 @@
 								randShield = randShield / 2;
 								randShield = randShield.toFixed(0);
 								document.getElementById("enemyHit").innerHTML = randShield;
-							}			
-							
+							}
+
 						}
-						
+
 						if (event.target.dataset.shield>0) {/*Fix Ally Animaion Delaying by one turn[?]*/
 							audio2.play();
 							if (turnPly==0) {
@@ -664,7 +664,7 @@
 					cardPickr.style.background="linear-gradient(45deg, #211a1c 0%, #a52020 100%)";
 				}
 			}else{generateCard();}
-			
+
 		}
 		var startingMana=3;
 		function newCards(){
@@ -679,7 +679,7 @@
 			}
 			playerStats.dataset.mana=startingMana;
 			//document.getElementById("endturn").style.backgroundImage="linear-gradient(225deg, #545353, #7d7d7d)";
-			
+
 		}
 		function turnEnd(){
 			audio4.play();
@@ -817,7 +817,7 @@
 				/*get different damage sound for player (dont enemy one)*/
 			}
 
-			
+
 			checkWin();
 		}
 
@@ -872,7 +872,7 @@
 			document.body.style.backgroundImage="url('bgs/bg3b.png')";
 			document.getElementById("enemyText").innerHTML="Moon Penguin";
 		}
-		
+
 
 
 		/* Update Stats */
@@ -912,7 +912,7 @@
 						document.getElementById(i).dataset.shield=parseInt(document.getElementById(i).dataset.shield)+1;
 					}
 				}
-				break;	
+				break;
 		}
 			document.getElementById("b1").disabled = true;document.getElementById("b1").style.opacity = 0.5;
 			document.getElementById("b2").disabled = true;document.getElementById("b2").style.opacity = 0.5;
@@ -975,7 +975,7 @@
 	</script>
 
 <!--
-	To Do: 
+	To Do:
 		- Reset shield on next level
 		- Pre-load the background images
 		- Add (more) sound effects for: card woosh, take damage, win, lose, next level btn, walk [?].
@@ -988,7 +988,7 @@
 			- rand 0 or 1, if 1 - put random number into shield, not attack
 		- difference damage motion for attacking just shield vs attacking health as well
 		- Show level in text
-	
+
 		Mid Term
 			- Make shield pulse (?) | Increase shield size when mutiple shield cards used (?)
 			- Finish card put down effects (instead of disappearing)
@@ -1016,4 +1016,3 @@
 -->
 
 </html>
-

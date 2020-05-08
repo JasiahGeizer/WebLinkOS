@@ -38,10 +38,11 @@
             }
 
             function upArrowPressed() {
-            	if (fired3==false) {
-            		moverUp = setInterval(moverU, 1);
-            		fired3=true;
-            	}
+            	
+	            	if (fired3==false) {
+	            		moverUp = setInterval(moverU, 1);
+	            		fired3=true;
+	            	}
             }
 
             function downArrowPressed() {
@@ -61,7 +62,10 @@
 	                    rightArrowPressed();
 	                    break;
 	                    case 38:
-	                    upArrowPressed();
+	                    console.log(document.getElementById('image1').style.top);
+	                    //if (parseInt(document.getElementById('image1').style.top>500)) {
+	                    	upArrowPressed();
+	                	//}
 	                    break;
 	                    case 40:
 	                    downArrowPressed();
@@ -150,9 +154,13 @@
 	        }
         }
         function moverU(){
+        	if (velocityReset=true) {
+        		velocityReset=false;velocity=1;
+        	}
+
         	var element = document.getElementById("image1");
         	if (parseInt(element.style.top)!==0) {
-            	element.style.top = parseInt(element.style.top) - 1 + 'px';
+            	element.style.top = parseInt(element.style.top) - 100 + 'px';
             }
         	//collision detection blocks
         	for (var i = 1; i < blockCount; i++) {
@@ -173,6 +181,7 @@
 								}   	
 	            }
 	        }
+	         clearInterval(moverUp);
         }
         
         function moverD(){
@@ -214,7 +223,8 @@
         }
         var times2 = setInterval(times, 500);
         var timerON=true;
-
+        var velocity=10;
+        var velocityReset=false;
         function times(){
         	var block1 = document.getElementById("block1");
         	var block2 = document.getElementById("block2");
@@ -222,30 +232,9 @@
         	var block4 = document.getElementById("block4");
         	var block5 = document.getElementById("block5");
 
-        	var randVar1a = (Math.floor(Math.random() * 300) - 150);
-        	block1.style.left = parseInt(block1.style.left) + randVar1a+"px";
-        	var randVar1b = (Math.floor(Math.random() * 200) - 100);
-        	block1.style.top = parseInt(block1.style.top) + randVar1b+"px";
-
-        	var randVar3a = (Math.floor(Math.random() * 300) - 150);
-        	block3.style.left = parseInt(block3.style.left) + randVar3a+"px";
-        	var randVar3a = (Math.floor(Math.random() * 200) - 100);
-        	block3.style.top = parseInt(block3.style.top) + randVar3a+"px";
-
-        	var randVar2a = (Math.floor(Math.random() * 300) - 150);
-        	block2.style.left = parseInt(block2.style.left) + randVar2a+"px";
-        	var randVar2b = (Math.floor(Math.random() * 100) - 50);
-        	block2.style.top = parseInt(block2.style.top) + randVar2b+"px";
-
-        	var randVar4a = (Math.floor(Math.random() * 300) - 150);
-        	block4.style.left = parseInt(block4.style.left) + randVar4a+"px";
-        	var randVar4a = (Math.floor(Math.random() * 200) - 100);
-        	block4.style.top = parseInt(block4.style.top) + randVar4a+"px";
-
-        	var randVar5a = (Math.floor(Math.random() * 30) -15);
-        	block5.style.left = parseInt(block5.style.left) + randVar5a+"px";
-        	var randVar5a = (Math.floor(Math.random() * 30) - 15);
-        	block5.style.top = parseInt(block5.style.top) + randVar5a+"px";
+        	velocity=velocity+velocity;
+        	if (velocity+parseInt(document.getElementById('image1').style.top)>1000) {velocity=0;velocityReset=true;}
+        	document.getElementById('image1').style.top=parseInt(document.getElementById('image1').style.top)+velocity+"px";
         }
 
 
@@ -268,9 +257,9 @@
         			
 			}
 		function endscreen(){
-			clearInterval(times2);
-			timerON=false;
-			document.getElementById('restartBtn').style.display="block";
+			//clearInterval(times2);
+			//timerON=false;
+			//document.getElementById('restartBtn').style.display="block";
 		}
 		function restartGame(){
 			timerON=true;
