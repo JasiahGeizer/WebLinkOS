@@ -1,17 +1,9 @@
 <!DOCTYPE html>
 
 <!-- To Do:
-	- hold shift to duplicate drum
-	- catergorise beats with labels (on full 4/4) (+ add more?)
-	
-	- manualy enter a bpm
-	- mute row - button
-	- change any sound manually by dragging a sound file on it.
-	
-	- save volume level of each row (and save BPM?)
+	- Change speed to bpm
+	- Color Stop/Go buttons to green /red
 	- Increase color contrast & but not change from soft ui
-	- save/download whole document (local storage)
-	- Export sound file?
 -->
 
 <html>
@@ -176,71 +168,16 @@
 				box-shadow: inset 3px 3px 6px #424242, inset -3px -3px 6px #5a5a5a;
 				border:0px solid #b444c7;
 			}
-			.slider {
-			  -webkit-appearance: none;  /* Override default CSS styles */
-			  appearance: none;
-			  height: 8px; 
-			  width: 60px;
-			  outline: none;
-			  background: #4e4e4e;
-			  box-shadow: inset -2px -2px 4px #5f5f5fa8, inset 2px 2px 4px #232323a3;
-			  -webkit-transition: .2s; 
-			  transition: opacity .2s;margin-top: 10px;
-			}
-			.slider:hover {
-			  opacity: 1; 
-			}
-			
-			.slider::-webkit-slider-thumb {
-			  -webkit-appearance: none; /* Override default look */
-			  appearance: none;
-			  width: 12px; 
-			  box-shadow: inset -1px -1px 2px #23232345, inset 1px 1px 2px #292929;
-			  height: 8px; 
-			  background: linear-gradient(145deg, #4c4b4b, #292929);
-			  border-radius: 10px;
-			  cursor: pointer; 
-			}
-
-			select{
-			    margin-left: 15px;
-			    border: none;
-			    outline: 0px;
-			    border-radius: 3px;
-			    padding: 5px;
-			    padding-left: 10px;
-			    padding-right: 10px;
-			    box-shadow: 3px 3px 6px #424242, -3px -3px 6px #5a5a5a;
-			    color: darkgrey;
-			    background: linear-gradient(145deg, #535353, #464646);
-			    background-color:#4e4e4e;
-			}
-			select:active{
-				background: linear-gradient(145deg, #464646, #535353);
-				box-shadow: inset 3px 3px 6px #424242, inset -3px -3px 6px #5a5a5a;
-				background-color:#4e4e4e;
-			}
 		</style>
 	</head>
 
 
-	<body onkeypress="pressBeat(event)">
-
+	<body >
 		<span style="color: #cccccc;">Beat Looper</span> <br>
 
 		<div class="PiecePositionTop" id="div1"> 
-
-			<Span style="margin-top: 25px; margin-left: 10px; color:lightgrey; position: absolute;">Sound Pack:</Span>
-				<select id="soundPacks" onchange="soundChange()" style="margin-top: 23px; margin-left: 110px; position: absolute;">
-				  <option value="Standard">Standard</option>
-				  <option value="EDM">EDM</option>
-				</select>
-
-			<Span style="margin-top: 55px; margin-left: 10px; color:lightgrey; position: absolute;">Beats:</Span>
-
-				<p style="margin: 24px;"></p> 
-
-				
+			<Span style="margin-top: 45px; margin-left: 10px; color:lightgrey; position: absolute;">Beats:</Span>
+				<p style="margin: 24px;"></p>
 
 			<div style="background: linear-gradient(145deg, #424242cf, #2e795a96);" draggable="true" ondragstart="drag(event)" id="1" class="drumpad" style="top: 220px;left: 70%;" onclick="playBeat(clap)">clap</div>
 			<div style="background: linear-gradient(145deg, #424242cf, #2e797996);" draggable="true" ondragstart="drag(event)" id="2" class="drumpad" style="top: 220px;left: 50%;" onclick="playBeat(kick)">kick</div>
@@ -265,15 +202,14 @@
 
 			<ul>
 				<p><span>Beat </span> <span id="score">Looper</span> 
-					<button id="gostop" onclick="prebeat(this)" style="background: linear-gradient(145deg, rgba(121, 46, 46, 0.59), rgba(66, 66, 66, 0.81));">Stop</button>
-					<span style="margin-left:20px;"> BPM:</span>
+					<button onclick="prebeat(this)">Stop</button>
+					<span style="margin-left:20px;"> Speed:</span>
 					<button onclick="speed(1)">-</button>
-					<span style="padding-left: 15px;" id="s1">100</span>
+					<span style="padding-left: 15px;" id="s1">150</span>
 					<button onclick="speed(2)">+</button>
 					<button style="margin-left: 36px; background: linear-gradient(145deg, #4e4e4e, #643b3bed);" onclick="clearAll()">Clear</button>
-				
-				
-				<br> 
+
+				<br>
 				<li class="items" id="50" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
 				<li class="items" id="51" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
 				<li class="items" id="52" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
@@ -283,9 +219,10 @@
 				<li class="items" id="56" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
 				<li class="items" id="57" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
 				<li class="items" id="58" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
-				<li  class="items" id="59" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
-
-
+				<li  class="items" id="59" ondrop="drop(event)" ondragover="allowDrop(event)"></li>		
+			</ul>
+			<p></p> 
+			<ul>
 				<li  class="items" id="60" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
 				<li  class="items" id="61" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
 				<li  class="items" id="62" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
@@ -296,7 +233,9 @@
 				<li  class="items" id="67" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
 				<li  class="items" id="68" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
 				<li  class="items" id="69" ondrop="drop(event)" ondragover="allowDrop(event)"></li>		
-
+			</ul>
+			<p></p>
+			<ul>
 				<li  class="items" id="70" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
 				<li  class="items" id="71" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
 				<li  class="items" id="72" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
@@ -307,7 +246,9 @@
 				<li  class="items" id="77" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
 				<li  class="items" id="78" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
 				<li  class="items" id="79" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
-
+			</ul>
+			<p></p>
+			<ul>
 				<li  class="items" id="80" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
 				<li  class="items" id="81" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
 				<li  class="items" id="82" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
@@ -318,7 +259,9 @@
 				<li  class="items" id="87" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
 				<li  class="items" id="88" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
 				<li  class="items" id="89" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
-
+			</ul>
+			<p></p>
+			<ul>
 				<li  class="items" id="90" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
 				<li  class="items" id="91" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
 				<li  class="items" id="92" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
@@ -330,47 +273,22 @@
 			</ul>
 			<p></p>
 
-			<button id="save1" style="margin-left: 40px; background: linear-gradient(145deg, #656565, #404040ed);" onclick="opens(1)">1</button>
-			<button id="save2" style="margin-left: 10px; background: linear-gradient(145deg, #656565, #404040ed);" onclick="opens(2)">2</button>
-			<button id="save3" style="margin-left: 10px; background: linear-gradient(145deg, #656565, #404040ed);" onclick="opens(3)">3</button>
+			<button style="margin-left: 40px; background: linear-gradient(145deg, #5c485d, #3b5664ed);" onclick="opens(1)">1</button>
+			<button style="margin-left: 10px; background: linear-gradient(145deg, #485d5a, #3b4764ed);" onclick="opens(2)">2</button>
+			<button style="margin-left: 10px; background: linear-gradient(145deg, #0cefef2e, #4a613c);" onclick="opens(3)">3</button>
 
 
-			<button style="margin-left: 84px; background: linear-gradient(145deg, #5c485d, #3b5664ed);" onclick="save(1, this)">Set 1</button>
-			<button style="margin-left: 10px; background: linear-gradient(145deg, #485d5a, #3b4764ed);" onclick="save(2, this)">Set 2</button>
-			<button style="margin-left: 10px; background: linear-gradient(145deg, #0cefef2e, #4a613c);" onclick="save(3, this)">Set 3</button>
+			<button style="margin-left: 84px; background: linear-gradient(145deg, #5c485d, #3b5664ed);" onclick="save(1)">Set 1</button>
+			<button style="margin-left: 10px; background: linear-gradient(145deg, #485d5a, #3b4764ed);" onclick="save(2)">Set 2</button>
+			<button style="margin-left: 10px; background: linear-gradient(145deg, #0cefef2e, #4a613c);" onclick="save(3)">Set 3</button>
 			
 			<!-- Save to internal storage, create load function-->
-
-			
-			<input type="range" min="1" max="100" value="50" class="slider" id="myRange1" style="position:absolute;left:-10px;top:98px; transform: rotate(270deg);">
-			<input type="range" min="1" max="100" value="50" class="slider" id="myRange2" style="position:absolute;left:-10px;top:179px; transform: rotate(270deg);">
-			<input type="range" min="1" max="100" value="50" class="slider" id="myRange3" style="position:absolute;left:-10px;top:260px; transform: rotate(270deg);">
-			<input type="range" min="1" max="100" value="50" class="slider" id="myRange4" style="position:absolute;left:-10px;top:340px; transform: rotate(270deg);">
-			<input type="range" min="1" max="100" value="50" class="slider" id="myRange5" style="position:absolute;left:-10px;top:421px; transform: rotate(270deg);">
-			<input type="range" min="1" max="100" value="50" class="slider" id="myRange6" style="position:absolute;left:-10px;top:503px; transform: rotate(270deg);">
 
 			</div>
 		</div>
 				<br>
 				<div style="color: #b3b3b3; top: 710px; position: absolute;"><i>Drag the beat to the board</i></div>
-
-				
-
 <script language="Javascript" >
-	var volumeINT1=1;
-	document.getElementById("myRange1").oninput = function() {volumeINT1=(this.value/100);}
-	var volumeINT2=1;
-	document.getElementById("myRange2").oninput = function() {volumeINT2=(this.value/100);}
-	var volumeINT3=1;
-	document.getElementById("myRange3").oninput = function() {volumeINT3=(this.value/100);}
-	var volumeINT4=1;
-	document.getElementById("myRange4").oninput = function() {volumeINT4=(this.value/100);}
-	var volumeINT5=1;
-	document.getElementById("myRange5").oninput = function() {volumeINT5=(this.value/100);}
-	var volumeINT6=1;
-	document.getElementById("myRange6").oninput = function() {volumeINT6=(this.value/100);}
-	var volumeINT7=1;
-
 	//define sounds
 	var clap = new Audio('clap.wav');
 	var kick = new Audio('kick.wav');
@@ -403,69 +321,61 @@
 	highTom.preload = 'auto';
 	midTom.preload = 'auto';
 
-	//function docReady(){ //setup key press as on down press
-    //    window.addEventListener('keydown', pressBeat());
-    //}
+
+	function docReady(){ //setup key press as on down press
+        window.addEventListener('keydown', pressBeat);
+    }
 	function pressBeat(evt){ //play audio on key press
-		switch (evt.key) {
-			case "1"://1
-		    	opens(1);
-		    break;
-		    case "2": //2
-		    	opens(2);
-		    break;
-		    case "3"://3
-		    	opens(3);
-		    break;
-		    case "q"://q
+
+		switch (evt.keyCode) {
+		    case 81://q
 		    	playBeat(splash);
 		    break;
-		    case "w": //w
+		    case 87: //w
 		    	playBeat(ride);
 		    break;
-		    case "e"://e
+		    case 69://e
 		    	playBeat(hiHat);
 		    break;
-		    case "r": //r
+		    case 82: //r
 		    	playBeat(block);
 		    break;
-		    case "t"://a
+		    case 65://a
 		    	playBeat(crash);
 		    break;
-		    case "a": //s
+		    case 83: //s
 		    	playBeat(snare);
 		    break;
-		    case "s"://d
+		    case 68://d
 		    	playBeat(kick);
 		    break;
-		    case "d": //f
+		    case 70: //f
 		    	playBeat(clap);
 		    break;
-		    case "f"://z
+		    case 90://z
 		    	playBeat(sleighBells);
 		    break;
-		    case "g": //x
+		    case 88: //x
 		    	playBeat(eggShaker);
 		    break;
-		    case "z"://c
+		    case 67://c
 		    	playBeat(cowbell);
 		    break;
-		    case "x": //b
+		    case 86: //b
 		    	playBeat(stickHits);
 		    break;
-		    case "c"://1
+		    case 49://1
 		    	playBeat(midTom);
 		    break;
-		    case "v": //2
+		    case 50: //2
 		    	playBeat(highTom);
 		    break;
-		    case "b"://3
+		    case 51://3
 		    	playBeat(floorTom);
 		    break;
 		    }
 	}
-	var realSpeed=100; 
-	var myBeat = setInterval(beat, (1000 * 60 / realSpeed)/4); //set beat
+	var myBeat = setInterval(beat, 150); //set beat
 	//clearInterval(beat); //clear beat
 	var beatGo = true;
 	function prebeat(that) {
@@ -476,7 +386,7 @@
 			that.innerHTML = "Go";
 			that.style.background="linear-gradient(145deg, #4b792e96,#424242cf)";
 		}else if (beatGo==false) {
-			myBeat = setInterval(beat, (1000 * 60 / realSpeed)/4); //set beat //WHY????
+			myBeat = setInterval(beat, 150); //set beat
 			beatGo = true;
 			that.innerHTML = "Stop";
 			that.style.background="linear-gradient(145deg, #792e2e96,#424242cf)";
@@ -484,72 +394,47 @@
 	}
 
 	//set speed
-	var realSpeed=100; //interval
+	var realSpeed=150;
 	function speed(that){
 		if (that==1) {
 			realSpeed=realSpeed-10;
 			clearInterval(myBeat);
-			if (document.getElementById("gostop").innerHTML=="Stop") {
-				myBeat = setInterval(beat, (1000 * 60 / realSpeed)/4);
-			}
+			myBeat = setInterval(beat, realSpeed);
 			document.getElementById("s1").innerHTML=realSpeed;
 		}else{
 			realSpeed=realSpeed+10;
 			clearInterval(myBeat);
-			if (document.getElementById("gostop").innerHTML=="Stop") {
-				myBeat = setInterval(beat, (1000 * 60 / realSpeed)/4);
-			}
+			myBeat = setInterval(beat, realSpeed);
 			document.getElementById("s1").innerHTML=realSpeed;
 		}
 	}
-	var counterPlaying=0;
-	var blockplaying=1000;
+
 	var numset=50;
 	function beat(){
 		for (var i = numset; i < 98; i=i+8) {
 			//console.log(document.getElementById(i).childNodes[0]);
-				blockplaying=i; //console.log(i);
-				if(i>50){document.getElementById(i-1).style.background=null}else{
-					document.getElementById(97).style.background=null;
+
+				if(i>50){document.getElementById(i-1).style.background="#4e4e4e";}else{
+					document.getElementById(97).style.background="#4e4e4e";
 				}
-				document.getElementById(i).style.background="#545454";
+				document.getElementById(i).style.background="#5a5a5a";
 
 			if (document.getElementById(i).firstChild) {
 				//console.log(document.getElementById(i).childNodes[0].innerHTML);
-				playBeat(eval(document.getElementById(i).childNodes[0].innerHTML), true);
-			} 
-		}
-		counterPlaying=counterPlaying+1; //console.log(counterPlaying);
-		numset=numset+1; if (numset==58) {numset=50;counterPlaying=0;}
+				playBeat(eval(document.getElementById(i).childNodes[0].innerHTML));
+			}
+		}numset=numset+1; if (numset==58) {numset=50;}
 	}
 
-	function playBeat(beat, presser){ //play audio
+	function playBeat(beat){ //play audio
 		if (!beat.ended) {beat.currentTime = 0;}
-		if(presser==true){
-			if(blockplaying<50) {
-			beat.volume=1;
-			}else if(blockplaying<=57) {
-				beat.volume=volumeINT1;
-			}else if(blockplaying<=65) {
-				beat.volume=volumeINT2;
-			}else if(blockplaying<=73) {
-				beat.volume=volumeINT3;
-			}else if(blockplaying<=81) {
-				beat.volume=volumeINT4;
-			}else if(blockplaying<=89) {
-				beat.volume=volumeINT5;
-			}else if(blockplaying<=97) {
-				beat.volume=volumeINT6;
-			}
-		}else{beat.volume=1;}
-
 		beat.play();
 	}
 
 
 
 		/*Movement / Drag*/
-			var indexPosition=2;
+
 			function allowDrop(ev) {
 			  ev.preventDefault();
 			}
@@ -557,8 +442,6 @@
 			function drag(ev) {
 			  ev.dataTransfer.setData("text", ev.target.id);
 			  PreDrag = ev.toElement.parentNode.className;
-			  indexPosition=Array.prototype.indexOf.call(document.getElementById("div1").children, ev.toElement); //get index position of soundblock grabbed
-
 			}
 			var score1=0;
 			function drop(ev) {
@@ -571,9 +454,7 @@
 					var div = document.getElementById(ev.toElement.childNodes[0].id),
 					clone = div.cloneNode(true); // true means clone all childNodes and all event handlers
 					clone.id = ("a"+ev.toElement.childNodes[0].id);
-					//document.getElementById("div1").appendChild(clone);
-					document.getElementById("div1").insertBefore(clone, document.getElementById("div1").children[indexPosition]); //inset soundblock at original position in index
-
+					document.getElementById("div1").appendChild(clone);
 				}
 				if (ev.toElement.id == "div2") {
 					(ev.toElement.childNodes[0]).remove();
@@ -600,10 +481,7 @@
 			var storeDataC=[0,0];
 			var storeData2C=[0,0];
 
-			function save(num, thatOne){
-
-				document.getElementById("save"+num).style.background=thatOne.style.background; //set background of save from grey to gradient
-
+			function save(num){
 				if (num==1) {
 						storeCount=0;
 						storeData.length = 0;
@@ -658,43 +536,6 @@
 					for (var i = 0; i < storeCountC; i++) {
 							document.getElementById(storeData2C[i+1]).appendChild(storeDataC[i+1]);
 					}		
-				}
-			}
-
-			function soundChange(){
-				if (document.getElementById("soundPacks").value=="Standard") {
-					 clap = new Audio('clap.wav');
-					 kick = new Audio('kick.wav');
-					 snare = new Audio('snare.wav');
-					 crash = new Audio('crash.wav');
-					 hiHat = new Audio('hiHat.wav');
-					 ride = new Audio('ride.wav');
-					 splash = new Audio('splash.wav');
-					 block = new Audio('block.wav');
-					 cowbell = new Audio('cowbell.wav');
-					 eggShaker = new Audio('eggShaker.wav');
-					 sleighBells = new Audio('sleighBells.wav');
-					 stickHits = new Audio('stickHits.wav');
-					 floorTom = new Audio('floorTom.wav');
-					 highTom = new Audio('highTom.wav');
-					 midTom = new Audio('midTom.wav');
-				}
-				if (document.getElementById("soundPacks").value=="EDM") {
-					 clap = new Audio('edm/clap.wav');
-					 kick = new Audio('edm/kick.wav');
-					 snare = new Audio('edm/snare.wav');
-					 crash = new Audio('edm/crash.wav');
-					 hiHat = new Audio('edm/hiHat.wav');
-					 ride = new Audio('edm/ride.wav');
-					 splash = new Audio('edm/splash.wav');
-					 block = new Audio('edm/block.wav');
-					 cowbell = new Audio('edm/cowbell.wav');
-					 eggShaker = new Audio('edm/eggShaker.wav');
-					 sleighBells = new Audio('edm/sleighBells.wav');
-					 stickHits = new Audio('edm/stickHits.wav');
-					 floorTom = new Audio('edm/floorTom.wav');
-					 highTom = new Audio('edm/highTom.wav');
-					 midTom = new Audio('edm/midTom.wav');
 				}
 			}
 		</script>

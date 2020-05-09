@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 
 <!-- To Do:
+	- button press to change between save 1,2,3
+	- drop down to swap between normal drums and edm
 	- hold shift to duplicate drum
-	- catergorise beats with labels (on full 4/4) (+ add more?)
-	
+	- catergorise beats with labels on full 4/4 (+ add more?)
+
 	- manualy enter a bpm
-	- mute row - button
 	- change any sound manually by dragging a sound file on it.
 	
-	- save volume level of each row (and save BPM?)
+	- save volume level of each row
 	- Increase color contrast & but not change from soft ui
-	- save/download whole document (local storage)
-	- Export sound file?
+	- Export sound file or block positions
 -->
 
 <html>
@@ -176,6 +176,7 @@
 				box-shadow: inset 3px 3px 6px #424242, inset -3px -3px 6px #5a5a5a;
 				border:0px solid #b444c7;
 			}
+			/* The slider itself */
 			.slider {
 			  -webkit-appearance: none;  /* Override default CSS styles */
 			  appearance: none;
@@ -187,6 +188,7 @@
 			  -webkit-transition: .2s; 
 			  transition: opacity .2s;margin-top: 10px;
 			}
+			/* Mouse-over effects */
 			.slider:hover {
 			  opacity: 1; 
 			}
@@ -200,47 +202,19 @@
 			  background: linear-gradient(145deg, #4c4b4b, #292929);
 			  border-radius: 10px;
 			  cursor: pointer; 
-			}
 
-			select{
-			    margin-left: 15px;
-			    border: none;
-			    outline: 0px;
-			    border-radius: 3px;
-			    padding: 5px;
-			    padding-left: 10px;
-			    padding-right: 10px;
-			    box-shadow: 3px 3px 6px #424242, -3px -3px 6px #5a5a5a;
-			    color: darkgrey;
-			    background: linear-gradient(145deg, #535353, #464646);
-			    background-color:#4e4e4e;
-			}
-			select:active{
-				background: linear-gradient(145deg, #464646, #535353);
-				box-shadow: inset 3px 3px 6px #424242, inset -3px -3px 6px #5a5a5a;
-				background-color:#4e4e4e;
 			}
 		</style>
 	</head>
 
 
-	<body onkeypress="pressBeat(event)">
+	<body>
 
-		<span style="color: #cccccc;">Beat Looper</span> <br>
+		<span style="color: #cccccc;">Beat Looper-tron</span> <br>
 
 		<div class="PiecePositionTop" id="div1"> 
-
-			<Span style="margin-top: 25px; margin-left: 10px; color:lightgrey; position: absolute;">Sound Pack:</Span>
-				<select id="soundPacks" onchange="soundChange()" style="margin-top: 23px; margin-left: 110px; position: absolute;">
-				  <option value="Standard">Standard</option>
-				  <option value="EDM">EDM</option>
-				</select>
-
-			<Span style="margin-top: 55px; margin-left: 10px; color:lightgrey; position: absolute;">Beats:</Span>
-
+			<Span style="margin-top: 45px; margin-left: 10px; color:lightgrey; position: absolute;">Beats:</Span> 
 				<p style="margin: 24px;"></p> 
-
-				
 
 			<div style="background: linear-gradient(145deg, #424242cf, #2e795a96);" draggable="true" ondragstart="drag(event)" id="1" class="drumpad" style="top: 220px;left: 70%;" onclick="playBeat(clap)">clap</div>
 			<div style="background: linear-gradient(145deg, #424242cf, #2e797996);" draggable="true" ondragstart="drag(event)" id="2" class="drumpad" style="top: 220px;left: 50%;" onclick="playBeat(kick)">kick</div>
@@ -403,63 +377,55 @@
 	highTom.preload = 'auto';
 	midTom.preload = 'auto';
 
-	//function docReady(){ //setup key press as on down press
-    //    window.addEventListener('keydown', pressBeat());
-    //}
+	function docReady(){ //setup key press as on down press
+        window.addEventListener('keydown', pressBeat);
+    }
 	function pressBeat(evt){ //play audio on key press
-		switch (evt.key) {
-			case "1"://1
-		    	opens(1);
-		    break;
-		    case "2": //2
-		    	opens(2);
-		    break;
-		    case "3"://3
-		    	opens(3);
-		    break;
-		    case "q"://q
+
+		switch (evt.keyCode) {
+		    case 81://q
 		    	playBeat(splash);
 		    break;
-		    case "w": //w
+		    case 87: //w
 		    	playBeat(ride);
 		    break;
-		    case "e"://e
+		    case 69://e
 		    	playBeat(hiHat);
 		    break;
-		    case "r": //r
+		    case 82: //r
 		    	playBeat(block);
 		    break;
-		    case "t"://a
+		    case 65://a
 		    	playBeat(crash);
 		    break;
-		    case "a": //s
+		    case 83: //s
 		    	playBeat(snare);
 		    break;
-		    case "s"://d
+		    case 68://d
 		    	playBeat(kick);
 		    break;
-		    case "d": //f
+		    case 70: //f
 		    	playBeat(clap);
 		    break;
-		    case "f"://z
+		    case 90://z
 		    	playBeat(sleighBells);
 		    break;
-		    case "g": //x
+		    case 88: //x
 		    	playBeat(eggShaker);
 		    break;
-		    case "z"://c
+		    case 67://c
 		    	playBeat(cowbell);
 		    break;
-		    case "x": //b
+		    case 86: //b
 		    	playBeat(stickHits);
 		    break;
-		    case "c"://1
+		    case 49://1
 		    	playBeat(midTom);
 		    break;
-		    case "v": //2
+		    case 50: //2
 		    	playBeat(highTom);
 		    break;
-		    case "b"://3
+		    case 51://3
 		    	playBeat(floorTom);
 		    break;
 		    }
@@ -658,43 +624,6 @@
 					for (var i = 0; i < storeCountC; i++) {
 							document.getElementById(storeData2C[i+1]).appendChild(storeDataC[i+1]);
 					}		
-				}
-			}
-
-			function soundChange(){
-				if (document.getElementById("soundPacks").value=="Standard") {
-					 clap = new Audio('clap.wav');
-					 kick = new Audio('kick.wav');
-					 snare = new Audio('snare.wav');
-					 crash = new Audio('crash.wav');
-					 hiHat = new Audio('hiHat.wav');
-					 ride = new Audio('ride.wav');
-					 splash = new Audio('splash.wav');
-					 block = new Audio('block.wav');
-					 cowbell = new Audio('cowbell.wav');
-					 eggShaker = new Audio('eggShaker.wav');
-					 sleighBells = new Audio('sleighBells.wav');
-					 stickHits = new Audio('stickHits.wav');
-					 floorTom = new Audio('floorTom.wav');
-					 highTom = new Audio('highTom.wav');
-					 midTom = new Audio('midTom.wav');
-				}
-				if (document.getElementById("soundPacks").value=="EDM") {
-					 clap = new Audio('edm/clap.wav');
-					 kick = new Audio('edm/kick.wav');
-					 snare = new Audio('edm/snare.wav');
-					 crash = new Audio('edm/crash.wav');
-					 hiHat = new Audio('edm/hiHat.wav');
-					 ride = new Audio('edm/ride.wav');
-					 splash = new Audio('edm/splash.wav');
-					 block = new Audio('edm/block.wav');
-					 cowbell = new Audio('edm/cowbell.wav');
-					 eggShaker = new Audio('edm/eggShaker.wav');
-					 sleighBells = new Audio('edm/sleighBells.wav');
-					 stickHits = new Audio('edm/stickHits.wav');
-					 floorTom = new Audio('edm/floorTom.wav');
-					 highTom = new Audio('edm/highTom.wav');
-					 midTom = new Audio('edm/midTom.wav');
 				}
 			}
 		</script>
