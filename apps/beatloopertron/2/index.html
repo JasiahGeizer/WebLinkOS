@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+
+<!-- To Do:
+	- manualy enter a bpm
+	- change any sound manually by dragging a sound file on it.
+	
+	- save volume level of each row
+	- Increase color contrast & but not change from soft ui
+	- Export sound file or block positions
+-->
+
+<html>
+	<head>
+		<script>
+			
+		</script>
+
+		<style type="text/css">
+			html, body {
+				height: 99%;
+				user-select: none;
+				-moz-user-select: none;
+				background-color: #4e4e4e;
+				font-family: monospace;
+				color:black;
+			}			
+			.dragStyle{
+				float: left;
+				/*margin:2px;*/
+				width: 70px;
+				height: 70px;
+				background-color: darkslategrey;
+				text-align: center;
+				color: #e6e6e6;
+				font-size: 60px;
+			}
+			.dragStyle:hover{
+				background-color: #2f2b2a;
+				border-color: #2f2b2a;
+			}
+			.dragStyle:active{
+				background-color: #615a54;
+				border-color: #615a54;
+				box-shadow: 0px 0px 13px 2px #424242;
+			}
+			.dragStyle2{
+				float: left;
+				width: 70px;
+				height: 70px;
+				background-color: darkslategrey;
+				text-align: center;
+				line-height: 64px;
+				color: #e6e6e6;
+				font-size: 50px;
+
+			}
+			.dragStyle2:hover{
+				background-color: #90614a;
+				border-color: #90614a;
+			}
+			.dragStyle2:active{
+				background-color: #ebb38e;
+				border-color: #ebb38e;
+				box-shadow: 0px 0px 13px 2px #424242;
+			}				
+			.grouped{
+				position: absolute;
+				background-color: #4e4e4e;
+				width: 650px;
+				height: 600px;
+				top: 100px;
+				left: 50%;
+				margin-left: -470px;
+				border-radius: 22px;
+				box-shadow: 8px 8px 16px #424242, -8px -8px 16px #5a5a5a;	
+				color: lightgrey;		
+			}
+			ul {
+			    margin: 0 auto;
+			    padding-top: 10px;
+			    list-style-type: none;
+			    display:block;
+
+			}	
+			p{
+				height: 25px;
+
+			}		
+			.items{
+				background:#4e4e4e;
+				float: left;
+				margin-bottom: 10px;
+				width: 35px;
+				height: 71px;
+				font-size: 60px;
+    			text-align: center;
+    			color: white;
+    			border-right:solid 1px #d1f8fb00;
+    			box-shadow: inset -4px -4px 4px #5f5f5f75, inset 4px 4px 4px #2323236b;
+			}
+			/*.items:first-child{
+				background: linear-gradient(145deg, #535353, #464646);
+			}*/
+			.items:active{
+				background: linear-gradient(145deg, #464646, #535353);
+			}
+			.PiecePositionTop2{
+				left: 50%;
+				margin-left: 210px;
+				padding-left: 10px;
+				float: left;
+				margin-top:75px; 
+				border-radius: 22px;
+				width: 240px !important;
+				box-shadow: 8px 8px 16px #424242, -8px -8px 16px #5a5a5a;	
+
+				height: 100px; 
+				top:500px; 
+				background:linear-gradient(145deg, #4e4e4e, #643b3bed); 
+				position: relative;
+			}
+			.PiecePositionTop{
+				position: absolute;
+				left: 50%;
+				margin-left: 210px;
+				padding-left: 10px;
+				float: left;
+				height: 470px;
+				margin-top:75px; 
+				border-radius: 22px;
+				width: 240px !important;
+				background: linear-gradient(145deg, #4e4e4e, #4e4e4e);
+				box-shadow: 8px 8px 16px #424242, -8px -8px 16px #5a5a5a;	
+			}
+			.drumpad{
+				padding: 2px;
+				font-size: 12px;
+				line-height: 55px;
+				text-align:center;
+				box-shadow: 4px 4px 8px #424242,-4px -4px 8px #5a5a5a;
+				color: #989898ed;
+				width: 25px;
+				height: 62px;
+				/*background: linear-gradient(145deg, #424242cf, #2e795a96);*/
+    			border: none; 
+    			overflow: hidden;
+    			float:left;
+    			border-radius: 10px;
+    			margin:3px;
+			}
+			.drumpad:active{
+				box-shadow: inset 4px 4px 8px #383838f7,inset -4px -4px 8px #5a5a5a;
+			}
+			button{
+				margin-left: 15px;
+			    border: 0px solid #b444c7;
+			    border-radius: 3px;
+			    padding: 5px;
+			    padding-left: 25px;
+			    padding-right: 25px;
+			    margin-bottom: 10px;
+			    box-shadow: 3px 3px 6px #424242, -3px -3px 6px #5a5a5a;
+			    color: darkgrey;
+			    background: linear-gradient(145deg, #535353, #464646);
+			}
+			button:focus{outline: 0;}
+			button:hover{
+				color:lightgrey;
+			}
+			button:active{
+				box-shadow: inset 3px 3px 6px #424242, inset -3px -3px 6px #5a5a5a;
+				border:0px solid #b444c7;
+			}
+			/* The slider itself */
+			.slider {
+			  -webkit-appearance: none;  /* Override default CSS styles */
+			  appearance: none;
+			  height: 8px; 
+			  width: 60px;
+			  outline: none;
+			  background: #4e4e4e;
+			  box-shadow: inset -2px -2px 4px #5f5f5fa8, inset 2px 2px 4px #232323a3;
+			  -webkit-transition: .2s; 
+			  transition: opacity .2s;margin-top: 10px;
+			}
+			/* Mouse-over effects */
+			.slider:hover {
+			  opacity: 1; 
+			}
+			
+			.slider::-webkit-slider-thumb {
+			  -webkit-appearance: none; /* Override default look */
+			  appearance: none;
+			  width: 12px; 
+			  box-shadow: inset -1px -1px 2px #23232345, inset 1px 1px 2px #292929;
+			  height: 8px; 
+			  background: linear-gradient(145deg, #4c4b4b, #292929);
+			  border-radius: 10px;
+			  cursor: pointer; 
+
+			}
+		</style>
+	</head>
+
+
+	<body>
+
+		<span style="color: #cccccc;">Beat Looper-tron</span> <br>
+
+		<div class="PiecePositionTop" id="div1"> 
+			<Span style="margin-top: 45px; margin-left: 10px; color:lightgrey; position: absolute;">Beats:</Span> 
+				<p style="margin: 24px;"></p> 
+
+			<div style="background: linear-gradient(145deg, #424242cf, #2e795a96);" draggable="true" ondragstart="drag(event)" id="1" class="drumpad" style="top: 220px;left: 70%;" onclick="playBeat(clap)">clap</div>
+			<div style="background: linear-gradient(145deg, #424242cf, #2e797996);" draggable="true" ondragstart="drag(event)" id="2" class="drumpad" style="top: 220px;left: 50%;" onclick="playBeat(kick)">kick</div>
+			<div style="background: linear-gradient(145deg, #424242cf, #792e7496);" draggable="true" ondragstart="drag(event)" id="3" class="drumpad" style="top: 220px;left: 30%;" onclick="playBeat(snare)">snare</div>
+			<div style="background: linear-gradient(145deg, #424242cf, #792e6296);" draggable="true" ondragstart="drag(event)" id="4" class="drumpad" style="top: 220px;left: 10%;" onclick="playBeat(crash)">crash</div>
+			<div style="background: linear-gradient(145deg, #424242cf, #792e2e96);" draggable="true" ondragstart="drag(event)" id="5" class="drumpad" style="top: 135px;left: 50%;" onclick="playBeat(hiHat)">hiHat</div>
+			<div style="background: linear-gradient(145deg, #424242cf, #75792e96);" draggable="true" ondragstart="drag(event)" id="6" class="drumpad" style="top: 135px;left: 30%;" onclick="playBeat(ride)">ride</div>
+			<div style="background: linear-gradient(145deg, #424242cf, #4b792e96);" draggable="true" ondragstart="drag(event)" id="7" class="drumpad" style="top: 135px;left: 10%;" onclick="playBeat(splash)">splash</div>
+			<div style="background: linear-gradient(145deg, #424242cf, #512e7996);" draggable="true" ondragstart="drag(event)" id="8" class="drumpad" style="top: 135px;left: 70%;" onclick="playBeat(block)">block</div>
+			<div style="background: linear-gradient(145deg, #424242cf, #2e457996);" draggable="true" ondragstart="drag(event)" id="9" class="drumpad" style="top: 305px;left: 50%;" onclick="playBeat(cowbell)">cowbell</div>
+			<div style="background: linear-gradient(145deg, #424242cf, #79542e96);" draggable="true" ondragstart="drag(event)" id="10" class="drumpad" style="top: 305px;left: 30%;" onclick="playBeat(eggShaker)">eggShaker</div>
+			<div style="background: linear-gradient(145deg, #424242cf, #2e617996);" draggable="true" ondragstart="drag(event)" id="11" class="drumpad" style="top: 305px;left: 10%;" onclick="playBeat(sleighBells)">sleighBells</div>
+			<div style="background: linear-gradient(145deg, #424242cf, #616161);" draggable="true" ondragstart="drag(event)" id="12" class="drumpad" style="top: 305px;left: 70%;" onclick="playBeat(stickHits)">stickHits</div>
+			<div style="background: linear-gradient(145deg, #424242cf, #793f2e96);" draggable="true" ondragstart="drag(event)" id="13" class="drumpad" style="top: 50px;left: 50%;" onclick="playBeat(floorTom)">floorTom</div>
+			<div style="background: linear-gradient(145deg, #424242cf, #792e4096);" draggable="true" ondragstart="drag(event)" id="14" class="drumpad" style="top: 50px;left: 30%;" onclick="playBeat(highTom)">highTom</div>
+			<div style="background: linear-gradient(145deg, #424242cf, #2e794596);" draggable="true" ondragstart="drag(event)" id="15" class="drumpad" style="top: 50px;left: 10%;" onclick="playBeat(midTom)">midTom</div>
+		</div>
+		<Span style="margin-top: 585px;z-index: 2; left:50%;margin-left: 230px; color:darkgrey; position: absolute;"><i>Remove</i></Span>
+			<div class="PiecePositionTop2" id="div2" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+		<div class="grouped">
+			<br>
+
+			<ul>
+				<p><span>Beat </span> <span id="score">Looper</span> 
+					<button id="gostop" onclick="prebeat(this)" style="background: linear-gradient(145deg, rgba(121, 46, 46, 0.59), rgba(66, 66, 66, 0.81));">Stop</button>
+					<span style="margin-left:20px;"> BPM:</span>
+					<button onclick="speed(1)">-</button>
+					<span style="padding-left: 15px;" id="s1">100</span>
+					<button onclick="speed(2)">+</button>
+					<button style="margin-left: 36px; background: linear-gradient(145deg, #4e4e4e, #643b3bed);" onclick="clearAll()">Clear</button>
+				
+				
+				<br> 
+				<li class="items" id="50" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li class="items" id="51" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li class="items" id="52" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li class="items" id="53" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li class="items" id="54" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li class="items" id="55" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li class="items" id="56" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li class="items" id="57" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li class="items" id="58" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="59" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="60" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="61" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="62" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="63" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="64" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="65" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="66" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="67" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="68" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="69" ondrop="drop(event)" ondragover="allowDrop(event)"></li>		
+				<li  class="items" id="70" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="71" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="72" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="73" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="74" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="75" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="76" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="77" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="78" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="79" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="80" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="81" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="82" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="83" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="84" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="85" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="86" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="87" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="88" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="89" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="90" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="91" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="92" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="93" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="94" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="95" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="96" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="97" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+
+				<li class="items" id="98" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li class="items" id="99" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li class="items" id="100" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li class="items" id="101" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li class="items" id="102" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li class="items" id="103" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li class="items" id="104" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li class="items" id="105" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li class="items" id="106" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="107" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="108" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="109" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="110" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="111" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="112" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="113" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="114" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="115" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="116" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="117" ondrop="drop(event)" ondragover="allowDrop(event)"></li>		
+				<li  class="items" id="118" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="119" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="120" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="121" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="122" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="123" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="124" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="125" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="126" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="127" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="128" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="129" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="130" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="131" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="132" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="133" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="134" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="135" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="136" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="137" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="138" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="139" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="140" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="141" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="142" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="143" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="144" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+				<li  class="items" id="145" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+			</ul>
+			<p></p>
+
+			<button id="save1" style="margin-left: 40px; background: linear-gradient(145deg, #656565, #404040ed);" onclick="opens(1)">1</button>
+			<button id="save2" style="margin-left: 10px; background: linear-gradient(145deg, #656565, #404040ed);" onclick="opens(2)">2</button>
+			<button id="save3" style="margin-left: 10px; background: linear-gradient(145deg, #656565, #404040ed);" onclick="opens(3)">3</button>
+
+
+			<button style="margin-left: 84px; background: linear-gradient(145deg, #5c485d, #3b5664ed);" onclick="save(1, this)">Set 1</button>
+			<button style="margin-left: 10px; background: linear-gradient(145deg, #485d5a, #3b4764ed);" onclick="save(2, this)">Set 2</button>
+			<button style="margin-left: 10px; background: linear-gradient(145deg, #0cefef2e, #4a613c);" onclick="save(3, this)">Set 3</button>
+			
+			<!-- Save to internal storage, create load function-->
+
+			
+			<input type="range" min="1" max="100" value="50" class="slider" id="myRange1" style="position:absolute;left:-10px;top:98px; transform: rotate(270deg);">
+			<input type="range" min="1" max="100" value="50" class="slider" id="myRange2" style="position:absolute;left:-10px;top:179px; transform: rotate(270deg);">
+			<input type="range" min="1" max="100" value="50" class="slider" id="myRange3" style="position:absolute;left:-10px;top:260px; transform: rotate(270deg);">
+			<input type="range" min="1" max="100" value="50" class="slider" id="myRange4" style="position:absolute;left:-10px;top:340px; transform: rotate(270deg);">
+			<input type="range" min="1" max="100" value="50" class="slider" id="myRange5" style="position:absolute;left:-10px;top:421px; transform: rotate(270deg);">
+			<input type="range" min="1" max="100" value="50" class="slider" id="myRange6" style="position:absolute;left:-10px;top:503px; transform: rotate(270deg);">
+
+			</div>
+		</div>
+				<br>
+				<div style="color: #b3b3b3; top: 710px; position: absolute;"><i>Drag the beat to the board</i></div>
+
+				
+
+<script language="Javascript" >
+	var volumeINT1=1;
+	document.getElementById("myRange1").oninput = function() {volumeINT1=(this.value/100);}
+	var volumeINT2=1;
+	document.getElementById("myRange2").oninput = function() {volumeINT2=(this.value/100);}
+	var volumeINT3=1;
+	document.getElementById("myRange3").oninput = function() {volumeINT3=(this.value/100);}
+	var volumeINT4=1;
+	document.getElementById("myRange4").oninput = function() {volumeINT4=(this.value/100);}
+	var volumeINT5=1;
+	document.getElementById("myRange5").oninput = function() {volumeINT5=(this.value/100);}
+	var volumeINT6=1;
+	document.getElementById("myRange6").oninput = function() {volumeINT6=(this.value/100);}
+	var volumeINT7=1;
+
+	//define sounds
+	var clap = new Audio('../clap.wav');
+	var kick = new Audio('../kick.wav');
+	var snare = new Audio('../snare.wav');
+	var crash = new Audio('../crash.wav');
+	var hiHat = new Audio('../hiHat.wav');
+	var ride = new Audio('../ride.wav');
+	var splash = new Audio('../splash.wav');
+	var block = new Audio('../block.wav');
+	var cowbell = new Audio('../cowbell.wav');
+	var eggShaker = new Audio('../eggShaker.wav');
+	var sleighBells = new Audio('../sleighBells.wav');
+	var stickHits = new Audio('../stickHits.wav');
+	var floorTom = new Audio('../floorTom.wav');
+	var highTom = new Audio('../highTom.wav');
+	var midTom = new Audio('../midTom.wav');
+
+	clap.preload = 'auto';
+	kick.preload = 'auto';
+	snare.preload = 'auto';
+	crash.preload = 'auto';
+	hiHat.preload = 'auto';
+	splash.preload = 'auto';
+	block.preload = 'auto';
+	cowbell.preload = 'auto';
+	eggShaker.preload = 'auto';
+	sleighBells.preload = 'auto';
+	stickHits.preload = 'auto';
+	floorTom.preload = 'auto';
+	highTom.preload = 'auto';
+	midTom.preload = 'auto';
+
+	function docReady(){ //setup key press as on down press
+        window.addEventListener('keydown', pressBeat);
+    }
+	function pressBeat(evt){ //play audio on key press
+
+		switch (evt.keyCode) {
+		    case 81://q
+		    	playBeat(splash);
+		    break;
+		    case 87: //w
+		    	playBeat(ride);
+		    break;
+		    case 69://e
+		    	playBeat(hiHat);
+		    break;
+		    case 82: //r
+		    	playBeat(block);
+		    break;
+		    case 65://a
+		    	playBeat(crash);
+		    break;
+		    case 83: //s
+		    	playBeat(snare);
+		    break;
+		    case 68://d
+		    	playBeat(kick);
+		    break;
+		    case 70: //f
+		    	playBeat(clap);
+		    break;
+		    case 90://z
+		    	playBeat(sleighBells);
+		    break;
+		    case 88: //x
+		    	playBeat(eggShaker);
+		    break;
+		    case 67://c
+		    	playBeat(cowbell);
+		    break;
+		    case 86: //b
+		    	playBeat(stickHits);
+		    break;
+		    case 49://1
+		    	playBeat(midTom);
+		    break;
+		    case 50: //2
+		    	playBeat(highTom);
+		    break;
+		    case 51://3
+		    	playBeat(floorTom);
+		    break;
+		    }
+	}
+	var realSpeed=100; 
+	var myBeat = setInterval(beat, (1000 * 60 / realSpeed)/4); //set beat
+	//clearInterval(beat); //clear beat
+	var beatGo = true;
+	function prebeat(that) {
+
+		if (beatGo == true) {
+			clearInterval(myBeat); //clear beat
+			beatGo = false;
+			that.innerHTML = "Go";
+			that.style.background="linear-gradient(145deg, #4b792e96,#424242cf)";
+		}else if (beatGo==false) {
+			myBeat = setInterval(beat, (1000 * 60 / realSpeed)/4); //set beat //WHY????
+			beatGo = true;
+			that.innerHTML = "Stop";
+			that.style.background="linear-gradient(145deg, #792e2e96,#424242cf)";
+		}
+	}
+
+	//set speed
+	var realSpeed=100; //interval
+	function speed(that){
+		if (that==1) {
+			realSpeed=realSpeed-10;
+			clearInterval(myBeat);
+			if (document.getElementById("gostop").innerHTML=="Stop") {
+				myBeat = setInterval(beat, (1000 * 60 / realSpeed)/4);
+			}
+			document.getElementById("s1").innerHTML=realSpeed;
+		}else{
+			realSpeed=realSpeed+10;
+			clearInterval(myBeat);
+			if (document.getElementById("gostop").innerHTML=="Stop") {
+				myBeat = setInterval(beat, (1000 * 60 / realSpeed)/4);
+			}
+			document.getElementById("s1").innerHTML=realSpeed;
+		}
+	}
+	var counterPlaying=0;
+	var blockplaying=1000;
+	var numset=50;
+	function beat(){
+		for (var i = numset; i < 146; i=i+16) {
+			//console.log(document.getElementById(i).childNodes[0]);
+				blockplaying=i; //console.log(i);
+				if(i>50){document.getElementById(i-1).style.background=null}else{
+					document.getElementById(145).style.background=null;
+				}
+				document.getElementById(i).style.background="#545454";
+
+			if (document.getElementById(i).firstChild) {
+				//console.log(document.getElementById(i).childNodes[0].innerHTML);
+				playBeat(eval(document.getElementById(i).childNodes[0].innerHTML), true);
+			} 
+		}
+		counterPlaying=counterPlaying+1; //console.log(counterPlaying);
+		numset=numset+1; if (numset==66) {numset=50;counterPlaying=0;}
+	}
+
+	function playBeat(beat, presser){ //play audio
+		if (!beat.ended) {beat.currentTime = 0;}
+		if(presser==true){
+			if(blockplaying<50) {
+			beat.volume=1;
+			}else if(blockplaying<=65) {
+				beat.volume=volumeINT1;
+			}else if(blockplaying<=81) {
+				beat.volume=volumeINT2;
+			}else if(blockplaying<=97) {
+				beat.volume=volumeINT3;
+			}else if(blockplaying<=113) {
+				beat.volume=volumeINT4;
+			}else if(blockplaying<=129) {
+				beat.volume=volumeINT5;
+			}else if(blockplaying<=145) {
+				beat.volume=volumeINT6;
+			}
+		}else{beat.volume=1;}
+
+		beat.play();
+	}
+
+
+
+		/*Movement / Drag*/
+			var indexPosition=2;
+			function allowDrop(ev) {
+			  ev.preventDefault();
+			}
+			var PreDrag;
+			function drag(ev) {
+			  ev.dataTransfer.setData("text", ev.target.id);
+			  PreDrag = ev.toElement.parentNode.className;
+			  indexPosition=Array.prototype.indexOf.call(document.getElementById("div1").children, ev.toElement); //get index position of soundblock grabbed
+
+			}
+			var score1=0;
+			function drop(ev) {
+			  ev.preventDefault();
+			  var data = ev.dataTransfer.getData("text");
+			  ev.target.appendChild(document.getElementById(data));
+			  //console.log(ev.toElement.id);
+
+				if (PreDrag == "PiecePositionTop") {
+					var div = document.getElementById(ev.toElement.childNodes[0].id),
+					clone = div.cloneNode(true); // true means clone all childNodes and all event handlers
+					clone.id = ("a"+ev.toElement.childNodes[0].id);
+					//document.getElementById("div1").appendChild(clone);
+					document.getElementById("div1").insertBefore(clone, document.getElementById("div1").children[indexPosition]); //inset soundblock at original position in index
+
+				}
+				if (ev.toElement.id == "div2") {
+					(ev.toElement.childNodes[0]).remove();
+				}
+			}
+
+			function clearAll(){
+				for (var i = 50; i < 146; i++) {
+					if (document.getElementById(i).childNodes[0] !== undefined && document.getElementById(i).childNodes[0] !== null) {
+						document.getElementById(i).childNodes[0].remove(); 
+					}
+				}
+			}
+
+			var storeCount=0;
+			var storeData=[0,0];
+			var storeData2=[0,0];
+
+			var storeCountB=0;
+			var storeDataB=[0,0];
+			var storeData2B=[0,0];
+
+			var storeCountC=0;
+			var storeDataC=[0,0];
+			var storeData2C=[0,0];
+
+			function save(num, thatOne){
+
+				document.getElementById("save"+num).style.background=thatOne.style.background; //set background of save from grey to gradient
+
+				if (num==1) {
+						storeCount=0;
+						storeData.length = 0;
+						storeData2.length = 0;
+					for (var i = 50; i < 146; i++) {
+						if (document.getElementById(i).childNodes[0] !== undefined && document.getElementById(i).childNodes[0] !== null) { 
+							storeCount=storeCount+1;
+							storeData[storeCount]=(/*i+*/document.getElementById(i).childNodes[0]/*.innerHTML*/);
+							storeData2[storeCount]=i;
+						}
+					}
+				}
+				if (num==2) {
+						storeCountB=0;
+						storeDataB.length = 0;
+						storeData2B.length = 0;
+					for (var i = 50; i < 146; i++) {
+						if (document.getElementById(i).childNodes[0] !== undefined && document.getElementById(i).childNodes[0] !== null) { 
+							storeCountB=storeCountB+1;
+							storeDataB[storeCountB]=(/*i+*/document.getElementById(i).childNodes[0]/*.innerHTML*/);
+							storeData2B[storeCountB]=i;
+						}
+					}
+				}
+
+				if (num==3) {
+						storeCountC=0;
+						storeDataC.length = 0;
+						storeData2C.length = 0;
+					for (var i = 50; i < 146; i++) {
+						if (document.getElementById(i).childNodes[0] !== undefined && document.getElementById(i).childNodes[0] !== null) { 
+							storeCountC=storeCountC+1;
+							storeDataC[storeCountC]=(/*i+*/document.getElementById(i).childNodes[0]/*.innerHTML*/);
+							storeData2C[storeCountC]=i;
+						}
+					}
+				}
+			}
+			function opens(nums){
+				clearAll();
+				if (nums==1) {
+					for (var i = 0; i < storeCount; i++) {
+							document.getElementById(storeData2[i+1]).appendChild(storeData[i+1]);
+					}
+				}
+				if (nums==2) {
+					for (var i = 0; i < storeCountB; i++) {
+							document.getElementById(storeData2B[i+1]).appendChild(storeDataB[i+1]);
+					}		
+				}
+				if (nums==3) {
+					for (var i = 0; i < storeCountC; i++) {
+							document.getElementById(storeData2C[i+1]).appendChild(storeDataC[i+1]);
+					}		
+				}
+			}
+		</script>
+	</body>
+</html>
