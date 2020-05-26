@@ -2,9 +2,8 @@
 
 <!-- To Do:
 	- For Loops / Arrays (Code Efficiency)
-	- Scoreboard
-	- Better Design / css
-	- Bug: Enable reset button on tied game
+	- Keep track of score
+	- Change name?
 -->
 
 <html>
@@ -15,40 +14,43 @@
 				height:99%;
 				user-select: none;
 				-moz-user-select: none;
-				background-color: slategrey;
+				background: rgb(45, 45, 45);
 				font-family: monospace;
 			}
 			.contains {
 				position: relative;
-				background: linear-gradient(to right, #134e5e, #71b280);
-				color:white;
-				width: 500px;
-				height: 500px;
-				top: 100px;
-				margin: 0 auto;
-				border-radius: 10px;
-				box-shadow: 0px 2px 5px #0000002e;
+			    color: #d4d4d4;
+			    width: 500px;
+			    height: 500px;
+			    top: 100px;
+			    margin: 0 auto;
+			    border-radius: 50px;
+			    background: rgb(45, 45, 45);
+			    box-shadow: 41px 41px 82px #1b1b1b, -41px -41px 82px #3e3e3e;
 			}
 			ul {
 				width: 350px;
-				height: 200px;
+			    height: 210px;
 			    margin: 0 auto;
-			    margin-top: 20px;
+			    margin-top: 33px;
 			    list-style-type: none;
 			    border-radius: 10px;
-			    /*box-shadow: 0px 2px 10px grey;*/
+			    margin-left: 60px;
 			}
 			li {
-				background-color: #ffffff26;
-				width: 100px;
-				height: 100px;
+				width: 80px;
+			    height: 80px;
 			    top: 100px;
 			    text-align: center;
-			    line-height: 100px;
+			    line-height: 80px;
 			    float: left;
-			    border:1px dotted #ffffff0f;
 			    font-size: 40px;
 			    color: #ffffff;
+			    background: linear-gradient(145deg, #424242, rgb(45, 45, 45));
+			    /* border: solid 1px black; */
+			    box-shadow: 8px 8px 16px #00000052, -8px -8px 16px #4c4c4c6e;
+			    margin: 10px;
+			    border-radius: 25px;
 			}
 			br {
 				clear: both;
@@ -57,33 +59,39 @@
 				height: 25px;
 			}
 			li:hover {
-				background-color: #ffffff87 !important;
+				 background: linear-gradient(145deg, rgb(45, 45, 45), #424242);
+			}
+			li:active {
+				/*background: #ffffff87 !important;*/
+				box-shadow: inset 8px 8px 16px #00000052, inset -8px -8px 16px #4c4c4c6e;
 			}
 			button {
-				/*opacity: 0.5;*/
-				height: 50px;
-				width: 25px;
-				font-family: monospace;
-				background-color: lightgrey;
-
+			    padding: 10px;
+			    font-family: monospace;
 			}
 			#Styling:hover {
 				background-color: purple !important;
 			}
 			#ResetBtn {
 				width: 100px;
-				margin: 13px;
-				margin-right:100px;
-				border:0px;
-				font-size: 16px;
-				outline: none;
-				box-shadow: 5px 5px 3px #0000002b;
+			    margin: 10px;
+			    margin-right: 111px;
+			    border: 0px;
+			    font-size: 16px;
+			    outline: none;
+			    background: linear-gradient(145deg, #212121, #353535);
+			    box-shadow: 6px 6px 12px #00000047, -6px -6px 12px #54545447;
+			    border-radius: 25px;
+			    top: 10px;
+			    color: grey;
+			    border: solid 1px #424242;
+			    position: relative;
 			}
 			#ResetBtn:hover{
-				background: darkgrey;
+				background: linear-gradient(145deg, #353535, rgb(45, 45, 45));
 			}
 			#ResetBtn:active{
-				box-shadow: 0px 0px 3px #0000002b;
+				box-shadow: inset 6px 6px 12px #1b1b1b, inset -6px -6px 12px #3c3c3c;
 			}
 			p {
 				margin:0px;
@@ -92,9 +100,27 @@
 			}
 			#Turn{
 				padding: 10px;
+			    left: 175px;
+			    top: 6px;
+			    position: relative;
+			    width: 120px;
+			    text-align: center;
+			    border-radius: 25px;
+			    /*box-shadow: 6px 6px 12px #00000047, -6px -6px 12px #54545447;*/
+			    box-shadow: #1b1b1bd6 6px 6px 24px inset, 
+						    #3c3c3cd6 -6px -6px 24px inset, 
+						    #1b1b1b73 6px 6px 12px, 
+						    #3c3c3c7a -6px -6px 12px;
+			    border: solid #71717147 1px;
+			}
+			#Turn:active{
+				box-shadow: #000000d6 6px 6px 24px inset, #3c3c3cd6 -6px -6px 24px inset;
+				/*border: solid #71717147 1px;*/
 			}
 			span{
 				padding: 10px;
+			    left: 100px;
+			    top: 30px;
 			}
 		</style>
 
@@ -105,7 +131,7 @@
 		<div class="contains">
 
 			<br>
-			<span>Turn:</span>
+			<span style="position: relative;">Turn:</span>
 			<div id="Turn"><SPAN>Player 1</SPAN></div>
 
 			<ul>
@@ -128,105 +154,162 @@
 		</div>
 
 		<script>
+			var chosen1;
+			var chosen2;
+			var chosen3;
+			var select1=document.getElementById('1');
+			var select2=document.getElementById('2');
+			var select3=document.getElementById('3');
+			var select4=document.getElementById('4');
+			var select5=document.getElementById('5');
+			var select6=document.getElementById('6');
+			var select7=document.getElementById('7');
+			var select8=document.getElementById('8');
+			var select9=document.getElementById('9');
+
 			function myFunction() {
 				//document.getElementsByTagName('li').classList.add('Styling');
-				if(document.body.style.backgroundColor=="slategrey"){
+				if(document.body.style.background=="rgb(45, 45, 45)"){
 
 					if(document.getElementById(event.target.id).innerHTML.indexOf(" ") !== -1) {
 						if(document.getElementById('Turn').innerHTML.indexOf("Player 1") !== -1) {
 					  		document.getElementById('Turn').innerHTML = "Player 2";
 					  		document.getElementById(event.target.id).innerHTML = "X";
-					  		document.getElementById(event.target.id).style.backgroundColor = "#5293ffad";
-					  		document.getElementById('Turn').style.backgroundColor = "#ff5252ad";
+					  		document.getElementById(event.target.id).style.background = "#5293ffad";
+					  		document.getElementById('Turn').style.background = "#ff5252ad";
 					  	}else{
 					  		document.getElementById('Turn').innerHTML = "Player 1";
 					  		document.getElementById(event.target.id).innerHTML = "O";
-					  		document.getElementById(event.target.id).style.backgroundColor = "#ff5252ad";
-					  		document.getElementById('Turn').style.backgroundColor = "#5293ffad";
+					  		document.getElementById(event.target.id).style.background = "#ff5252ad";
+					  		document.getElementById('Turn').style.background = "#5293ffad";
 
 					  	}
 				  	}
 				  	
-				  	if(		document.getElementById('1').innerHTML == document.getElementById('4').innerHTML 
-				  		&& 	document.getElementById('1').innerHTML == document.getElementById('7').innerHTML 
-				  		&& 	document.getElementById('1').innerHTML !== " "
-				  		){ResetState();}
+				  	if(		select1.innerHTML == select4.innerHTML 
+				  		&& 	select1.innerHTML == select7.innerHTML 
+				  		&& 	select1.innerHTML !== " "
+				  		){
+				  			chosen1=select1;chosen2=select4;chosen3=select7; 
+				  			ResetState();
 
-				  	if(		document.getElementById('2').innerHTML == document.getElementById('5').innerHTML 
-				  		&& 	document.getElementById('2').innerHTML == document.getElementById('8').innerHTML 
-				  		&& 	document.getElementById('2').innerHTML !== " "
-				  		){ResetState();}	
+				  		}
 
-				  	if(		document.getElementById('3').innerHTML == document.getElementById('6').innerHTML 
-				  		&& 	document.getElementById('3').innerHTML == document.getElementById('9').innerHTML 
-				  		&& 	document.getElementById('3').innerHTML !== " "
-				  		){ResetState();}
+				  	if(		select2.innerHTML == select5.innerHTML 
+				  		&& 	select2.innerHTML == select8.innerHTML
+				  		&& 	select2.innerHTML !== " "
+				  		){
+				  			chosen1=select2;chosen2=select5;chosen3=select8;
+				  			ResetState();
+				  		}	
 
-				  	if(		document.getElementById('1').innerHTML == document.getElementById('2').innerHTML 
-				  		&& 	document.getElementById('1').innerHTML == document.getElementById('3').innerHTML 
-				  		&& 	document.getElementById('1').innerHTML !== " "
-				  		){ResetState();}
+				  	if(		select3.innerHTML == select6.innerHTML 
+				  		&& 	select3.innerHTML == select9.innerHTML
+				  		&& 	select3.innerHTML !== " "
+				  		){
+				  			chosen1=select3; chosen2=select6; chosen3=select9;
+				  			ResetState();
+				  		}
 
-				  	if(		document.getElementById('4').innerHTML == document.getElementById('5').innerHTML 
-				  		&& 	document.getElementById('4').innerHTML == document.getElementById('6').innerHTML 
-				  		&& 	document.getElementById('4').innerHTML !== " "
-				  		){ResetState();}	
+				  	if(		select1.innerHTML == select2.innerHTML 
+				  		&& 	select1.innerHTML == select3.innerHTML 
+				  		&& 	select1.innerHTML !== " "
+				  		){
+				  			chosen1=select1; chosen2=select2; chosen3=select3;
+				  			ResetState();
+				  		}
 
-				  	if(		document.getElementById('7').innerHTML == document.getElementById('8').innerHTML 
-				  		&& 	document.getElementById('7').innerHTML == document.getElementById('9').innerHTML 
-				  		&& 	document.getElementById('7').innerHTML !== " "
-				  		){ResetState();}	
+				  	if(		select4.innerHTML == select5.innerHTML 
+				  		&& 	select4.innerHTML == select6.innerHTML 
+				  		&& 	select4.innerHTML !== " "
+				  		){
+				  			chosen1=select4; chosen2=select5; chosen3=select6;
+				  			ResetState();
+				  		}	
 
-				  	if(		document.getElementById('1').innerHTML == document.getElementById('5').innerHTML 
-				  		&& 	document.getElementById('1').innerHTML == document.getElementById('9').innerHTML 
-				  		&& 	document.getElementById('1').innerHTML !== " "
-				  		){ResetState();}	
+				  	if(		select7.innerHTML == select8.innerHTML
+				  		&& 	select7.innerHTML == select9.innerHTML
+				  		&& 	select7.innerHTML !== " "
+				  		){
+				  			chosen1=select7; chosen2=select8; chosen3=select9;
+					  		ResetState();
+					  	}	
 
-				  	if(		document.getElementById('3').innerHTML == document.getElementById('5').innerHTML 
-				  		&& 	document.getElementById('3').innerHTML == document.getElementById('7').innerHTML 
-				  		&& 	document.getElementById('3').innerHTML !== " "
-				  		){ResetState();}
+				  	if(		select1.innerHTML == select5.innerHTML 
+				  		&& 	select1.innerHTML == select9.innerHTML
+				  		&& 	select1.innerHTML !== " "
+				  		){
+				  			chosen1=select1; chosen2=select5; chosen3=select9;
+				  			ResetState();
+				  		}	
+
+				  	if(		select3.innerHTML == select5.innerHTML 
+				  		&& 	select3.innerHTML == select7.innerHTML 
+				  		&& 	select3.innerHTML !== " "
+				  		){
+				  			chosen1=select3; chosen2=select5; chosen3=select7;
+				  			ResetState();
+				  		}
 				}	
 			}
 		function ResetState() {
+			document.getElementById('Turn').style.boxShadow="#000000d6 6px 6px 24px inset, #3c3c3cd6 -6px -6px 24px inset";
+				  		chosen1.style.boxShadow="white -0px -0px 0px 3px";
+						chosen2.style.boxShadow="white -0px -0px 0px 3px";
+						chosen3.style.boxShadow="white -0px -0px 0px 3px";
+			
 			if(document.getElementById('Turn').innerHTML.indexOf("Player 1") !== -1) {
 				  		document.getElementById('Turn').innerHTML = "Player 2";
-				  		document.getElementById('Turn').style.backgroundColor = "#ff5252ad";
+				  		document.getElementById('Turn').style.background = "#ff5252ad";
 				  	}else{
 				  		document.getElementById('Turn').innerHTML = "Player 1";
-				  		document.getElementById('Turn').style.backgroundColor = "#5293ffad";
+				  		document.getElementById('Turn').style.background = "#5293ffad";
 
 				  	}
 			document.getElementById("ResetBtn").disabled = false;
-			document.body.style.backgroundColor = document.getElementById('Turn').style.backgroundColor;
+			document.body.style.background = document.getElementById('Turn').style.background;
 			document.getElementById('Turn').innerHTML = document.getElementById('Turn').innerHTML + " Wins!";
 		}
 
 		function Reset() {	//need to loop these instead of new line for each
 			document.getElementById("ResetBtn").disabled = false;
-			document.getElementById('1').innerHTML = " ";
-			document.getElementById('2').innerHTML = " ";
-			document.getElementById('3').innerHTML = " ";
-			document.getElementById('4').innerHTML = " ";
-			document.getElementById('5').innerHTML = " ";
-			document.getElementById('6').innerHTML = " ";
-			document.getElementById('7').innerHTML = " ";
-			document.getElementById('8').innerHTML = " ";
-			document.getElementById('9').innerHTML = " ";
 
-			document.getElementById('1').style.backgroundColor = "#ffffff26";
-			document.getElementById('2').style.backgroundColor = "#ffffff26";
-			document.getElementById('3').style.backgroundColor = "#ffffff26";
-			document.getElementById('4').style.backgroundColor = "#ffffff26";
-			document.getElementById('5').style.backgroundColor = "#ffffff26";
-			document.getElementById('6').style.backgroundColor = "#ffffff26";
-			document.getElementById('7').style.backgroundColor = "#ffffff26";
-			document.getElementById('8').style.backgroundColor = "#ffffff26";
-			document.getElementById('9').style.backgroundColor = "#ffffff26";
+			select1.innerHTML = " ";
+			select2.innerHTML = " ";
+			select3.innerHTML = " ";
+			select4.innerHTML = " ";
+			select5.innerHTML = " ";
+			select6.innerHTML = " ";
+			select7.innerHTML = " ";
+			select8.innerHTML= " ";
+			select9.innerHTML= " ";
 
-			document.body.style.backgroundColor = "slategrey";
-		}
-		document.body.style.backgroundColor = "slategrey";
+			document.getElementById('1').style.background = null;
+			document.getElementById('2').style.background = null;
+			document.getElementById('3').style.background = null;
+			document.getElementById('4').style.background = null;
+			document.getElementById('5').style.background = null;
+			document.getElementById('6').style.background = null;
+			document.getElementById('7').style.background = null;
+			document.getElementById('8').style.background = null;
+			document.getElementById('9').style.background = null;
+
+			document.body.style.background = "rgb(45, 45, 45)";
+			document.getElementById('Turn').innerHTML = "Player 1"
+			document.getElementById('Turn').style.boxShadow=null;
+			document.getElementById('Turn').style.background=null;
+
+			select1.style.boxShadow=null;
+			select2.style.boxShadow=null;
+			select3.style.boxShadow=null;
+			select4.style.boxShadow=null;
+			select5.style.boxShadow=null;
+			select6.style.boxShadow=null;
+			select7.style.boxShadow=null;
+			select8.style.boxShadow=null;
+			select9.style.boxShadow=null;
+	}
+		document.body.style.background = "rgb(45, 45, 45)";
 		</script>
 	</body>
 </html>
