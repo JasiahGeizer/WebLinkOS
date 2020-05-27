@@ -2,10 +2,11 @@
 
 <!-- To Do:
 	- Get blocks to animate falling downwards.
-	- Detect when someone's won
-	- Create reset button
 	- Clean code by creating elements in a for loop
 	- Create background div graphics for stand and tray
+	- [Change] Reset sound to pieces falling into tray
+	- Turn yellow arrows into an animation moving back and forward
+
 -->
 
 <html>
@@ -14,15 +15,22 @@
 		<script>
 			var chosen;
 			var turn = "yellow";
+			var lastDrop;
 			function decision(x) {
-				var t = x+40; console.log(t);
+				//helper arrows
+				if (document.getElementById("btn2b").style.visibility=="visible") {
+					document.getElementById("btn2b").style.visibility="hidden";
+					document.getElementById("btn2c").style.visibility="hidden";
+				}
+
+				var t = x+40; /*console.log(t); lastDrop=t;*/
 
 				while(	document.getElementById(t).style.backgroundColor == "red" ||
 						document.getElementById(t).style.backgroundColor == "yellow"){t=t-8;}
 
 				var i;
 				for (i = x; i < t; i++) {
-					console.log(i)
+					console.log(i); lastDrop=i;
 
 					for (B = 1; B < 9; B++) {
 						if(turn == "red"){
@@ -32,26 +40,15 @@
 							document.getElementById(B).className = "items2";
 						}
 					}
-					//document.getElementById(i).style.backgroundColor = turn; //change red to variable
-					//document.getElementById(i).style.border = "3px solid " + turn;
-					//document.getElementById(i).style["boxShadow"] = "0 0 5px " + turn;
 					
-					document.getElementById(i+8).style.backgroundColor = "white";
-					//document.getElementById(i).style.border = "3px solid #0053c9";
-					//document.getElementById(i).style["boxShadow"] = "inset 0px 3px 7px #424242"
+					document.getElementById(i+8).style.backgroundColor = null;
 
 					i=i+7;
 				}
 				
 				for (i; i < t+7; i++) {
-					console.log(i)
+					console.log(i); lastDrop=i;
 					document.getElementById(i).style.backgroundColor = turn; //change red to variable
-					//document.getElementById(i).style.border = "3px solid " + turn;
-					//document.getElementById(i).style["boxShadow"] = "0 0 5px black";
-					
-					//document.getElementById(i).style.backgroundColor = "white";
-					//document.getElementById(i).style.border = "3px solid #0053c9";
-					//document.getElementById(i).style["boxShadow"] = "inset 0px 3px 7px #424242"
 
 					i=i+7;
 				}
@@ -61,6 +58,232 @@
 
 			var audio = new Audio('clink.wav');
 			audio.play();
+
+			winCheck();
+			}
+
+			var repeatrChk;
+			var Rcount=0;
+			var Lcount=0;
+			var Dcount=0;
+			var Ucount=0;
+			var ULcount=0;
+			var DRcount=0;
+			var DLcount=0;
+			var URcount=0;
+
+			//the winning peices
+				//change to 1 array winPiece[i]?
+			var winPiece = [];
+			var iWin=0;
+
+			function winCheck(){ 
+				winPiece = [];
+				iWin=0;
+			
+				//Left and Right [-]
+
+				repeatrChk=lastDrop+1;
+				currentChk=lastDrop;
+				Rcount=1;
+
+
+					//right
+				if (repeatrChk<49) {
+					while (document.getElementById(repeatrChk)!=null && document.getElementById(currentChk).style.backgroundColor == document.getElementById(repeatrChk).style.backgroundColor && (currentChk % 8)>0) 
+							{			
+								if (document.getElementById(currentChk).style.backgroundColor
+								 == document.getElementById(repeatrChk).style.backgroundColor) {
+									Rcount=Rcount+1; 
+									console.log(Rcount+" YES R");
+
+									winPiece[iWin]=currentChk;
+									winPiece[iWin+1]=repeatrChk;
+									iWin=iWin+1;
+								}
+								repeatrChk=repeatrChk+1;
+								currentChk=currentChk+1;
+							}
+				}
+					//Left
+				repeatrChk=lastDrop-1;
+				currentChk=lastDrop;
+				Lcount=1;
+				while (document.getElementById(repeatrChk)!=null && document.getElementById(currentChk).style.backgroundColor == document.getElementById(repeatrChk).style.backgroundColor && (repeatrChk % 8)>0)
+						{ 						
+							if (document.getElementById(currentChk).style.backgroundColor
+							 == document.getElementById(repeatrChk).style.backgroundColor) {
+								Lcount=Lcount+1; 
+								console.log(Lcount+" YES L");
+
+								winPiece[iWin]=currentChk;
+								winPiece[iWin+1]=repeatrChk;
+								iWin=iWin+1;
+							}
+							repeatrChk=repeatrChk-1;
+							currentChk=currentChk-1;
+						}
+				if (Lcount+Rcount>4) {
+					winner(document.getElementById(currentChk).style.backgroundColor);
+					console.log("Winner L.R");
+				}
+
+
+				//Up and Down [|]
+
+				repeatrChk=lastDrop+8;
+				currentChk=lastDrop;
+				Dcount=1;
+					//Down
+				if (repeatrChk<41) {
+					while (document.getElementById(repeatrChk)!=null && document.getElementById(currentChk).style.backgroundColor == document.getElementById(repeatrChk).style.backgroundColor)
+							{
+								if (document.getElementById(currentChk).style.backgroundColor
+								 == document.getElementById(repeatrChk).style.backgroundColor) {
+									Dcount=Dcount+1; 
+									console.log(Dcount+" YES D");
+
+									winPiece[iWin]=currentChk;
+									winPiece[iWin+1]=repeatrChk;
+									iWin=iWin+1;
+								}
+								repeatrChk=repeatrChk+8;
+								currentChk=currentChk+8;
+							}
+					
+				}
+				if (Dcount>3) {
+					winner(document.getElementById(currentChk).style.backgroundColor);
+					console.log("Winner U/D");
+				}
+
+
+				//Up-left and down-right [\]
+
+				repeatrChk=lastDrop+9;
+				currentChk=lastDrop;
+				DRcount=1;
+					//down right
+
+				if (repeatrChk<49) {
+					while (document.getElementById(repeatrChk)!=null && document.getElementById(currentChk).style.backgroundColor == document.getElementById(repeatrChk).style.backgroundColor && (currentChk % 8)>0)
+							{				
+								if (document.getElementById(currentChk).style.backgroundColor
+								 == document.getElementById(repeatrChk).style.backgroundColor) {
+									DRcount=DRcount+1; 
+									console.log(DRcount+" YES DR");
+
+									winPiece[iWin]=currentChk;
+									winPiece[iWin+1]=repeatrChk;
+									iWin=iWin+1;
+								}
+								repeatrChk=repeatrChk+9;
+								currentChk=currentChk+9;
+							}
+				}
+					//up Left
+				repeatrChk=lastDrop-9;
+				currentChk=lastDrop;
+				ULcount=1;
+				while (document.getElementById(repeatrChk)!=null && document.getElementById(currentChk).style.backgroundColor == document.getElementById(repeatrChk).style.backgroundColor && (repeatrChk % 8)>0)
+						{ 						
+							if (document.getElementById(currentChk).style.backgroundColor
+							 == document.getElementById(repeatrChk).style.backgroundColor) {
+								ULcount=ULcount+1; 
+								console.log(ULcount+" YES UL");
+
+								winPiece[iWin]=currentChk;
+								winPiece[iWin+1]=repeatrChk;
+								iWin=iWin+1;
+							}
+							repeatrChk=repeatrChk-9;
+							currentChk=currentChk-9;
+						}
+				if (ULcount+DRcount>4) {
+					winner(document.getElementById(currentChk).style.backgroundColor);
+					console.log("Winner UL.DR");
+				}
+
+				//Down-left and up-right [/]
+
+				repeatrChk=lastDrop+7;
+				currentChk=lastDrop;
+				URcount=1;
+					//up right
+
+				if (repeatrChk<49) {
+					while (document.getElementById(repeatrChk)!=null && document.getElementById(currentChk).style.backgroundColor == document.getElementById(repeatrChk).style.backgroundColor && (currentChk % 8)>0)
+							{				
+								if (document.getElementById(currentChk).style.backgroundColor
+								 == document.getElementById(repeatrChk).style.backgroundColor) {
+									URcount=URcount+1; 
+									console.log(URcount+" YES UR");
+
+									winPiece[iWin]=currentChk;
+									winPiece[iWin+1]=repeatrChk;
+									iWin=iWin+1;
+								}
+								repeatrChk=repeatrChk+7;
+								currentChk=currentChk+7;
+							}
+				}
+					//down Left
+				repeatrChk=lastDrop-7;
+				currentChk=lastDrop;
+				DLcount=1;
+				while (document.getElementById(repeatrChk)!=null && document.getElementById(currentChk).style.backgroundColor == document.getElementById(repeatrChk).style.backgroundColor && (repeatrChk % 8)>0)
+						{ 						
+							if (document.getElementById(currentChk).style.backgroundColor
+							 == document.getElementById(repeatrChk).style.backgroundColor) {
+								DLcount=DLcount+1; 
+								console.log(DLcount+" YES DL");
+
+								winPiece[iWin]=currentChk;
+								winPiece[iWin+1]=repeatrChk;
+								iWin=iWin+1;
+							}
+							repeatrChk=repeatrChk-7;
+							currentChk=currentChk-7;
+						}
+				if (DLcount+URcount>4) {
+					winner(document.getElementById(currentChk).style.backgroundColor);
+					console.log("Winner DL.UR");
+				}
+
+			}
+
+			function winner(winColor){
+			var audioWin = new Audio('correct.wav');
+			audioWin.play();
+
+			document.getElementById("btn1").style.visibility="visible";
+			document.getElementById("btn2").style.visibility="visible";
+			console.log(winColor);
+				if (winColor=="red") {
+					document.getElementById("btn2").style.background="#F44336";
+					document.getElementById("btn2").innerHTML="Red Player Wins!";
+				}else if (winColor=="yellow"){
+					document.getElementById("btn2").style.background="yellow";
+					document.getElementById("btn2").innerHTML="Yellow Player Wins!";
+				}
+
+				for (var i = 1; i < 49; i++) {
+					if (winPiece.includes(i)) {
+						document.getElementById(i).style.border="3px solid white";
+					}
+					
+				}
+			}
+			function restart(){
+			var audioReset = new Audio('woosh.wav');
+			audioReset.play();
+				document.getElementById("btn1").style.visibility="hidden";
+				document.getElementById("btn2").style.visibility="hidden";
+
+				for (var i = 1; i < 49; i++) {
+					document.getElementById(i).style.background=null;
+					document.getElementById(i).style.border="3px solid #0053c9";
+				}
 			}
 		</script>
 
@@ -94,14 +317,28 @@
 				border: 3px solid #0053c9;
 				box-shadow: inset 0px 3px 7px #424242;
 			}
-			.items:hover{
+			.items3{
+				float: left;
+				margin:2px;
+				background-color: white;
+				width: 60px;
+				height: 60px;
+				border-radius: 50px;
+				border: 3px solid #0053c9;
+				box-shadow: inset 0px 3px 7px #424242;
+			}
+			.items:hover{ /*Yellow Turn*/
 				background-color: #fffbad;
 				border-color: #fffbad;
 				/*box-shadow: 0px -10px 1px yellow;*/
 			}
-			.items2:hover{
+			.items2:hover{ /*Red Turn*/
 				background-color: #ffadad;
 				border-color: #ffadad;
+				/*box-shadow: 0px -10px 1px red;*/
+			}
+			.items3:hover{ /*Red Turn*/
+				background-color: grey;
 				/*box-shadow: 0px -10px 1px red;*/
 			}
 			.grouped{
@@ -127,13 +364,58 @@
 			i{
 				line-height: 250px;
 			}
+			button{
+			    position: absolute;
+			    bottom: 9px;
+			    right: 45px;
+			    color: #e2e2e2;
+			    background: linear-gradient(180deg, #045cda, #034db5);
+			    padding: 5px;
+			    padding-left: 15px;
+			    padding-right: 15px;
+			    border: 1px solid #ffffff21;
+			    box-shadow: 0px 0px 0px 1px #0044a5, 0px 0px 7px 0px #00296380;
+			    border-radius: 10px;
+			    outline: 0px;
+			    visibility: hidden;
+			}
+			button:hover{
+				background: linear-gradient(180deg, #0858cc, #034db5);
+			}
+			button:active{
+				box-shadow: inset 0px 0px 3px 1px #00000054;
+			}
+			.btn2{
+				position: absolute;
+			    top: 8px;
+			    left: 45px;
+			    background: #ffeb3b;
+			    padding: 5px;
+			    padding-left: 15px;
+			    padding-right: 15px;
+			    border-radius: 4px;
+			        /*border: 1px solid #ffffff21;*/
+				    box-shadow: 0px 0px 0px 1px #0044a5, 0px 0px 7px 0px #00296380;
+				    border-radius: 10px;
+				    outline: 0px;
+				    visibility: hidden;
+			    color: black;
+			    visibility: hidden;
+			}
 		</style>
 	</head>
 
 
 	<body>
 		<span>Connect Four</span>
+		
 		<div class="grouped">
+
+		<div id="btn2" class="btn2" style="">Red Player Wins!</div>
+		<div id="btn2b" class="btn2" style="visibility: visible; left: 3px; top: 60px;">></div>
+		<div id="btn2c" class="btn2" style="visibility: visible; top: 60px;left: 600px;"><</div>
+
+		<button id="btn1" onclick="restart();">Restart?</button>
 			<br>
 			<ul>
 				 <br>
@@ -145,62 +427,61 @@
 				<li onclick="decision(6)" class="items" id="6"></li>
 				<li onclick="decision(7)" class="items" id="7"></li>
 				<li onclick="decision(8)" class="items" id="8"></li>
-							
 			</ul>
 			<p></p>
 			<ul>
-				<li onclick="decision(9)" class="items" id="9"></li>
-				<li onclick="decision(10)" class="items" id="10"></li>
-				<li onclick="decision(11)" class="items" id="11"></li>
-				<li onclick="decision(12)" class="items" id="12"></li>
-				<li onclick="decision(13)" class="items" id="13"></li>
-				<li onclick="decision(14)" class="items" id="14"></li>
-				<li onclick="decision(15)" class="items" id="15"></li>
-				<li onclick="decision(16)" class="items" id="16"></li>		
+				<li class="items3" id="9"></li>
+				<li class="items3" id="10"></li>
+				<li class="items3" id="11"></li>
+				<li class="items3" id="12"></li>
+				<li class="items3" id="13"></li>
+				<li class="items3" id="14"></li>
+				<li class="items3" id="15"></li>
+				<li class="items3" id="16"></li>		
 			</ul>
 			<p></p>
 			<ul>
-				<li onclick="decision(17)" class="items" id="17"></li>
-				<li onclick="decision(18)" class="items" id="18"></li>
-				<li onclick="decision(19)" class="items" id="19"></li>
-				<li onclick="decision(20)" class="items" id="20"></li>
-				<li onclick="decision(21)" class="items" id="21"></li>
-				<li onclick="decision(22)" class="items" id="22"></li>
-				<li onclick="decision(23)" class="items" id="23"></li>
-				<li onclick="decision(24)" class="items" id="24"></li>
+				<li class="items3" id="17"></li>
+				<li class="items3" id="18"></li>
+				<li class="items3" id="19"></li>
+				<li class="items3" id="20"></li>
+				<li class="items3" id="21"></li>
+				<li class="items3" id="22"></li>
+				<li class="items3" id="23"></li>
+				<li class="items3" id="24"></li>
 			</ul>
 			<p></p>
 			<ul>
-				<li onclick="decision(25)" class="items" id="25"></li>
-				<li onclick="decision(26)" class="items" id="26"></li>
-				<li onclick="decision(27)" class="items" id="27"></li>
-				<li onclick="decision(28)" class="items" id="28"></li>
-				<li onclick="decision(29)" class="items" id="29"></li>
-				<li onclick="decision(30)" class="items" id="30"></li>
-				<li onclick="decision(31)" class="items" id="31"></li>
-				<li onclick="decision(32)" class="items" id="32"></li>				
+				<li class="items3" id="25"></li>
+				<li class="items3" id="26"></li>
+				<li class="items3" id="27"></li>
+				<li class="items3" id="28"></li>
+				<li class="items3" id="29"></li>
+				<li class="items3" id="30"></li>
+				<li class="items3" id="31"></li>
+				<li class="items3" id="32"></li>				
 			</ul>
 			<p></p>
 			<ul>
-				<li onclick="decision(33)" class="items" id="33"></li>
-				<li onclick="decision(34)" class="items" id="34"></li>
-				<li onclick="decision(35)" class="items" id="35"></li>
-				<li onclick="decision(36)" class="items" id="36"></li>
-				<li onclick="decision(37)" class="items" id="37"></li>
-				<li onclick="decision(38)" class="items" id="38"></li>
-				<li onclick="decision(39)" class="items" id="39"></li>
-				<li onclick="decision(40)" class="items" id="40"></li>
+				<li class="items3" id="33"></li>
+				<li class="items3" id="34"></li>
+				<li class="items3" id="35"></li>
+				<li class="items3" id="36"></li>
+				<li class="items3" id="37"></li>
+				<li class="items3" id="38"></li>
+				<li class="items3" id="39"></li>
+				<li class="items3" id="40"></li>
 			</ul>
 			<p></p>
 			<ul>
-				<li onclick="decision(41)" class="items" id="41"></li>
-				<li onclick="decision(42)" class="items" id="42"></li>
-				<li onclick="decision(43)" class="items" id="43"></li>
-				<li onclick="decision(44)" class="items" id="44"></li>
-				<li onclick="decision(45)" class="items" id="45"></li>
-				<li onclick="decision(46)" class="items" id="46"></li>
-				<li onclick="decision(47)" class="items" id="47"></li>
-				<li onclick="decision(48)" class="items" id="48"></li>
+				<li class="items3" id="41"></li>
+				<li class="items3" id="42"></li>
+				<li class="items3" id="43"></li>
+				<li class="items3" id="44"></li>
+				<li class="items3" id="45"></li>
+				<li class="items3" id="46"></li>
+				<li class="items3" id="47"></li>
+				<li class="items3" id="48"></li>
 			</ul>
 			</div>
 			<i>click on the top row to drop a piece</i>
