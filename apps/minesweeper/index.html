@@ -2,8 +2,12 @@
 
 <!-- To Do:
 	- When empty space is pressed, open nearby empty spaces above.
-	- Add win state
-	- Fix Wrap-around counts
+	- Change win alert to a non-alert text label
+	- Fix searching last row >100 & first row <1
+	- Fix flag emoji
+	- create version with soft ui
+
+	- v1.2: Fixed clear lines on Wrap-around, fixed bomb indicators on Wrap-around, fixed <10 & >90 bombs stopping new bomb placement, added win detection & win alert, added start button changes to restart after first game
 -->
 
 <html>
@@ -25,6 +29,7 @@
 									started=false;
 									document.getElementById('startBTN').disabled=false;
 									document.getElementById('startBTN').style.display = "inline";
+									document.getElementById('startBTN').innerHTML="Restart?";
 									for (var i = 1; i < 101; i++) {
 										if (document.getElementById(i).innerHTML == "B") {
 											document.getElementById(i).style.fontSize = "25px";
@@ -46,23 +51,29 @@
 								}
 							}
 						}
-					var x1 = x-1;
+					var x1 = x-1; //check backwards
+					
 					for (var ii = 0; ii < 2; ii++) {
-						if (document.getElementById(x).innerHTML == "0") {
-							if (document.getElementById(x1).innerHTML == "0") {
-								document.getElementById(x1).style.boxShadow = "0px 0px 0px white";
-								x1=x1-1;
-								ii--;
+						if (document.getElementById(x).innerHTML == "0" && (x1>0)) {
+							if (document.getElementById(x1).innerHTML == "0") {console.log("as");
+								if (x1 % 10!==0) {
+									document.getElementById(x1).style.boxShadow = "0px 0px 0px white";
+									//console.log(x1); //logs all rows opened
+									x1=x1-1;
+									ii--;								
+								}
 							}
 						}
 					}
-					var x2 = x+1;
+					var x2 = x+1; //check forwards
 					for (var ii = 0; ii < 2; ii++) {
-						if (document.getElementById(x).innerHTML == "0") {
-							if (document.getElementById(x2).innerHTML == "0") {
-								document.getElementById(x2).style.boxShadow = "0px 0px 0px white";
-								x2=x2+1;
-								ii--;
+						if (document.getElementById(x).innerHTML == "0" && (x2<101)) {
+							if ((document.getElementById(x2).innerHTML == "0")) {console.log("df");
+								if (x2 % 10!==1) {
+									document.getElementById(x2).style.boxShadow = "0px 0px 0px white";
+									x2=x2+1;
+									ii--;									
+								}
 							}
 						}
 					}
@@ -74,6 +85,7 @@
 						document.getElementById(x).style.boxShadow = "inset 0px 0px 0px 6px grey";
 					}
 				}
+				winState();
 			}
 			function start(){
 				started = true;
@@ -98,44 +110,86 @@
 			var i8; // +11
 
 			for(i = 0; i < 10; i++){
-				bombs[i] = Math.floor((Math.random() * 80+10) + 1);
+				bombs[i] = Math.floor((Math.random() * 99) + 1); 
+				console.log(bombs[i] + " new"); //logs all new rows
 					i1 = bombs[i]-11;
-					i2 = bombs[i]-10;
-					i3 = bombs[i]-9;
 					i4 = bombs[i]-1;
-					i5 = bombs[i]+1;
 					i6 = bombs[i]+9;
+					
+					i2 = bombs[i]-10;
 					i7 = bombs[i]+10;
+
+					i3 = bombs[i]-9;
+					i5 = bombs[i]+1;
 					i8 = bombs[i]+11;
 				document.getElementById(bombs[i]).innerHTML = "B";
 				/*document.getElementById(bombs[i]).style.color = "#bdbdbd";*/
-
-				if (document.getElementById(i1).innerHTML != "B") {
-					document.getElementById(i1).innerHTML = parseInt(document.getElementById(i1).innerHTML)+1;
+				if (i1 >  0){
+					if (document.getElementById(i1).innerHTML != "B" && (i1 % 10 !== 0)) {
+						document.getElementById(i1).innerHTML = parseInt(document.getElementById(i1).innerHTML)+1;
+					}
 				}
-				if (document.getElementById(i2).innerHTML != "B") {
-					document.getElementById(i2).innerHTML = parseInt(document.getElementById(i2).innerHTML)+1;
+				if (i2 > 0){
+					if (document.getElementById(i2).innerHTML != "B") {
+						document.getElementById(i2).innerHTML = parseInt(document.getElementById(i2).innerHTML)+1;
+					}
 				}
-				if (document.getElementById(i3).innerHTML != "B") {
-					document.getElementById(i3).innerHTML = parseInt(document.getElementById(i3).innerHTML)+1;
+				if (i3 > 0){
+					if (document.getElementById(i3).innerHTML != "B"  && (i3 % 10 !== 1)) {
+						document.getElementById(i3).innerHTML = parseInt(document.getElementById(i3).innerHTML)+1;
+					}
 				}
-				if (document.getElementById(i4).innerHTML != "B") {
-					document.getElementById(i4).innerHTML = parseInt(document.getElementById(i4).innerHTML)+1;
+				if (i4 > 0) {
+					if (document.getElementById(i4).innerHTML != "B"  && (i4 % 10 !== 0)) {
+						document.getElementById(i4).innerHTML = parseInt(document.getElementById(i4).innerHTML)+1;
+					}					
 				}
-				if (document.getElementById(i5).innerHTML != "B") {
-					document.getElementById(i5).innerHTML = parseInt(document.getElementById(i5).innerHTML)+1;
+				if (i5 < 100) {
+					if (document.getElementById(i5).innerHTML != "B" && (i5 % 10 !== 1)) {
+						document.getElementById(i5).innerHTML = parseInt(document.getElementById(i5).innerHTML)+1;
+					}					
 				}
-				if (document.getElementById(i6).innerHTML != "B") {
-					document.getElementById(i6).innerHTML = parseInt(document.getElementById(i6).innerHTML)+1;
+				if (i6 < 100){
+					if (document.getElementById(i6).innerHTML != "B"  && (i6 % 10 !== 0)) {
+						document.getElementById(i6).innerHTML = parseInt(document.getElementById(i6).innerHTML)+1;
+					}
 				}
-				if (document.getElementById(i7).innerHTML != "B") {
-					document.getElementById(i7).innerHTML = parseInt(document.getElementById(i7).innerHTML)+1;
+				if (i7 < 100){
+					if (document.getElementById(i7).innerHTML != "B") {
+						document.getElementById(i7).innerHTML = parseInt(document.getElementById(i7).innerHTML)+1;
+					}
 				}
-				if (document.getElementById(i8).innerHTML != "B") {
-					document.getElementById(i8).innerHTML = parseInt(document.getElementById(i8).innerHTML)+1;
+				if (i8 < 100){
+					if (document.getElementById(i8).innerHTML != "B" && (i8 % 10 !== 1)) {
+						document.getElementById(i8).innerHTML = parseInt(document.getElementById(i8).innerHTML)+1;
+					}
 				}
 			}
 			}
+		function winState(){
+			//loop all 100 rows 
+				// if boxShadow !== "rgb(243, 243, 243) 3px 3px 0px 0px inset, rgb(122, 122, 122) -3px -3px 0px 0px inset"
+			//if all innerHTML "B" has boxShadow = "grey 0px 0px 0px 6px inset"
+			var winChk=false;
+			var winCounter=0;
+			for (var i = 1; i < 101; i++) {
+				if (document.getElementById(i).style.boxShadow == "white 0px 0px 0px") {
+					winCounter=winCounter+1;
+				}
+				if (document.getElementById(i).innerHTML == "B") {
+					if (document.getElementById(i).style.boxShadow == "grey 0px 0px 0px 6px inset") {
+						winCounter=winCounter+1;
+					}
+				}
+				if (winCounter>99) {
+					console.log(winCounter+"asdf");
+					alert("You Won!");		
+					document.getElementById('startBTN').disabled=false;
+					document.getElementById('startBTN').style.display = "inline";	
+					document.getElementById('startBTN').innerHTML="Restart?";		
+				}
+			}
+		}
 		</script>
 
 		<style type="text/css">		
@@ -374,7 +428,7 @@
 				<li onclick="decision(99)" class="items1" id="99">0</li>
 				<li onclick="decision(100)" class="items1" id="100">0</li>
 			</ul>
-			<button class="myButton" id="startBTN" style="position:relative; left: 150px;" onclick="start()">Start?</button>
+			<button class="myButton" id="startBTN" style="position:relative; left: 150px;display: none;" onclick="start()">Start?</button>
 
 			<li onclick="flagORbomb('flag')" class="items1" id="flag" style="position:relative; left: 30px; top: 10px;color: black;box-shadow:inset 3px 3px 0px 0px grey,inset -3px -3px 0px 0px lightgrey;">-</li>
 			<li onclick="flagORbomb(102)" class="items1" id="102" style="position:relative; left: 30px; top: 10px; color: black;">🚩</li>
@@ -384,7 +438,9 @@
 		</div>
 		<br>
 		</div>	
+		<br><br><br>
 There are ~10 mines, <br> clear every space except those 10 to win.
+
 		<script type="text/javascript">
 			var flgORbmb;
 			var flagSwitch=0;
@@ -400,6 +456,7 @@ There are ~10 mines, <br> clear every space except those 10 to win.
 					flagSwitch=0;
 				}
 			}
+			start();
 		</script>
 	</body>
 </html>
