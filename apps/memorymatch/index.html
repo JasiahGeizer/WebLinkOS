@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 
 <!-- To Do:
-	- [BUG] click the same image or found matches twice to get score;
 	- Change canvas size / amount of images.
 	- Get other 12 images to be included in the set, at random.
-	- When images are dragged/held down, you can see what they are.
 	- When you win (score=12), then add a "You Win" prompt.
 -->
 
@@ -61,53 +59,59 @@
 			var scorecount = 0;
 			var guessed = 0;
 
+			var waitingCount=false;
 			function selected(num) { //needs fixing - it controls what is shown and what isn't
-				if (!audio.ended) {audio.currentTime = 0;}
-				audio.play();
-				document.getElementById(num).style.opacity = "1";
-				
-				if(total == "0"){
-					document.getElementById(num).style.opacity = "1";
-					total = total + 1;	
-					img1 = (document.getElementById(num).src);
-					num1 = num;
-					guessed = guessed + 0.5;
-					document.getElementById("guesses").innerHTML = guessed;
-				}else if(total == "1"){
-					total = 0;
-					img2 = (document.getElementById(num).src);
+				if (waitingCount==false){
 					
-					if(img2 == img1){
-						if (num!=num1) {
-							document.getElementById(num).style.opacity = "0.7";
-							document.getElementById(num1).style.opacity = "0.7";
-
-							document.getElementById(num).parentElement.style.boxShadow = "8px 8px 16px #852196, inset 0px 0px 1px 5px #9b27af, inset 0px 0px 1px 7px #ffc500ab";
-							document.getElementById(num1).parentElement.style.boxShadow = "8px 8px 16px #852196, inset 0px 0px 1px 5px #9b27af, inset 0px 0px 1px 7px #ffc500ab";
-
-							document.getElementById(num).parentElement.style.background = "linear-gradient(145deg, #8c239e, #a72abc)";
-							document.getElementById(num1).parentElement.style.background = "linear-gradient(145deg, #8c239e, #a72abc)";
-
-							document.getElementById(num).parentElement.onclick = null;
-							document.getElementById(num1).parentElement.onclick = null;
-
-							scorecount = scorecount + 1;
-							document.getElementById("score").innerHTML = scorecount;
-							
-							guessed = guessed + 0.5;
-							document.getElementById("guesses").innerHTML = guessed;
-						}else{total=1;}
-					}else if (img2 !== img1){
+					if (!audio.ended) {audio.currentTime = 0;}
+					audio.play();
+					document.getElementById(num).style.opacity = "1";
+					
+					if(total == "0"){
 						document.getElementById(num).style.opacity = "1";
-						waiting(num, num1);
+						total = total + 1;	
+						img1 = (document.getElementById(num).src);
+						num1 = num;
 						guessed = guessed + 0.5;
 						document.getElementById("guesses").innerHTML = guessed;
+					}else if(total == "1"){
+						total = 0;
+						img2 = (document.getElementById(num).src);
+						
+						if(img2 == img1){
+							if (num!=num1) {
+								document.getElementById(num).style.opacity = "0.7";
+								document.getElementById(num1).style.opacity = "0.7";
+
+								document.getElementById(num).parentElement.style.boxShadow = "8px 8px 16px #852196, inset 0px 0px 1px 5px #9b27af, inset 0px 0px 1px 7px #ffc500ab";
+								document.getElementById(num1).parentElement.style.boxShadow = "8px 8px 16px #852196, inset 0px 0px 1px 5px #9b27af, inset 0px 0px 1px 7px #ffc500ab";
+
+								document.getElementById(num).parentElement.style.background = "linear-gradient(145deg, #8c239e, #a72abc)";
+								document.getElementById(num1).parentElement.style.background = "linear-gradient(145deg, #8c239e, #a72abc)";
+
+								document.getElementById(num).parentElement.onclick = null;
+								document.getElementById(num1).parentElement.onclick = null;
+
+								scorecount = scorecount + 1;
+								document.getElementById("score").innerHTML = scorecount;
+								
+								guessed = guessed + 0.5;
+								document.getElementById("guesses").innerHTML = guessed;
+							}else{total=1;}
+						}else if (img2 !== img1){
+							waitingCount=true;
+							document.getElementById(num).style.opacity = "1";
+							waiting(num, num1);
+							guessed = guessed + 0.5;
+							document.getElementById("guesses").innerHTML = guessed;
+						}
 					}
+					//if (scorecount==12) {audio2.play();}
 				}
-				//if (scorecount==12) {audio2.play();}
 			}
 			function waiting(b1,b2) {
 			  setTimeout(function(){
+			  	waitingCount=false;
 			  	document.getElementById(b1).style.opacity = "0";
 			  	document.getElementById(b2).style.opacity = "0";
 			  }, 1000);
