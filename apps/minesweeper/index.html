@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 
 <!-- To Do:
-	- When empty space is pressed, open nearby empty spaces above.
+	- place bomb with right click
 	- Change win alert to a non-alert text label
-	- Fix searching last row >100 & first row <1
-	- Fix flag emoji
+	- Create version with bigger board and more bombs
 	- create version with soft ui
 
 	- v1.2: Fixed clear lines on Wrap-around, fixed bomb indicators on Wrap-around, fixed <10 & >90 bombs stopping new bomb placement, added win detection & win alert, added start button changes to restart after first game
+	- v1.3: Changed line clear to flood fill, fixed duplicate bomb locations, change flag emoji to text, toggle flag placement
 -->
 
 <html>
@@ -22,67 +22,68 @@
 							if(document.getElementById(x).style.backgroundColor != "white"){
 								/*document.getElementById(x).style.backgroundColor = "white";*/
 								document.getElementById(x).style.boxShadow = "0px 0px 0px white";
-								document.getElementById(x).style.color = "#bdbdbd";
-								if (document.getElementById(x).innerHTML == "B") {
-									document.getElementById(x).style.backgroundColor= "red";
-									document.getElementById(x).style.fontSize = "25px";
-									started=false;
-									document.getElementById('startBTN').disabled=false;
-									document.getElementById('startBTN').style.display = "inline";
-									document.getElementById('startBTN').innerHTML="Restart?";
-									for (var i = 1; i < 101; i++) {
-										if (document.getElementById(i).innerHTML == "B") {
-											document.getElementById(i).style.fontSize = "25px";
-											document.getElementById(i).style.backgroundColor= "red";
+								document.getElementById(x).style.color = "rgb(189, 189, 189)";
+								numbers(x);
+							}
+						}
+
+
+					//chech nearby squares as flood
+					//show the number on the boarder of each.
+					var square = new Array();
+					if (document.getElementById(x).innerHTML == "0"){
+						document.getElementById(x).style.backgroundColor="green";
+					} 
+
+					var greenIdent=1;
+					var greenIdentCount=0;
+
+					while (greenIdent==1){
+						greenIdentCount=0;
+						greenIdent=1;
+
+						for (var i = 1; i <101; i++) {
+							if (document.getElementById(i).style.backgroundColor=="green") {
+								document.getElementById(i).style.backgroundColor="lightgrey";
+								document.getElementById(i).style.color="lightgrey";
+								document.getElementById(i).style.boxShadow="white 0px 0px 0px";
+								square=[i-11,i-10,i-9, i-1, i+1, i+9, i+10, i+11];
+
+								for (var j=0; j <= 7; j++) {
+									if (square[j]<101 && square[j]>0 && ((square[j]%10)+(i%10)>1)) {
+										if (document.getElementById(square[j]).innerHTML==0 && document.getElementById(square[j]).style.backgroundColor!=="lightgrey") {
+											document.getElementById(square[j]).style.backgroundColor="green";
 										}
+										if (document.getElementById(square[j]).innerHTML>0 && document.getElementById(square[j]).style.backgroundColor!=="lightgrey") {
+											document.getElementById(square[j]).style.backgroundColor="rgb(189, 189, 189)";
+											document.getElementById(square[j]).style.boxShadow="white 0px 0px 0px";
+											numbers(square[j]);
+										}		
 									}
-								}else if (document.getElementById(x).innerHTML == "1") {
-									document.getElementById(x).style.color= "blue";
-									document.getElementById(x).style.fontSize = "25px";
-								}else if (document.getElementById(x).innerHTML == "2") {
-									document.getElementById(x).style.color= "green";
-									document.getElementById(x).style.fontSize = "25px";
-								}else if (document.getElementById(x).innerHTML == "3") {
-									document.getElementById(x).style.color= "red";
-									document.getElementById(x).style.fontSize = "25px";
-								}else if (document.getElementById(x).innerHTML == "4") {
-									document.getElementById(x).style.color= "darkblue";
-									document.getElementById(x).style.fontSize = "25px";
 								}
 							}
 						}
-					var x1 = x-1; //check backwards
-					
-					for (var ii = 0; ii < 2; ii++) {
-						if (document.getElementById(x).innerHTML == "0" && (x1>0)) {
-							if (document.getElementById(x1).innerHTML == "0") {console.log("as");
-								if (x1 % 10!==0) {
-									document.getElementById(x1).style.boxShadow = "0px 0px 0px white";
-									//console.log(x1); //logs all rows opened
-									x1=x1-1;
-									ii--;								
-								}
+						for (var i = 1; i < 101; i++) {
+							if (document.getElementById(i).style.backgroundColor=="green") {
+								greenIdentCount=greenIdentCount+1;
 							}
+						}
+						if (greenIdentCount<1) {
+							greenIdent=2;
 						}
 					}
-					var x2 = x+1; //check forwards
-					for (var ii = 0; ii < 2; ii++) {
-						if (document.getElementById(x).innerHTML == "0" && (x2<101)) {
-							if ((document.getElementById(x2).innerHTML == "0")) {console.log("df");
-								if (x2 % 10!==1) {
-									document.getElementById(x2).style.boxShadow = "0px 0px 0px white";
-									x2=x2+1;
-									ii--;									
-								}
-							}
-						}
-					}
+						square = [];
+
 					}
 				}else{
 					if(started == true){
 						/*document.getElementById(x).style.backgroundColor= "blue";
 						document.getElementById(x).style.color= "blue";*/
-						document.getElementById(x).style.boxShadow = "inset 0px 0px 0px 6px grey";
+						if (document.getElementById(x).style.boxShadow == "grey 0px 0px 0px 6px inset") {
+							document.getElementById(x).style.boxShadow = "rgb(243, 243, 243) 3px 3px 0px 0px inset, rgb(122, 122, 122) -3px -3px 0px 0px inset";
+						}else {
+							document.getElementById(x).style.boxShadow = "inset 0px 0px 0px 6px grey";
+						}
 					}
 				}
 				winState();
@@ -111,6 +112,12 @@
 
 			for(i = 0; i < 10; i++){
 				bombs[i] = Math.floor((Math.random() * 99) + 1); 
+				for (var iTest = bombs.length - 1; iTest >= 0; iTest--) { //replace dup. bombs
+					if (bombs[i] == bombs[iTest] && i !== iTest){
+						console.log(i+" dup. "+iTest);
+						bombs[i]=Math.floor((Math.random() * 99) + 1);
+					}
+				}
 				console.log(bombs[i] + " new"); //logs all new rows
 					i1 = bombs[i]-11;
 					i4 = bombs[i]-1;
@@ -123,7 +130,7 @@
 					i5 = bombs[i]+1;
 					i8 = bombs[i]+11;
 				document.getElementById(bombs[i]).innerHTML = "B";
-				/*document.getElementById(bombs[i]).style.color = "#bdbdbd";*/
+				/*document.getElementById(bombs[i]).style.color = "rgb(189, 189, 189)";*/
 				if (i1 >  0){
 					if (document.getElementById(i1).innerHTML != "B" && (i1 % 10 !== 0)) {
 						document.getElementById(i1).innerHTML = parseInt(document.getElementById(i1).innerHTML)+1;
@@ -144,22 +151,22 @@
 						document.getElementById(i4).innerHTML = parseInt(document.getElementById(i4).innerHTML)+1;
 					}					
 				}
-				if (i5 < 100) {
+				if (i5 < 101) {
 					if (document.getElementById(i5).innerHTML != "B" && (i5 % 10 !== 1)) {
 						document.getElementById(i5).innerHTML = parseInt(document.getElementById(i5).innerHTML)+1;
 					}					
 				}
-				if (i6 < 100){
+				if (i6 < 101){
 					if (document.getElementById(i6).innerHTML != "B"  && (i6 % 10 !== 0)) {
 						document.getElementById(i6).innerHTML = parseInt(document.getElementById(i6).innerHTML)+1;
 					}
 				}
-				if (i7 < 100){
+				if (i7 < 101){
 					if (document.getElementById(i7).innerHTML != "B") {
 						document.getElementById(i7).innerHTML = parseInt(document.getElementById(i7).innerHTML)+1;
 					}
 				}
-				if (i8 < 100){
+				if (i8 < 101){
 					if (document.getElementById(i8).innerHTML != "B" && (i8 % 10 !== 1)) {
 						document.getElementById(i8).innerHTML = parseInt(document.getElementById(i8).innerHTML)+1;
 					}
@@ -186,8 +193,43 @@
 					alert("You Won!");		
 					document.getElementById('startBTN').disabled=false;
 					document.getElementById('startBTN').style.display = "inline";	
-					document.getElementById('startBTN').innerHTML="Restart?";		
+					document.getElementById('startBTN').innerHTML="Restart?";
+
+					for (var i = 1; i < 101; i++) {
+						if (document.getElementById(i).innerHTML == "B") {
+							document.getElementById(i).style.fontSize = "25px";
+							document.getElementById(i).style.backgroundColor= "#808080";
+						}
+					}		
 				}
+			}
+		}
+		function numbers(x){
+			if (document.getElementById(x).innerHTML == "B") {
+				document.getElementById(x).style.backgroundColor= "red";
+				document.getElementById(x).style.fontSize = "25px";
+				started=false;
+				document.getElementById('startBTN').disabled=false;
+				document.getElementById('startBTN').style.display = "inline";
+				document.getElementById('startBTN').innerHTML="Restart?";
+				for (var i = 1; i < 101; i++) {
+					if (document.getElementById(i).innerHTML == "B") {
+						document.getElementById(i).style.fontSize = "25px";
+						document.getElementById(i).style.backgroundColor= "red";
+					}
+				}
+			}else if (document.getElementById(x).innerHTML == "1") {
+				document.getElementById(x).style.color= "blue";
+				document.getElementById(x).style.fontSize = "25px";
+			}else if (document.getElementById(x).innerHTML == "2") {
+				document.getElementById(x).style.color= "green";
+				document.getElementById(x).style.fontSize = "25px";
+			}else if (document.getElementById(x).innerHTML == "3") {
+				document.getElementById(x).style.color= "red";
+				document.getElementById(x).style.fontSize = "25px";
+			}else if (document.getElementById(x).innerHTML == "4") {
+				document.getElementById(x).style.color= "darkblue";
+				document.getElementById(x).style.fontSize = "25px";
 			}
 		}
 		</script>
@@ -298,7 +340,7 @@
 				top:11px;
 			}
 			li {
-				color: #bdbdbd;
+				color: rgb(189, 189, 189);
 				text-align: center;
 				line-height: 30px;
 				font-size: 12px;
@@ -431,7 +473,7 @@
 			<button class="myButton" id="startBTN" style="position:relative; left: 150px;display: none;" onclick="start()">Start?</button>
 
 			<li onclick="flagORbomb('flag')" class="items1" id="flag" style="position:relative; left: 30px; top: 10px;color: black;box-shadow:inset 3px 3px 0px 0px grey,inset -3px -3px 0px 0px lightgrey;">-</li>
-			<li onclick="flagORbomb(102)" class="items1" id="102" style="position:relative; left: 30px; top: 10px; color: black;">🚩</li>
+			<li onclick="flagORbomb(102)" class="items1" id="102" style="position:relative; left: 30px; top: 10px; color: black;width: 50px;">Flag</li>
 
 			</div>
 			
