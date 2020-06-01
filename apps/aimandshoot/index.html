@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html onclick="counter()">
+<html onclick="hitCount()">
 	<!--
 		- Add sound effect for misses
+		- Add levels / faster speeds
+		- Add better game ended notifyer - e.g. color change or end sound
 	-->
 	<head>
 <title>Aim And Shoot</title>
@@ -38,90 +40,100 @@
 		</style>
 
 		<script type="text/javascript">
-			var tLeft;
-			var tTop;
-			var iLeft;
-			var iTop;
-			var score=0;
-			var timer=16;
+			var top1 = Math.floor((Math.random() * 80) + 1);
+			var left1 = Math.floor((Math.random() * 80) + 1);
+			var counter=0;
+			var timer=15;
+			var intTimer;
+			var scoreInt=0;
+			var highscoreInt=0;
 			var audio1 = new Audio('pop.wav');
 			var audio2 = new Audio('levelup.wav');
-			var audio3 = new Audio('miss.wav');
-			var audio = audio1;
-			var turn=0;
-			var highscore=0;
-			var missesCOUNT;
-			function newPos(){
-				if (timer !== 0){
-					iTop = Math.floor((Math.random() * 80) + 1);
-					iLeft = Math.floor((Math.random() * 80) + 1);
-					
-					document.getElementById('target1').style.top = iTop + "%";
-					document.getElementById('target1').style.left = iLeft + "%";
-					
-					if (score==10 || score==20 || score==30 || score==40){
-						audio = audio2;
-					}else{
-						audio = audio1;
-					}
-					audio.play();
+			var hitCounter=0;
+			var targetCount=0;
+			function start(that){
+				that.style.visibility="hidden";
+				intTimer = setInterval(newPos, 400);
+				clockTimer = setInterval(clock, 1000);
+				timer=15
+				hitCounter=0;
+				targetCount=0;
+				newhigh=false;
+				scoreInt=5;
+			}
 
-					score=score+1;
-					document.getElementById('target1').innerHTML = "Score: " + score;
-					if (timer<5) {
-						document.body.style.backgroundColor="slateblue";
-						document.getElementById('target1').style.backgroundColor="red";
-					}
-					
-					if (score==1) {
-						if (turn==0){
-							setInterval(makeAlert, 1000);		
+			function clock(){
+				timer=timer-1;
+				document.getElementById("time").innerHTML="Time: "+timer;
+				if (timer<1) {
+					clearInterval(intTimer);
+					clearInterval(clockTimer);
+					document.getElementById("target1").style.visibility="visible";
+					document.getElementById("time").innerHTML="Time: "+timer;
+					for (var i = 0; i < counter+1; i++) {
+						if(document.getElementById(i)){
+							document.getElementById(i).remove();
 						}
 					}
-				}else{
-					document.getElementById('target1').style.backgroundColor="coral";
-					document.body.style.backgroundColor="lightskyblue";
-					if (highscore<score) {
-						highscore=score;
-					}
-					missesCOUNT=hitcounter-score;
-					var r = confirm("Your Highscore: "+highscore+"\nYour score: "+score+"\nMisses: "+missesCOUNT+"\n\nTry again?");
-					if (r==true){
-						timer=16;
-						hitcounter=0;
-						score=1;
-						document.getElementById('target1').innerHTML = "Score: " + score;
-						turn=1;
-
-					iTop = Math.floor((Math.random() * 80) + 1);
-					iLeft = Math.floor((Math.random() * 80) + 1);
-					
-					document.getElementById('target1').style.top = iTop + "%";
-					document.getElementById('target1').style.left = iLeft + "%";
-					}
+					scoreInt=0;
+					counter=0;
 				}
 			}
-			function makeAlert(){ 
-				if (timer>0) {
-					timer=timer-1;
-			    	document.getElementById('time').innerHTML = "Time: " + timer;	
-				}/*else{
-					clearInterval(makeAlert);
-					score=0;
-					document.getElementById('target1').style.top = 10+"%";
-					document.getElementById('target1').style.left = 10+"%";
-				}*/
+			function newPos(){
+				top1 = Math.floor((Math.random() * 80) + 1);
+				left1 = Math.floor((Math.random() * 80) + 1);
+				counter=counter+1;
+
+				var targeted = document.createElement("DIV");
+				targeted.setAttribute("class", "target");
+				targeted.setAttribute("onclick", "destory(this)");
+				targeted.setAttribute("id", counter);
+				targeted.style.top=top1+"%";
+				targeted.style.left=left1+"%";
+				targeted.setAttribute("data-countr", timer);
+				//targeted.style.zIndex=-1;
+				document.body.appendChild(targeted);
 			}
-			var hitcounter=0;
-			function counter(){
-				hitcounter=hitcounter+1;
+
+			var newhigh=false;
+			function destory(that){
+				if (timer>0) {
+					scoreInt=scoreInt+(timer-(that.getAttribute('data-countr'))+20);
+					document.getElementById("score").innerHTML="Score: "+scoreInt;
+					that.remove();
+					if (!audio1.ended){
+						audio1.currentTime = 0;				
+					}
+						audio1.play();	
+
+					if (scoreInt>highscoreInt) {
+						highscoreInt=scoreInt;
+						document.getElementById("highscore").innerHTML="Highscore: "+highscoreInt;
+						if (newhigh==false) {
+							newhigh=true;
+							audio2.play();
+						}
+					}
+					targetCount=targetCount+1;
+				}
+			}
+
+			function hitCount(){
+				hitCounter=hitCounter+1;
+				console.log((hitCounter-targetCount)*5);
+				scoreInt=scoreInt-((hitCounter-targetCount)*5);
+				document.getElementById("score").innerHTML="Score: "+scoreInt;
+				hitCounter=0;
+				targetCount=0;
 			}
 		</script>
 	</head>
 	
 	<body>
 		Aim And Shoot
-		<div id="time">Time: 15</div>										
-		<div class="target" onclick="newPos()" id="target1">Start?</div>	
+		<div id="time">Time: 15</div>
+		<div id="score">Score: 0</div>
+		<div id="highscore">Highscore: 0</div>												
+		<div class="target" onclick="start(this)" id="target1" style="background-color:mediumseagreen;">Start?</div>	
 	</body>
 </html>
