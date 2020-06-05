@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 
 <!-- To Do:
-	- Place bomb with right click
-	- Change win alert to a non-alert text label
 	- Create version with bigger board and more bombs
 	- Create version with soft ui
 
 	- v1.1: Fixed clear lines on Wrap-around, Fixed bomb indicators on Wrap-around, Fixed <10 & >90 bombs stopping new bomb placement, Added win detection & win alert, Added start button changes to restart after first game
 	- v1.2: Changed line clear to flood fill, Fixed duplicate bomb locations, Change flag emoji to text, Toggle flag placement
+	- v1.3: Place flag with right click, win alert changed to text label, Fixed placing flag on already placed square
 -->
 
 <html>
@@ -75,13 +74,23 @@
 						square = [];
 
 					}
-				}else{
+				}else if (flagSwitch==2){
 					if(started == true){
-						/*document.getElementById(x).style.backgroundColor= "blue";
-						document.getElementById(x).style.color= "blue";*/
 						if (document.getElementById(x).style.boxShadow == "grey 0px 0px 0px 6px inset") {
 							document.getElementById(x).style.boxShadow = "rgb(243, 243, 243) 3px 3px 0px 0px inset, rgb(122, 122, 122) -3px -3px 0px 0px inset";
-						}else {
+						}else if (document.getElementById(x).style.boxShadow=="rgb(243, 243, 243) 3px 3px 0px 0px inset, rgb(122, 122, 122) -3px -3px 0px 0px inset") {
+							document.getElementById(x).style.boxShadow = "inset 0px 0px 0px 6px grey";
+						}
+						flagSwitch=0;
+						document.getElementById('flag').style.boxShadow = "inset 3px 3px 0px 0px grey,inset -3px -3px 0px 0px lightgrey";
+						document.getElementById(102).style.boxShadow = "inset 3px 3px 0px 0px #f3f3f3, inset -3px -3px 0px 0px #7a7a7a";
+						console.log(flagSwitch+" C "+flgORbmb);
+					}
+				}else{
+					if(started == true){
+						if (document.getElementById(x).style.boxShadow == "grey 0px 0px 0px 6px inset") {
+							document.getElementById(x).style.boxShadow = "rgb(243, 243, 243) 3px 3px 0px 0px inset, rgb(122, 122, 122) -3px -3px 0px 0px inset";
+						}else if (document.getElementById(x).style.boxShadow=="rgb(243, 243, 243) 3px 3px 0px 0px inset, rgb(122, 122, 122) -3px -3px 0px 0px inset") { 
 							document.getElementById(x).style.boxShadow = "inset 0px 0px 0px 6px grey";
 						}
 					}
@@ -92,6 +101,7 @@
 				started = true;
 				document.getElementById('startBTN').disabled=true;
 				document.getElementById('startBTN').style.display = "none";
+				document.getElementById('itemsWin').style.visibility=null;
 
 			for (var i = 1; i < 101; i++) {
 				document.getElementById(i).innerHTML = "0";
@@ -189,8 +199,9 @@
 					}
 				}
 				if (winCounter>99) {
+					document.getElementById('itemsWin').style.visibility="visible";
 					console.log(winCounter+"asdf");
-					alert("You Won!");		
+					//alert("You Won!");		
 					document.getElementById('startBTN').disabled=false;
 					document.getElementById('startBTN').style.display = "inline";	
 					document.getElementById('startBTN').innerHTML="Restart?";
@@ -289,6 +300,13 @@
 				border-color: #ffadad;
 				/*box-shadow: 0px -10px 1px red;*/
 			}
+			#itemsWin{
+				position: absolute;
+			    left: 145px;
+			    bottom: 13px;
+			    color: black;
+			    visibility: hidden;
+			}
 			.grouped{
 				position: relative;
 				background-color: #bdbdbd;
@@ -360,120 +378,122 @@
 		<div class="grouped">		<br>
 			<span style="margin-left:27px">Minesweeper</span> <br>
 			<ul>
-				<li onclick="decision(1)" class="items1" id="1">0</li>
-				<li onclick="decision(2)" class="items1" id="2">0</li>
-				<li onclick="decision(3)" class="items1" id="3">0</li>
-				<li onclick="decision(4)" class="items1" id="4">0</li>
-				<li onclick="decision(5)" class="items1" id="5">0</li>
-				<li onclick="decision(6)" class="items1" id="6">0</li>
-				<li onclick="decision(7)" class="items1" id="7">0</li>
-				<li onclick="decision(8)" class="items1" id="8">0</li>
-				<li onclick="decision(9)" class="items1" id="9">0</li>
-				<li onclick="decision(10)" class="items1" id="10">0</li>			
+				<li oncontextmenu="flagORbomb('flag'); decision(1); return false" onclick="decision(1)" class="items1" id="1">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(2); return false" onclick="decision(2)" class="items1" id="2">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(3); return false" onclick="decision(3)" class="items1" id="3">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(4); return false" onclick="decision(4)" class="items1" id="4">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(5); return false" onclick="decision(5)" class="items1" id="5">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(6); return false" onclick="decision(6)" class="items1" id="6">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(7); return false" onclick="decision(7)" class="items1" id="7">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(8); return false" onclick="decision(8)" class="items1" id="8">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(9); return false" onclick="decision(9)" class="items1" id="9">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(10); return false" onclick="decision(10)" class="items1" id="10">0</li>			
 			
-				<li onclick="decision(11)" class="items1" id="11">0</li>
-				<li onclick="decision(12)" class="items1" id="12">0</li>
-				<li onclick="decision(13)" class="items1" id="13">0</li>
-				<li onclick="decision(14)" class="items1" id="14">0</li>
-				<li onclick="decision(15)" class="items1" id="15">0</li>
-				<li onclick="decision(16)" class="items1" id="16">0</li>	
-				<li onclick="decision(17)" class="items1" id="17">0</li>
-				<li onclick="decision(18)" class="items1" id="18">0</li>
-				<li onclick="decision(19)" class="items1" id="19">0</li>
-				<li onclick="decision(20)" class="items1" id="20">0</li>	
+				<li oncontextmenu="flagORbomb('flag'); decision(11); return false" onclick="decision(11)" class="items1" id="11">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(12); return false" onclick="decision(12)" class="items1" id="12">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(13); return false" onclick="decision(13)" class="items1" id="13">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(14); return false" onclick="decision(14)" class="items1" id="14">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(15); return false" onclick="decision(15)" class="items1" id="15">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(16); return false" onclick="decision(16)" class="items1" id="16">0</li>	
+				<li oncontextmenu="flagORbomb('flag'); decision(17); return false" onclick="decision(17)" class="items1" id="17">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(18); return false" onclick="decision(18)" class="items1" id="18">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(19); return false" onclick="decision(19)" class="items1" id="19">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(20); return false" onclick="decision(20)" class="items1" id="20">0</li>	
 			
-				<li onclick="decision(21)" class="items1" id="21">0</li>
-				<li onclick="decision(22)" class="items1" id="22">0</li>
-				<li onclick="decision(23)" class="items1" id="23">0</li>
-				<li onclick="decision(24)" class="items1" id="24">0</li>
-				<li onclick="decision(25)" class="items1" id="25">0</li>
-				<li onclick="decision(26)" class="items1" id="26">0</li>
-				<li onclick="decision(27)" class="items1" id="27">0</li>
-				<li onclick="decision(28)" class="items1" id="28">0</li>
-				<li onclick="decision(29)" class="items1" id="29">0</li>
-				<li onclick="decision(30)" class="items1" id="30">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(21); return false" onclick="decision(21)" class="items1" id="21">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(22); return false" onclick="decision(22)" class="items1" id="22">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(23); return false" onclick="decision(23)" class="items1" id="23">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(24); return false" onclick="decision(24)" class="items1" id="24">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(25); return false" onclick="decision(25)" class="items1" id="25">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(26); return false" onclick="decision(26)" class="items1" id="26">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(27); return false" onclick="decision(27)" class="items1" id="27">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(28); return false" onclick="decision(28)" class="items1" id="28">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(29); return false" onclick="decision(29)" class="items1" id="29">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(30); return false" onclick="decision(30)" class="items1" id="30">0</li>
 			
-				<li onclick="decision(31)" class="items1" id="31">0</li>
-				<li onclick="decision(32)" class="items1" id="32">0</li>
-				<li onclick="decision(33)" class="items1" id="33">0</li>
-				<li onclick="decision(34)" class="items1" id="34">0</li>
-				<li onclick="decision(35)" class="items1" id="35">0</li>
-				<li onclick="decision(36)" class="items1" id="36">0</li>
-				<li onclick="decision(37)" class="items1" id="37">0</li>
-				<li onclick="decision(38)" class="items1" id="38">0</li>
-				<li onclick="decision(39)" class="items1" id="39">0</li>
-				<li onclick="decision(40)" class="items1" id="40">0</li>			
+				<li oncontextmenu="flagORbomb('flag'); decision(31); return false" onclick="decision(31)" class="items1" id="31">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(32); return false" onclick="decision(32)" class="items1" id="32">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(33); return false" onclick="decision(33)" class="items1" id="33">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(34); return false" onclick="decision(34)" class="items1" id="34">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(35); return false" onclick="decision(35)" class="items1" id="35">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(36); return false" onclick="decision(36)" class="items1" id="36">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(37); return false" onclick="decision(37)" class="items1" id="37">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(38); return false" onclick="decision(38)" class="items1" id="38">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(39); return false" onclick="decision(39)" class="items1" id="39">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(40); return false" onclick="decision(40)" class="items1" id="40">0</li>			
 			
-				<li onclick="decision(41)" class="items1" id="41">0</li>
-				<li onclick="decision(42)" class="items1" id="42">0</li>
-				<li onclick="decision(43)" class="items1" id="43">0</li>
-				<li onclick="decision(44)" class="items1" id="44">0</li>
-				<li onclick="decision(45)" class="items1" id="45">0</li>
-				<li onclick="decision(46)" class="items1" id="46">0</li>
-				<li onclick="decision(47)" class="items1" id="47">0</li>
-				<li onclick="decision(48)" class="items1" id="48">0</li>
-				<li onclick="decision(49)" class="items1" id="49">0</li>
-				<li onclick="decision(50)" class="items1" id="50">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(41); return false" onclick="decision(41)" class="items1" id="41">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(42); return false" onclick="decision(42)" class="items1" id="42">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(43); return false" onclick="decision(43)" class="items1" id="43">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(44); return false" onclick="decision(44)" class="items1" id="44">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(45); return false" onclick="decision(45)" class="items1" id="45">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(46); return false" onclick="decision(46)" class="items1" id="46">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(47); return false" onclick="decision(47)" class="items1" id="47">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(48); return false" onclick="decision(48)" class="items1" id="48">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(49); return false" onclick="decision(49)" class="items1" id="49">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(50); return false" onclick="decision(50)" class="items1" id="50">0</li>
 			
-				<li onclick="decision(51)" class="items1" id="51">0</li>
-				<li onclick="decision(52)" class="items1" id="52">0</li>
-				<li onclick="decision(53)" class="items1" id="53">0</li>
-				<li onclick="decision(54)" class="items1" id="54">0</li>
-				<li onclick="decision(55)" class="items1" id="55">0</li>
-				<li onclick="decision(56)" class="items1" id="56">0</li>
-				<li onclick="decision(57)" class="items1" id="57">0</li>
-				<li onclick="decision(58)" class="items1" id="58">0</li>
-				<li onclick="decision(59)" class="items1" id="59">0</li>
-				<li onclick="decision(60)" class="items1" id="60">0</li>			
+				<li oncontextmenu="flagORbomb('flag'); decision(51); return false" onclick="decision(51)" class="items1" id="51">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(52); return false" onclick="decision(52)" class="items1" id="52">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(53); return false" onclick="decision(53)" class="items1" id="53">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(54); return false" onclick="decision(54)" class="items1" id="54">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(55); return false" onclick="decision(55)" class="items1" id="55">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(56); return false" onclick="decision(56)" class="items1" id="56">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(57); return false" onclick="decision(57)" class="items1" id="57">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(58); return false" onclick="decision(58)" class="items1" id="58">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(59); return false" onclick="decision(59)" class="items1" id="59">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(60); return false" onclick="decision(60)" class="items1" id="60">0</li>			
 			
-				<li onclick="decision(61)" class="items1" id="61">0</li>
-				<li onclick="decision(62)" class="items1" id="62">0</li>
-				<li onclick="decision(63)" class="items1" id="63">0</li>
-				<li onclick="decision(64)" class="items1" id="64">0</li>
-				<li onclick="decision(65)" class="items1" id="65">0</li>
-				<li onclick="decision(66)" class="items1" id="66">0</li>	
-				<li onclick="decision(67)" class="items1" id="67">0</li>
-				<li onclick="decision(68)" class="items1" id="68">0</li>
-				<li onclick="decision(69)" class="items1" id="69">0</li>
-				<li onclick="decision(70)" class="items1" id="70">0</li>	
+				<li oncontextmenu="flagORbomb('flag'); decision(61); return false" onclick="decision(61)" class="items1" id="61">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(62); return false" onclick="decision(62)" class="items1" id="62">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(63); return false" onclick="decision(63)" class="items1" id="63">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(64); return false" onclick="decision(64)" class="items1" id="64">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(65); return false" onclick="decision(65)" class="items1" id="65">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(66); return false" onclick="decision(66)" class="items1" id="66">0</li>	
+				<li oncontextmenu="flagORbomb('flag'); decision(67); return false" onclick="decision(67)" class="items1" id="67">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(68); return false" onclick="decision(68)" class="items1" id="68">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(69); return false" onclick="decision(69)" class="items1" id="69">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(70); return false" onclick="decision(70)" class="items1" id="70">0</li>	
 			
-				<li onclick="decision(71)" class="items1" id="71">0</li>
-				<li onclick="decision(72)" class="items1" id="72">0</li>
-				<li onclick="decision(73)" class="items1" id="73">0</li>
-				<li onclick="decision(74)" class="items1" id="74">0</li>
-				<li onclick="decision(75)" class="items1" id="75">0</li>
-				<li onclick="decision(76)" class="items1" id="76">0</li>
-				<li onclick="decision(77)" class="items1" id="77">0</li>
-				<li onclick="decision(78)" class="items1" id="78">0</li>
-				<li onclick="decision(79)" class="items1" id="79">0</li>
-				<li onclick="decision(80)" class="items1" id="80">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(71); return false" onclick="decision(71)" class="items1" id="71">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(72); return false" onclick="decision(72)" class="items1" id="72">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(73); return false" onclick="decision(73)" class="items1" id="73">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(74); return false" onclick="decision(74)" class="items1" id="74">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(75); return false" onclick="decision(75)" class="items1" id="75">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(76); return false" onclick="decision(76)" class="items1" id="76">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(77); return false" onclick="decision(77)" class="items1" id="77">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(78); return false" onclick="decision(78)" class="items1" id="78">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(79); return false" onclick="decision(79)" class="items1" id="79">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(80); return false" onclick="decision(80)" class="items1" id="80">0</li>
 			
-				<li onclick="decision(81)" class="items1" id="81">0</li>
-				<li onclick="decision(82)" class="items1" id="82">0</li>
-				<li onclick="decision(83)" class="items1" id="83">0</li>
-				<li onclick="decision(84)" class="items1" id="84">0</li>
-				<li onclick="decision(85)" class="items1" id="85">0</li>
-				<li onclick="decision(86)" class="items1" id="86">0</li>
-				<li onclick="decision(87)" class="items1" id="87">0</li>
-				<li onclick="decision(88)" class="items1" id="88">0</li>
-				<li onclick="decision(89)" class="items1" id="89">0</li>
-				<li onclick="decision(90)" class="items1" id="90">0</li>			
+				<li oncontextmenu="flagORbomb('flag'); decision(81); return false" onclick="decision(81)" class="items1" id="81">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(82); return false" onclick="decision(82)" class="items1" id="82">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(83); return false" onclick="decision(83)" class="items1" id="83">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(84); return false" onclick="decision(84)" class="items1" id="84">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(85); return false" onclick="decision(85)" class="items1" id="85">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(86); return false" onclick="decision(86)" class="items1" id="86">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(87); return false" onclick="decision(87)" class="items1" id="87">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(88); return false" onclick="decision(88)" class="items1" id="88">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(89); return false" onclick="decision(89)" class="items1" id="89">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(90); return false" onclick="decision(90)" class="items1" id="90">0</li>			
 			
-				<li onclick="decision(91)" class="items1" id="91">0</li>
-				<li onclick="decision(92)" class="items1" id="92">0</li>
-				<li onclick="decision(93)" class="items1" id="93">0</li>
-				<li onclick="decision(94)" class="items1" id="94">0</li>
-				<li onclick="decision(95)" class="items1" id="95">0</li>
-				<li onclick="decision(96)" class="items1" id="96">0</li>
-				<li onclick="decision(97)" class="items1" id="97">0</li>
-				<li onclick="decision(98)" class="items1" id="98">0</li>
-				<li onclick="decision(99)" class="items1" id="99">0</li>
-				<li onclick="decision(100)" class="items1" id="100">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(91); return false" onclick="decision(91)" class="items1" id="91">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(92); return false" onclick="decision(92)" class="items1" id="92">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(93); return false" onclick="decision(93)" class="items1" id="93">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(94); return false" onclick="decision(94)" class="items1" id="94">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(95); return false" onclick="decision(95)" class="items1" id="95">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(96); return false" onclick="decision(96)" class="items1" id="96">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(97); return false" onclick="decision(97)" class="items1" id="97">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(98); return false" onclick="decision(98)" class="items1" id="98">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(99); return false" onclick="decision(99)" class="items1" id="99">0</li>
+				<li oncontextmenu="flagORbomb('flag'); decision(100); return false" onclick="decision(100)" class="items1" id="100">0</li>
 			</ul>
 			<button class="myButton" id="startBTN" style="position:relative; left: 150px;display: none;" onclick="start()">Start?</button>
 
-			<li onclick="flagORbomb('flag')" class="items1" id="flag" style="position:relative; left: 30px; top: 10px;color: black;box-shadow:inset 3px 3px 0px 0px grey,inset -3px -3px 0px 0px lightgrey;">-</li>
+			<li onclick="flagORbomb('flag1')" class="items1" id="flag" style="position:relative; left: 30px; top: 10px;color: black;box-shadow:inset 3px 3px 0px 0px grey,inset -3px -3px 0px 0px lightgrey;">-</li>
 			<li onclick="flagORbomb(102)" class="items1" id="102" style="position:relative; left: 30px; top: 10px; color: black;width: 50px;">Flag</li>
+
+			<li id="itemsWin"> You Win!</li>
 
 			</div>
 			
@@ -481,20 +501,27 @@
 		<br>
 		</div>	
 		<br><br><br>
-There are ~10 mines, <br> clear every space except those 10 to win.
+There are ~10 mines, <br> clear every space except those 10 to win. <br> Right click to place flag.
 
 		<script type="text/javascript">
 			var flgORbmb;
 			var flagSwitch=0;
 			function flagORbomb(x) {
 				flgORbmb = x;
-				if (flagSwitch==0) {
+				if (flgORbmb=="flag") {
 					document.getElementById(102).style.boxShadow = "inset 3px 3px 0px 0px grey,inset -3px -3px 0px 0px lightgrey";
 					document.getElementById('flag').style.boxShadow = "inset 3px 3px 0px 0px #f3f3f3, inset -3px -3px 0px 0px #7a7a7a";
+					console.log(flagSwitch+" B "+flgORbmb);
+					flagSwitch=2;
+				}else if (flagSwitch==0) {
+					document.getElementById(102).style.boxShadow = "inset 3px 3px 0px 0px grey,inset -3px -3px 0px 0px lightgrey";
+					document.getElementById('flag').style.boxShadow = "inset 3px 3px 0px 0px #f3f3f3, inset -3px -3px 0px 0px #7a7a7a";
+					console.log(flagSwitch+" B "+flgORbmb);
 					flagSwitch=1;
-				}else{
+				}else {
 					document.getElementById('flag').style.boxShadow = "inset 3px 3px 0px 0px grey,inset -3px -3px 0px 0px lightgrey";
 					document.getElementById(102).style.boxShadow = "inset 3px 3px 0px 0px #f3f3f3, inset -3px -3px 0px 0px #7a7a7a";
+					console.log(flagSwitch+" C "+flgORbmb);
 					flagSwitch=0;
 				}
 			}
