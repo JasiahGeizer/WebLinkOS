@@ -1,9 +1,16 @@
 <!DOCTYPE html>
 <html onclick="hitCount()">
 	<!--
-		- Add sound effect for misses
+	To Do:
+		- Style +score in bubble depending on value e.g. >18 = gold.
+		- Show -5 text when missed at mouse location
 		- Add levels / faster speeds
 		- Add better game ended notifyer - e.g. color change or end sound
+
+	Releases:
+		- v1.1: Mutiple Targets, Start button color changed, Advanced Scoreboard, High Score Sound
+		- v1.2: Scores show for popped balls for 2 seconds, Miss Sound Effect Added
+
 	-->
 	<head>
 <title>Aim And Shoot</title>
@@ -12,29 +19,28 @@
 				color:black;
 				background-color: lightskyblue;
 				font-family: monospace;
-				transition: 25s;
+				/*transition: 25s;*/
 			}
 			* 	{
 				   /*cursor: url('crosshair2.png') 25 25,auto;*/
 				   user-select: none; 
 				   cursor: cell;
 				}
-			.target:active {
+			/*.target:active {
 				background-color: orangered;
-			}
+			}*/
 			.target{
 				width: 100px;
 				height: 100px;
 				position:absolute;
 				top: 50%;
 				left: 50%;
-				background-color: coral;
 				color:white;
 				text-align: center;
 				line-height: 100px;
 				box-shadow: 0px 0px 5px grey;
 				border-radius: 50px;
-				transition: 0.4s;
+				/*transition: 0.4s;*/
 				/*transition: background-color 20s ease;*/
 			}
 		</style>
@@ -43,12 +49,13 @@
 			var top1 = Math.floor((Math.random() * 80) + 1);
 			var left1 = Math.floor((Math.random() * 80) + 1);
 			var counter=0;
-			var timer=15;
+			var timer=0;
 			var intTimer;
 			var scoreInt=0;
 			var highscoreInt=0;
 			var audio1 = new Audio('pop.wav');
 			var audio2 = new Audio('levelup.wav');
+			var audio3 = new Audio('miss.ogg');
 			var hitCounter=0;
 			var targetCount=0;
 			function start(that){
@@ -60,11 +67,26 @@
 				targetCount=0;
 				newhigh=false;
 				scoreInt=5;
+				startcount=0;
 			}
 
 			function clock(){
 				timer=timer-1;
 				document.getElementById("time").innerHTML="Time: "+timer;
+
+				//destroy block after 3 seconds
+				//if timer - data-timer > 3 = remove
+				for (var i = 0; i < counter+1; i++) {
+						if(document.getElementById(i)){
+								if (document.getElementById(i).getAttribute('data-click')=="TRUE") {
+									if (document.getElementById(i).getAttribute('data-countr')-timer>1) {
+										document.getElementById(i).remove();
+									}
+								}
+						}
+				}
+
+
 				if (timer<1) {
 					clearInterval(intTimer);
 					clearInterval(clockTimer);
@@ -91,16 +113,31 @@
 				targeted.style.top=top1+"%";
 				targeted.style.left=left1+"%";
 				targeted.setAttribute("data-countr", timer);
+				targeted.setAttribute("data-click", "FALSE");
+				targeted.style.backgroundColor="coral";
 				//targeted.style.zIndex=-1;
 				document.body.appendChild(targeted);
 			}
-
+			var x;
 			var newhigh=false;
+			var destorywait;
 			function destory(that){
 				if (timer>0) {
+					that.onclick=function() {return false;}
+
+					that.style.backgroundColor=null;
+					that.style.boxShadow="0px 0px black"
+					x=(timer-(that.getAttribute('data-countr'))+20);
+					that.innerHTML="+"+x;
+					that.style.zIndex=-1;
+					that.setAttribute('data-countr', timer);
+					that.setAttribute("data-click", "TRUE");
+					//console.log(that.getAttribute('data-countr'));
+
+					//old
 					scoreInt=scoreInt+(timer-(that.getAttribute('data-countr'))+20);
 					document.getElementById("score").innerHTML="Score: "+scoreInt;
-					that.remove();
+					//that.remove();
 					if (!audio1.ended){
 						audio1.currentTime = 0;				
 					}
@@ -117,14 +154,25 @@
 					targetCount=targetCount+1;
 				}
 			}
-
+			var startcount=0;
 			function hitCount(){
-				hitCounter=hitCounter+1;
-				console.log((hitCounter-targetCount)*5);
-				scoreInt=scoreInt-((hitCounter-targetCount)*5);
-				document.getElementById("score").innerHTML="Score: "+scoreInt;
-				hitCounter=0;
-				targetCount=0;
+				if (timer>0) {
+					hitCounter=hitCounter+1;
+					startcount=startcount+1;
+					if (startcount>1) {
+						if (((hitCounter-targetCount)*5)==5) {
+							if (!audio3.ended){
+								audio3.currentTime = 0;				
+							}
+							audio3.play();	
+						}
+					}
+					//console.log((hitCounter-targetCount)*5);
+					scoreInt=scoreInt-((hitCounter-targetCount)*5);
+					document.getElementById("score").innerHTML="Score: "+scoreInt;
+					hitCounter=0;
+					targetCount=0;
+				}
 			}
 		</script>
 	</head>
