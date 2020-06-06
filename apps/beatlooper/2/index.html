@@ -1,17 +1,7 @@
 <!DOCTYPE html>
 
 <!-- To Do:
-	- hold shift to duplicate drum
-	- catergorise beats with labels (on full 4/4) (+ add more?)
 	
-	- manualy enter a bpm
-	- mute row - button
-	- change any sound manually by dragging a sound file on it.
-	
-	- save volume level of each row (and save BPM?)
-	- Increase color contrast & but not change from soft ui
-	- save/download whole document (local storage)
-	- Export sound file?
 -->
 
 <html>
@@ -229,33 +219,47 @@
 
 		<div class="PiecePositionTop" id="div1"> 
 
-			<Span style="margin-top: 25px; margin-left: 10px; color:lightgrey; position: absolute;">Sound Pack:</Span>
+			<Span style="margin-top: 25px; margin-left: 5px; color:lightgrey; position: absolute;">Sound Pack:</Span>
 				<select id="soundPacks" onchange="soundChange()" style="margin-top: 23px; margin-left: 110px; position: absolute;">
 				  <option value="Standard">Standard</option>
 				  <option value="EDM">EDM</option>
 				</select>
 
-			<Span style="margin-top: 55px; margin-left: 10px; color:lightgrey; position: absolute;">Beats:</Span>
-
-				<p style="margin: 24px;"></p> 
-
-				
+			<p style="margin-bottom: 24px;margin-top: 24px;">
+				<Span style="margin-top: 30px; margin-left: 5px; color:lightgrey; position: absolute;">Drums:</Span>
+			</p> 
 			<div style="background: linear-gradient(145deg, #424242cf, #2e795a96);" draggable="true" ondragstart="drag(event)" id="1" class="drumpad" style="top: 220px;left: 70%;" onclick="playBeat(clap)">clap</div>
 			<div style="background: linear-gradient(145deg, #424242cf, #2e797996);" draggable="true" ondragstart="drag(event)" id="2" class="drumpad" style="top: 220px;left: 50%;" onclick="playBeat(kick)">kick</div>
 			<div style="background: linear-gradient(145deg, #424242cf, #792e7496);" draggable="true" ondragstart="drag(event)" id="3" class="drumpad" style="top: 220px;left: 30%;" onclick="playBeat(snare)">snare</div>
+			<p style="height: 80px;">
+				<Span style="color:lightgrey; position: absolute;left: 15px; top: 145px;">Cymbals:</Span>
+			</p>
 			<div style="background: linear-gradient(145deg, #424242cf, #792e6296);" draggable="true" ondragstart="drag(event)" id="4" class="drumpad" style="top: 220px;left: 10%;" onclick="playBeat(crash)">crash</div>
 			<div style="background: linear-gradient(145deg, #424242cf, #792e2e96);" draggable="true" ondragstart="drag(event)" id="5" class="drumpad" style="top: 135px;left: 50%;" onclick="playBeat(hiHat)">hiHat</div>
 			<div style="background: linear-gradient(145deg, #424242cf, #75792e96);" draggable="true" ondragstart="drag(event)" id="6" class="drumpad" style="top: 135px;left: 30%;" onclick="playBeat(ride)">ride</div>
 			<div style="background: linear-gradient(145deg, #424242cf, #4b792e96);" draggable="true" ondragstart="drag(event)" id="7" class="drumpad" style="top: 135px;left: 10%;" onclick="playBeat(splash)">splash</div>
+			<p style="height: 80px;">
+				<Span style="color:lightgrey; position: absolute;left: 15px; top: 239px;">Percussion:</Span>
+			</p>
 			<div style="background: linear-gradient(145deg, #424242cf, #512e7996);" draggable="true" ondragstart="drag(event)" id="8" class="drumpad" style="top: 135px;left: 70%;" onclick="playBeat(block)">block</div>
 			<div style="background: linear-gradient(145deg, #424242cf, #2e457996);" draggable="true" ondragstart="drag(event)" id="9" class="drumpad" style="top: 305px;left: 50%;" onclick="playBeat(cowbell)">cowbell</div>
 			<div style="background: linear-gradient(145deg, #424242cf, #79542e96);" draggable="true" ondragstart="drag(event)" id="10" class="drumpad" style="top: 305px;left: 30%;" onclick="playBeat(eggShaker)">eggShaker</div>
 			<div style="background: linear-gradient(145deg, #424242cf, #2e617996);" draggable="true" ondragstart="drag(event)" id="11" class="drumpad" style="top: 305px;left: 10%;" onclick="playBeat(sleighBells)">sleighBells</div>
 			<div style="background: linear-gradient(145deg, #424242cf, #616161);" draggable="true" ondragstart="drag(event)" id="12" class="drumpad" style="top: 305px;left: 70%;" onclick="playBeat(stickHits)">stickHits</div>
+			<p style="height: 80px;">
+				<Span style="color:lightgrey; position: absolute;left: 15px; top: 332px;">Tom-toms:</Span>
+			</p>
 			<div style="background: linear-gradient(145deg, #424242cf, #793f2e96);" draggable="true" ondragstart="drag(event)" id="13" class="drumpad" style="top: 50px;left: 50%;" onclick="playBeat(floorTom)">floorTom</div>
 			<div style="background: linear-gradient(145deg, #424242cf, #792e4096);" draggable="true" ondragstart="drag(event)" id="14" class="drumpad" style="top: 50px;left: 30%;" onclick="playBeat(highTom)">highTom</div>
 			<div style="background: linear-gradient(145deg, #424242cf, #2e794596);" draggable="true" ondragstart="drag(event)" id="15" class="drumpad" style="top: 50px;left: 10%;" onclick="playBeat(midTom)">midTom</div>
+		
+			<div style="position: absolute;bottom: 15px; right: 35px; color: #313131;">
+					<i><a href="../" style="color: black;">4/2</a> | <a>4/4</a></i>
+			</div>
+
 		</div>
+
+
 		<Span style="margin-top: 585px;z-index: 2; left:50%;margin-left: 230px; color:darkgrey; position: absolute;"><i>Remove</i></Span>
 			<div class="PiecePositionTop2" id="div2" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
 		<div class="grouped">
@@ -263,10 +267,10 @@
 
 			<ul>
 				<p><span>Beat </span> <span id="score">Looper</span> 
-					<button id="gostop" onclick="prebeat(this)" style="background: linear-gradient(145deg, rgba(121, 46, 46, 0.59), rgba(66, 66, 66, 0.81));">Stop</button>
+					<button id="gostop" onclick="prebeat(this)" style="background: linear-gradient(145deg, rgba(121, 46, 46, 0.59), rgba(66, 66, 66, 0.81));width: 78px;">Stop</button>
 					<span style="margin-left:20px;"> BPM:</span>
 					<button onclick="speed(1)">-</button>
-					<span style="padding-left: 15px;" id="s1">100</span>
+					<span ondblclick="speedSet()" style="padding-left: 15px;" id="s1">100</span>
 					<button onclick="speed(2)">+</button>
 					<button style="margin-left: 36px; background: linear-gradient(145deg, #4e4e4e, #643b3bed);" onclick="clearAll()">Clear</button>
 				
@@ -394,7 +398,7 @@
 			</div>
 		</div>
 				<br>
-				<div style="color: #b3b3b3; top: 710px; position: absolute;"><i>Drag the beat to the board</i></div>
+				<div style="color: #b3b3b3; top: 710px; position: absolute;"><i>Drag a beat to the board to play. <br> Double click the bpm to change it manually.</i></div>
 
 				
 
@@ -543,6 +547,18 @@
 			}
 			document.getElementById("s1").innerHTML=realSpeed;
 		}
+	}
+	function speedSet(){ //manually enter a bpm speed
+		var speedPop = prompt("What BPM do you want to use?",  realSpeed);
+		speedPop=parseInt(speedPop);
+		if (speedPop != null) {
+			clearInterval(myBeat);
+			realSpeed=speedPop;
+			if (document.getElementById("gostop").innerHTML=="Stop") {
+				myBeat = setInterval(beat, (1000 * 60 / speedPop)/4);
+			}
+			document.getElementById("s1").innerHTML=realSpeed;
+		}		
 	}
 	var counterPlaying=0;
 	var blockplaying=1000;

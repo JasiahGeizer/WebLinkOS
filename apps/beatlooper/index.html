@@ -1,14 +1,12 @@
 <!DOCTYPE html>
 
 <!-- To Do:
-	- Catergorise beats with labels (on full 4/4)
-	- Manualy enter a bpm
 	- Mute row - button
 	- Hold shift to duplicate drum
+	- Save volume level of each row (and save BPM?)
+	- Save/download whole document (to local storage)
 	
 	- Change any sound manually by dragging a sound file on it.
-	- Save volume level of each row (and save BPM?)
-	- Save/download whole document (local storage)
 	- Export sound file?
 
 	Releases:
@@ -16,6 +14,7 @@
 		- 1.2: 3 Save and Load Slots Added, Clear All Button Added
 		- 1.3: Volumn Control Added For Each Row, Stop/Go Gradient Added, Speed Updated to real BPM, Sounds Stay in same position when dragged. Added Alternate Version with EDM sounds
 		- 1.4: Alternate Version Combined to Drop-Down Menu, Individual Sounds can be played with Keyboard Presses, 3 save slots can be Loaded with Keyboard Presses
+		- 1.5: Swap between 4/2 and 4/4, 4/4 now Catergorises beats by type, stop/stop no longer moves whole row, Manualy enter a BPM, 
 -->
 
 <html>
@@ -234,13 +233,13 @@
 
 		<div class="PiecePositionTop" id="div1"> 
 
-			<Span style="margin-top: 25px; margin-left: 10px; color:lightgrey; position: absolute;">Sound Pack:</Span>
+			<Span style="margin-top: 25px; margin-left: 5px; color:lightgrey; position: absolute;">Sound Pack:</Span>
 				<select id="soundPacks" onchange="soundChange()" style="margin-top: 23px; margin-left: 110px; position: absolute;">
 				  <option value="Standard">Standard</option>
 				  <option value="EDM">EDM</option>
 				</select>
 
-			<Span style="margin-top: 55px; margin-left: 10px; color:lightgrey; position: absolute;">Beats:</Span>
+			<Span style="margin-top: 55px; margin-left: 5px; color:lightgrey; position: absolute;">Beats:</Span>
 
 				<p style="margin: 24px;"></p> 
 
@@ -261,7 +260,12 @@
 			<div style="background: linear-gradient(145deg, #424242cf, #793f2e96);" draggable="true" ondragstart="drag(event)" id="13" class="drumpad" style="top: 50px;left: 50%;" onclick="playBeat(floorTom)">floorTom</div>
 			<div style="background: linear-gradient(145deg, #424242cf, #792e4096);" draggable="true" ondragstart="drag(event)" id="14" class="drumpad" style="top: 50px;left: 30%;" onclick="playBeat(highTom)">highTom</div>
 			<div style="background: linear-gradient(145deg, #424242cf, #2e794596);" draggable="true" ondragstart="drag(event)" id="15" class="drumpad" style="top: 50px;left: 10%;" onclick="playBeat(midTom)">midTom</div>
+		
+			<div style="position: absolute;bottom: 15px; right: 35px; color: #313131;">
+				<i><a>4/2</a> | <a href="2" style="color: black;">4/4</a></i>
+			</div>
 		</div>
+
 		<Span style="margin-top: 585px;z-index: 2; left:50%;margin-left: 230px; color:darkgrey; position: absolute;"><i>Remove</i></Span>
 			<div class="PiecePositionTop2" id="div2" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
 		<div class="grouped">
@@ -269,10 +273,10 @@
 
 			<ul>
 				<p><span>Beat </span> <span id="score">Looper</span> 
-					<button id="gostop" onclick="prebeat(this)" style="background: linear-gradient(145deg, rgba(121, 46, 46, 0.59), rgba(66, 66, 66, 0.81));">Stop</button>
+					<button id="gostop" onclick="prebeat(this)" style="background: linear-gradient(145deg, rgba(121, 46, 46, 0.59), rgba(66, 66, 66, 0.81));width: 78px;">Stop</button>
 					<span style="margin-left:20px;"> BPM:</span>
 					<button onclick="speed(1)">-</button>
-					<span style="padding-left: 15px;" id="s1">100</span>
+					<span ondblclick="speedSet()" style="padding-left: 15px;" id="s1">100</span>
 					<button onclick="speed(2)">+</button>
 					<button style="margin-left: 36px; background: linear-gradient(145deg, #4e4e4e, #643b3bed);" onclick="clearAll()">Clear</button>
 				
@@ -356,7 +360,7 @@
 			</div>
 		</div>
 				<br>
-				<div style="color: #b3b3b3; top: 710px; position: absolute;"><i>Drag the beat to the board</i></div>
+				<div style="color: #b3b3b3; top: 710px; position: absolute;"><i>Drag a beat to the board to play. <br> Double click the bpm to change it manually.</i></div>
 
 				
 
@@ -505,6 +509,18 @@
 			}
 			document.getElementById("s1").innerHTML=realSpeed;
 		}
+	}
+	function speedSet(){ //manually enter a bpm speed
+		var speedPop = prompt("What BPM do you want to use?",  realSpeed);
+		speedPop=parseInt(speedPop);
+		if (speedPop != null) {
+			clearInterval(myBeat);
+			realSpeed=speedPop;
+			if (document.getElementById("gostop").innerHTML=="Stop") {
+				myBeat = setInterval(beat, (1000 * 60 / speedPop)/4);
+			}
+			document.getElementById("s1").innerHTML=realSpeed;
+		}		
 	}
 	var counterPlaying=0;
 	var blockplaying=1000;
