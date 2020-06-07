@@ -6,9 +6,7 @@
 
 <html>
 	<head>
-		<script>
-			
-		</script>
+		<title>Beat Looper</title>
 
 		<style type="text/css">
 			html, body {
@@ -213,7 +211,7 @@
 	</head>
 
 
-	<body onkeypress="pressBeat(event)">
+	<body onkeydown="pressBeat(event)" onkeyup="pressBeat2(event)">
 
 		<span style="color: #cccccc;">Beat Looper</span> <br>
 
@@ -388,17 +386,17 @@
 			<!-- Save to internal storage, create load function-->
 
 			
-			<input type="range" min="1" max="100" value="50" class="slider" id="myRange1" style="position:absolute;left:-10px;top:98px; transform: rotate(270deg);">
-			<input type="range" min="1" max="100" value="50" class="slider" id="myRange2" style="position:absolute;left:-10px;top:179px; transform: rotate(270deg);">
-			<input type="range" min="1" max="100" value="50" class="slider" id="myRange3" style="position:absolute;left:-10px;top:260px; transform: rotate(270deg);">
-			<input type="range" min="1" max="100" value="50" class="slider" id="myRange4" style="position:absolute;left:-10px;top:340px; transform: rotate(270deg);">
-			<input type="range" min="1" max="100" value="50" class="slider" id="myRange5" style="position:absolute;left:-10px;top:421px; transform: rotate(270deg);">
-			<input type="range" min="1" max="100" value="50" class="slider" id="myRange6" style="position:absolute;left:-10px;top:503px; transform: rotate(270deg);">
+			<input type="range" min="1" max="100" value="100" class="slider" id="myRange1" style="position:absolute;left:-10px;top:98px; transform: rotate(270deg);">
+			<input type="range" min="1" max="100" value="100" class="slider" id="myRange2" style="position:absolute;left:-10px;top:179px; transform: rotate(270deg);">
+			<input type="range" min="1" max="100" value="100" class="slider" id="myRange3" style="position:absolute;left:-10px;top:260px; transform: rotate(270deg);">
+			<input type="range" min="1" max="100" value="100" class="slider" id="myRange4" style="position:absolute;left:-10px;top:340px; transform: rotate(270deg);">
+			<input type="range" min="1" max="100" value="100" class="slider" id="myRange5" style="position:absolute;left:-10px;top:421px; transform: rotate(270deg);">
+			<input type="range" min="1" max="100" value="100" class="slider" id="myRange6" style="position:absolute;left:-10px;top:503px; transform: rotate(270deg);">
 
 			</div>
 		</div>
 				<br>
-				<div style="color: #b3b3b3; top: 710px; position: absolute;"><i>Drag a beat to the board to play. <br> Double click the bpm to change it manually.</i></div>
+				<div style="color: #b3b3b3; top: 710px; position: absolute;"><i>Drag a beat to the board to play. <br> Double click the bpm to change it manually.<br>Hold Shift while dragging a beat to duplicate it.</i></div>
 
 				
 
@@ -452,6 +450,12 @@
 	//function docReady(){ //setup key press as on down press
     //    window.addEventListener('keydown', pressBeat);
     //}
+    var ShiftHeld=false;
+    function pressBeat2(evt){ //key up - shift detection
+    	if (evt.key=="Shift") {
+    		ShiftHeld=false;
+    	}
+    }
 	function pressBeat(evt){ //play audio on key press
 		switch (evt.key) {
 			case "1"://1
@@ -508,6 +512,8 @@
 		    case "b"://3
 		    	playBeat(floorTom);
 		    break;
+		    case "Shift":
+		    	ShiftHeld=true;
 		    }
 	}
 	var realSpeed=100; 
@@ -551,7 +557,7 @@
 	function speedSet(){ //manually enter a bpm speed
 		var speedPop = prompt("What BPM do you want to use?",  realSpeed);
 		speedPop=parseInt(speedPop);
-		if (speedPop != null) {
+		if (speedPop != null && !isNaN(speedPop)) {
 			clearInterval(myBeat);
 			realSpeed=speedPop;
 			if (document.getElementById("gostop").innerHTML=="Stop") {
@@ -616,8 +622,11 @@
 			  ev.dataTransfer.setData("text", ev.target.id);
 			  PreDrag = ev.toElement.parentNode.className;
 			  indexPosition=Array.prototype.indexOf.call(document.getElementById("div1").children, ev.toElement); //get index position of soundblock grabbed
-
+			  	if (ShiftHeld==true && PreDrag !== "PiecePositionTop"){
+			  		PreDrag=ev.toElement.parentNode;
+				}
 			}
+			var nameIntr=0;
 			var score1=0;
 			function drop(ev) {
 			  ev.preventDefault();
@@ -625,15 +634,22 @@
 			  ev.target.appendChild(document.getElementById(data));
 			  //console.log(ev.toElement.id);
 
-				if (PreDrag == "PiecePositionTop") {
+				if (PreDrag == "PiecePositionTop") { //if piece needs duplicating - i.e. from side panel 
 					var div = document.getElementById(ev.toElement.childNodes[0].id),
 					clone = div.cloneNode(true); // true means clone all childNodes and all event handlers
 					clone.id = ("a"+ev.toElement.childNodes[0].id);
 					//document.getElementById("div1").appendChild(clone);
 					document.getElementById("div1").insertBefore(clone, document.getElementById("div1").children[indexPosition]); //inset soundblock at original position in index
-
+				}else if (ShiftHeld==true){
+					//if duplicating beat
+					//console.log("shift is held");
+					nameIntr=nameIntr+1;
+					var div = document.getElementById(ev.toElement.childNodes[0].id),
+					clone = div.cloneNode(true); // true means clone all childNodes and all event handlers
+					clone.id = ("b"+nameIntr);
+					document.getElementById(PreDrag.id).appendChild(clone);
 				}
-				if (ev.toElement.id == "div2") {
+				if (ev.toElement.id == "div2") { //if removing beat
 					(ev.toElement.childNodes[0]).remove();
 				}
 			}
@@ -658,6 +674,10 @@
 			var storeDataC=[0,0];
 			var storeData2C=[0,0];
 
+			var volumeData=[1,1,1,1,1,1];
+			var volumeData2=[1,1,1,1,1,1];
+			var volumeData3=[1,1,1,1,1,1];
+
 			function save(num, thatOne){
 
 				document.getElementById("save"+num).style.background=thatOne.style.background; //set background of save from grey to gradient
@@ -673,6 +693,7 @@
 							storeData2[storeCount]=i;
 						}
 					}
+					volumeData = [volumeINT1, volumeINT2, volumeINT3, volumeINT4, volumeINT5, volumeINT6];
 				}
 				if (num==2) {
 						storeCountB=0;
@@ -685,6 +706,7 @@
 							storeData2B[storeCountB]=i;
 						}
 					}
+					volumeData2 = [volumeINT1, volumeINT2, volumeINT3, volumeINT4, volumeINT5, volumeINT6];
 				}
 
 				if (num==3) {
@@ -698,6 +720,7 @@
 							storeData2C[storeCountC]=i;
 						}
 					}
+					volumeData3 = [volumeINT1, volumeINT2, volumeINT3, volumeINT4, volumeINT5, volumeINT6];
 				}
 			}
 			function opens(nums){
@@ -706,16 +729,35 @@
 					for (var i = 0; i < storeCount; i++) {
 							document.getElementById(storeData2[i+1]).appendChild(storeData[i+1]);
 					}
+					for (var i = 1; i < 7; i++) {
+							document.getElementById("myRange"+i).value=volumeData[i-1]*100;
+					}
+							volumeINT1=volumeData[0];volumeINT2=volumeData[1];
+							volumeINT3=volumeData[2];volumeINT4=volumeData[3];
+							volumeINT5=volumeData[4];volumeINT6=volumeData[5];
 				}
+
 				if (nums==2) {
 					for (var i = 0; i < storeCountB; i++) {
 							document.getElementById(storeData2B[i+1]).appendChild(storeDataB[i+1]);
-					}		
+					}
+					for (var i = 1; i < 7; i++) {
+							document.getElementById("myRange"+i).value=volumeData2[i-1]*100;
+					}
+							volumeINT1=volumeData2[0];volumeINT2=volumeData2[1];
+							volumeINT3=volumeData2[2];volumeINT4=volumeData2[3];
+							volumeINT5=volumeData2[4];volumeINT6=volumeData2[5];			
 				}
 				if (nums==3) {
 					for (var i = 0; i < storeCountC; i++) {
 							document.getElementById(storeData2C[i+1]).appendChild(storeDataC[i+1]);
-					}		
+					}
+					for (var i = 1; i < 7; i++) {
+							document.getElementById("myRange"+i).value=volumeData3[i-1]*100;
+					}
+							volumeINT1=volumeData3[0];volumeINT2=volumeData3[1];
+							volumeINT3=volumeData3[2];volumeINT4=volumeData3[3];
+							volumeINT5=volumeData3[4];volumeINT6=volumeData3[5];			
 				}
 			}
 
