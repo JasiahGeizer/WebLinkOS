@@ -2,14 +2,23 @@
 <title>Painter</title>
 <!--
 	To Do:
-		- Add Shapes
-		- Add Text
-		- increase canvas size??
+		- Change size to slider & input field, Turn fill into a toggle
+		- Text adjust - left,center,right
+		- Add undo button
+		- Image Upload
+		- Hold Shift to lock proportions
+		- Improve UI / increase canvas size - add room for more buttons
+		- Change Fill to flood fill so it only fills same color
+	Releases:
+		1.1: Minor UI improvements, Added Drawing Rectanges/Circles/Triangles/Lines, Added Drawing Text, Added Custom Colors, Custom Font, Custom Font Style & Color
 -->
   <style type="text/css">
     *{
       font-family: monospace;
-      background-color: lightsteelblue;
+      user-select: none;
+    }
+    body{
+    	background-color: lightsteelblue;
     }
     canvas{
             margin: 0 auto;
@@ -17,7 +26,7 @@
               list-style-type: none;
               resize:none;
               display:block;
-              margin-top:20px; 
+              margin-top: 10px;
               margin-bottom: 10px;
               height: 400px;
               width: 400px;
@@ -25,6 +34,7 @@
               border:2px solid lightgrey;
           }
     .grouped{
+    	z-index: 1;
         position: relative;
         background-color: #594a69;
         width: 540px;
@@ -43,9 +53,30 @@
         box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, .25);
     }
     button{
-    	border:0px;padding:5px;box-shadow:0px 1px 4px black;position:relative;left:240px;top:-119;background-color: gainsboro;
+    	border:0px;padding:5px;box-shadow:0px 1px 4px black;position:relative;background-color: gainsboro;
     }
+	input[type="color"] {
+		-webkit-appearance: none;
+		border: none;
+	}
+	input[type="color"]::-webkit-color-swatch-wrapper {
+		padding: 0;
+		position: relative;
+	    height: 25px;
+	    width: 25px;
+	    text-align: center;
+	    line-height: 40px;
+	}
+	input[type="color"]::-webkit-color-swatch {
+		border: none;
+	}    
+	.btns{
+		display:contents;
+	}
   </style>
+
+
+
   <script type="text/javascript">
   var canvas, canvasimg, backgroundImage, finalImg;
   var	mouseClicked = false;
@@ -85,29 +116,64 @@ var oldON2=false;
       fillStyle = btn.style.backgroundColor;
       pickColor(btn);
       break;
-      case "eraser":
-      globalCompositeOperation = 'destination-out';
-      fillStyle = "rgba(0,0,0,1)";
+      default:
+      console.log(btn.value);
+      fillStyle = btn.value;
       pickColor(btn);
-      //lineWidth = 14;
       break;
     }
   }
-
+  var type="Draw";
   function getType(btn) { 
     globalCompositeOperation = 'source-over';
     //lineWidth = 2;
+   	document.getElementById("fontPacks").style.visibility="hidden";
+   	document.getElementById("fontStyle").style.visibility="hidden";
+   		document.getElementById("20").style.boxShadow="0px 0px 0px black";
+   		document.getElementById("19").style.boxShadow="0px 0px 0px black";
+	    document.getElementById("18").style.boxShadow="0px 0px 0px black";
+	    document.getElementById("17").style.boxShadow="0px 0px 0px black";
+	    document.getElementById("16").style.boxShadow="0px 0px 0px black";
+	    document.getElementById("15").style.boxShadow="0px 0px 0px black";
+	    document.getElementById("14").style.boxShadow="0px 0px 0px black";
     switch (btn.getAttribute('data-color')) {
-      case "Fill":
-      fillorNot=1;
-      document.getElementById("15").style.boxShadow="0px 0px 0px black";
-      document.getElementById("14").style.boxShadow="inset 2px 2px 0px black";
-      break;
-      case "Draw":
-      fillorNot=0;
-      document.getElementById("14").style.boxShadow="0px 0px 0px black";
-      document.getElementById("15").style.boxShadow="inset 2px 2px 0px black";
-      break;
+      	case "Fill":
+      		type="Fill"
+	      	fillorNot=1;
+	      	document.getElementById("14").style.boxShadow="inset 2px 2px 0px black";
+	      	break;
+      	case "Draw":
+      		type="Draw";
+	      	fillorNot=0;
+	      	document.getElementById("15").style.boxShadow="inset 2px 2px 0px black";
+      		break;
+      	case "Rect":
+      		type="Rect";
+	      	fillorNot=0;
+	      	document.getElementById("16").style.boxShadow="inset 2px 2px 0px black";
+	      	break;
+	    case "Text":
+	    	document.getElementById("fontPacks").style.visibility="visible";
+	    	document.getElementById("fontStyle").style.visibility="visible";
+      		type="Text";
+	      	fillorNot=0;
+	      	document.getElementById("17").style.boxShadow="inset 2px 2px 0px black";
+	      	break;
+	    case "Tria":
+      		type="Tria";
+	      	fillorNot=0;
+	      	document.getElementById("18").style.boxShadow="inset 2px 2px 0px black";
+	      	break;
+	    case "Circ":
+      		type="Circ";
+	      	fillorNot=0;
+	      	document.getElementById("19").style.boxShadow="inset 2px 2px 0px black";
+	      	break;
+	    case "Line":
+      		type="Line";
+	      	fillorNot=0;
+	      	document.getElementById("20").style.boxShadow="inset 2px 2px 0px black";
+	      	break;
     }
   }
 
@@ -124,32 +190,138 @@ var oldON2=false;
       oldbtn2=color;
   }
 
-  function draw(dot) {
-    var ctx = canvas.getContext("2d");
-    ctx.beginPath();
-    ctx.globalCompositeOperation = globalCompositeOperation;
-    if (fillorNot==1) {
-      ctx.fillStyle = fillStyle;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      //ctx.beginPath(); 
-      //ctx.fillStyle=fillStyle;
-      //ctx.fillRect(rect.startX, rect.startY, rect.w, rect.h);
-      //ctx.stroke();
-    }else if(dot){
-      ctx.fillStyle = fillStyle;
-      ctx.fillRect(currX, currY, 2, 2);
-    } else {
-      ctx.beginPath();
-      ctx.moveTo(prevX, prevY);
-      ctx.lineTo(currX, currY);
-      ctx.strokeStyle = fillStyle;
-      ctx.lineWidth = lineWidth;
-
-      ctx.stroke();
-    }
-    ctx.closePath();
-  }
-
+    
+  	function draw(dot) {
+  		var ctx = canvas.getContext("2d");
+    		ctx.beginPath();
+    		ctx.globalCompositeOperation = globalCompositeOperation;
+    	if (fillorNot==1) {
+      		ctx.fillStyle = fillStyle;
+      		ctx.fillRect(0, 0, canvas.width, canvas.height);
+    	}else if(dot){
+      		ctx.fillStyle = fillStyle;
+      		ctx.fillRect(currX, currY, 2, 2);
+    	} else {
+      		ctx.beginPath();
+      		ctx.moveTo(prevX, prevY);
+      		ctx.lineTo(currX, currY);
+      		ctx.strokeStyle = fillStyle;
+      		if (filled==false) {
+      		ctx.lineWidth = lineWidth;
+      		}else{
+      			ctx.lineWidth = 50;
+      		}
+      		ctx.stroke();
+    	}
+    	ctx.closePath();
+  	}
+	function drawRect(xStart,yStart,updown){
+	var ctx = canvas.getContext("2d");
+		if (updown=="up") {
+			ctx.beginPath();
+				if (filled==false) {
+					ctx.lineWidth = lineWidth;
+					ctx.strokeStyle = fillStyle;
+					ctx.rect(downX, downY, xStart-downX, yStart-downY);
+				} else {
+					ctx.fillStyle = fillStyle;
+					ctx.fillRect(downX, downY, xStart-downX, yStart-downY);
+				}
+			ctx.stroke();
+		}
+		if (updown=="move") {
+			var img = new Image;
+			img.src = dataURL;
+			ctx.clearRect(0,0,canvas.width,canvas.height);
+			ctx.drawImage(img, 0, 0);
+			ctx.beginPath();	
+				if (filled==false) {
+					ctx.lineWidth = lineWidth;
+					ctx.strokeStyle = fillStyle;
+					ctx.rect(downX, downY, xStart-downX, yStart-downY);
+				} else {
+					ctx.fillStyle = fillStyle;
+					ctx.fillRect(downX, downY, xStart-downX, yStart-downY);
+				}
+			ctx.stroke();
+		}
+	}
+	function drawTria(xStart,yStart){
+		var img = new Image;
+		img.src = dataURL;
+		var ctx = canvas.getContext("2d");
+		ctx.clearRect(0,0,canvas.width,canvas.height);
+		ctx.drawImage(img, 0, 0);
+		ctx.beginPath();		
+		ctx.moveTo(downX, downY);
+		ctx.lineTo(xStart, yStart);
+		ctx.lineTo(downX, yStart);
+		ctx.lineTo(downX, downY);
+		ctx.closePath();
+		
+		if (filled==false) {
+					ctx.lineWidth = lineWidth;
+					ctx.strokeStyle = fillStyle;
+					ctx.stroke();
+				} else {
+					ctx.fillStyle = fillStyle;
+					ctx.fill();				
+		}	
+	}
+	function drawCirc(xStart,yStart){
+		var img = new Image;
+		img.src = dataURL;
+		var ctx = canvas.getContext("2d");
+		ctx.clearRect(0,0,canvas.width,canvas.height);
+		ctx.drawImage(img, 0, 0);
+		ctx.beginPath();
+		if (downX<xStart) {
+			ctx.arc(downX, downY, xStart-downX,0, 2 * Math.PI);
+		}else{ 
+			ctx.arc(downX, downY, downX-xStart,0, 2 * Math.PI);
+		}
+		ctx.closePath();
+			if (filled==false) {
+						ctx.lineWidth = lineWidth;
+						ctx.strokeStyle = fillStyle;
+						ctx.stroke();
+					} else {
+						ctx.fillStyle = fillStyle;
+						ctx.fill();				
+			}	
+	}
+	function drawLine(xStart,yStart){
+		var img = new Image;
+		img.src = dataURL;
+		var ctx = canvas.getContext("2d");
+		ctx.clearRect(0,0,canvas.width,canvas.height);
+		ctx.drawImage(img, 0, 0);
+		ctx.beginPath();
+		ctx.moveTo(downX, downY);
+		ctx.lineTo(xStart, yStart);
+		ctx.closePath();
+			if (filled==false) {
+						ctx.lineWidth = lineWidth;
+						ctx.strokeStyle = fillStyle;
+						ctx.stroke();
+					} else {
+						ctx.lineWidth = 50;
+						ctx.strokeStyle = fillStyle;
+						ctx.stroke();			
+			}	
+	}
+	function drawText(xStart,yStart,textDraw){
+		var ctx = canvas.getContext("2d");
+		if (filled==false) {
+			ctx.font =fontType+" "+lineWidth+"px "+font;
+			ctx.fillStyle = fillStyle;
+			ctx.fillText(textDraw, xStart, yStart);
+		}else {
+			ctx.font =fontType+" "+"50px "+font;
+			ctx.fillStyle = fillStyle;
+			ctx.fillText(textDraw, xStart, yStart);
+		}
+	}
   function erase() {
     if (confirm("Want to clear")) {
     	var ctx = canvas.getContext("2d");
@@ -163,63 +335,111 @@ var oldON2=false;
 	  link.setAttribute('download', 'painter.png');
 	  link.setAttribute('href', canvas.toDataURL("image/png").replace("image/png", "image/octet-stream"));
   }
-  rect = {},
-drag = false;
-var rectStartXArray = new Array() ;
-var rectStartYArray = new Array() ;
-var rectWArray = new Array() ;
-var rectHArray = new Array() ;
+  	rect = {},
+	drag = false;
+var downX;
+var downY;
+var destCtx;
+var dataURL;
   function handleMouseEvent(e) {
     if (e.type === 'mousedown') {
-        //rect.startX = e.pageX - this.offsetLeft;
-        //rect.startY = e.pageY - this.offsetTop;
-      prevX = currX;
-      prevY = currY;
-      currX = e.offsetX;
-      currY = e.offsetY;
-      mouseClicked = true;
-      draw(true);
+    		canvas.getContext('2d');
+    		dataURL = canvas.toDataURL();
+    	if (type=="Draw" || type=="Fill") {
+	     	mouseClicked = true;
+	    	prevX = currX;
+	    	prevY = currY;
+	    	currX = e.offsetX;
+	      	currY = e.offsetY;
+	      	draw(true);
+    	}else if (type=="Rect" || type=="Tria" || type=="Circ" || type=="Line") {
+    		mouseClicked = true;
+    		downX=e.offsetX;
+    		downY=e.offsetY;
+    	}else if (type=="Text") {
+    		var textEnter = prompt("Please enter your Text:", "Text Here");
+			if (textEnter != null) {
+				drawText(e.offsetX,e.offsetY,textEnter);
+			}
+    	}
     }
-    if (e.type === 'mouseup' || e.type === "mouseout") {
-      mouseClicked = false;
-    //rectStartXArray[rectStartXArray.length] = rect.startX;
-    //rectStartYArray[rectStartYArray.length] = rect.startY;
-    //rectWArray[rectWArray.length] = rect.w;
-    //rectHArray[rectHArray.length] = rect.h;
+
+    if (e.type === 'mouseup') {
+    	mouseClicked = false;
+    	if (type=="Rect") {
+    		//console.log(e.offsetX+"|"+e.offsetY);
+    		drawRect(e.offsetX,e.offsetY,"up");
+    	}else if (type=="Tria") {
+    		drawTria(e.offsetX,e.offsetY);
+    	}else if (type=="Circ") {
+    		drawCirc(e.offsetX,e.offsetY);
+    	}else if (type=="Line") {
+    		drawLine(e.offsetX,e.offsetY);
+    	}
     }
+
     if (e.type === 'mousemove') {
-      if (mouseClicked) {
-        prevX = currX;
-        prevY = currY;
-        currX = e.offsetX;
-        currY = e.offsetY;
-        //rect.w = (e.pageX ) - rect.startX-140;
-        //rect.h = (e.pageY ) - rect.startY-110;
-        draw();
-      }
+    	if (type=="Draw") {
+		     if (mouseClicked) {
+		    	prevX = currX;
+		        prevY = currY;
+		        currX = e.offsetX;
+		        currY = e.offsetY;
+		        draw();
+		     }
+    	}else if (type=="Rect" && mouseClicked==true) {
+    			drawRect(e.offsetX,e.offsetY,"move");
+    	}else if (type=="Tria" && mouseClicked==true) {
+    		drawTria(e.offsetX,e.offsetY);
+    	}else if (type=="Circ" && mouseClicked==true) {
+    		drawCirc(e.offsetX,e.offsetY);
+    	}else if (type=="Line" && mouseClicked==true) {
+    		drawLine(e.offsetX,e.offsetY);
+    	}
     }
   }
+
   var oldbtn;
   var oldON=false;
+  var filled=false
   function setSize(size,btn){
-    lineWidth=size;
-    btn.style.boxShadow="inset 2px 2px 0px black";
-    if (oldON==true) {
-      oldbtn.style.boxShadow="0px 1px 4px black";
-    }else{
-      oldON=true;
-    }
-    
-    oldbtn=btn;
-    
+  	if (size=="Fill") {
+  		filled=true;
+
+  		btn.style.boxShadow="inset 2px 2px 0px black";
+	    if (oldON==true) {
+	      oldbtn.style.boxShadow="0px 1px 4px black";
+	    }else{
+	      oldON=true;
+	    }
+	    oldbtn=btn;
+  	}else{
+  		filled=false;
+	    lineWidth=size;
+	    btn.style.boxShadow="inset 2px 2px 0px black";
+	    if (oldON==true) {
+	      oldbtn.style.boxShadow="0px 1px 4px black";
+	    }else{
+	      oldON=true;
+	    }
+	    oldbtn=btn;
+  	}
   }
+  	var font="sans-serif";
+  	function fontChange(){
+		font=document.getElementById("fontPacks").value;
+  	}
+  	var fontType="";
+  	function fontStyles(){
+		fontType=document.getElementById("fontStyle").value;
+  	}
   </script>
 
   <body onload="init()">Painter
     <div class="grouped"><br>
-      <canvas id="can" width="400" height="400"></canvas>
+      
 
-    <div style="left: 65px;top:5px;height:80px;position: relative;background-color: #675877;padding:5px;width: 35%;">Choose Color<p style="margin: 5px;position: relative;">
+    <div style="left: 65px;top:0px;height:80px;position: relative;background-color: #675877;padding:5px;width: 220px;">Choose Color<p style="margin: 5px;position: relative;">
         <div id="1" class="colors" style="position:relative;width:25px;height:25px;background:black;" data-color="black" onclick="getColor(this)"></div>
         <div id="2" class="colors" style="position:relative;width:25px;height:25px;background:red;" data-color="pink" onclick="getColor(this)"></div>
         <div id="3" class="colors" style="position:relative;width:25px;height:25px;background:yellow;" data-color="pink" onclick="getColor(this)"></div>
@@ -228,32 +448,69 @@ var rectHArray = new Array() ;
         <div id="6" class="colors" style="position:relative;width:25px;height:25px;background:purple;" data-color="pink" onclick="getColor(this)"></div>
 
         <div id="7" class="colors" style="position:relative;width:25px;height:25px;background:grey;" data-color="pink" onclick="getColor(this)"></div>
+        <div id="13" class="colors" style="position:relative;width:25px;height:25px;background:white;" data-color="pink" onclick="getColor(this)"></div>     
         <div id="8" class="colors" style="position:relative;width:25px;height:25px;background:orange;" data-color="pink" onclick="getColor(this)"></div>
         <div id="9" class="colors" style="position:relative;width:25px;height:25px;background:lightyellow;" data-color="pink" onclick="getColor(this)"></div>
         <div id="10" class="colors" style="position:relative;width:25px;height:25px;background:lightgreen;" data-color="pink" onclick="getColor(this)"></div>
         <div id="11" class="colors" style="position:relative;width:25px;height:25px;background:lightblue;" data-color="pink" onclick="getColor(this)"></div>
-        <div id="12" class="colors" style="position:relative;width:25px;height:25px;background:pink;" data-color="pink" onclick="getColor(this)"></div>      
+        <div id="12" class="colors" style="position:relative;width:25px;height:25px;background:pink;" data-color="pink" onclick="getColor(this)"></div> 
 
-        <div style="position:relative;left:236px;top:-80px;background-color:#594a69;padding-top:5px;text-align: center;width:50px;height:25px;">Eraser</div>
-        <div id="13" style="position:relative;left:240px;top:-86px;width:43px;height:21px;background:white;border:2px solid;" data-color="eraser" onclick="getColor(this)"></div>
+    	<input class="bgPickSmall" onchange="getColor(this)" data-color="green" style="position:relative;border:0px;padding:0px;-webkit-appearance: none;text-align: center;height:25px;width: 25px;" type="color" id="124">
+    	<div style="position:absolute;right: 0px;bottom: 0px;">Cust.</div>
 
-        <div style="position:relative;left:238px;top:-80px;background-color:#594a69;padding-top:5px;text-align: center;width:50px;height:25px;">Fill</div>
-        <div id="14" style="position:relative;left:250px;top:-86px;width:25px;height:21px;background:lightgrey;border:2px solid darkgrey;" data-color="Fill" onclick="getType(this)"></div>
-         <div style="position:relative;left:198px;top:-135px;background-color:#594a69;padding-top:5px;text-align: center;width:50px;height:25px;">Draw</div>
-        <div id="15" style="position:relative;left:210px;top:-141px;width:25px;height:21px;background:lightgrey;border:2px solid darkgrey;" data-color="Draw" onclick="getType(this)"></div>
+        <div style="position: absolute; top: 0px; left: 235px;width: 145px; height: 90px;"> 
+	        <div class="btns" style="position:relative;padding-top:5px;width:50px;height:25px;">Fill</div>
+	        <div class="btns" style="position:relative;padding-top:5px;width:50px;height:25px;">Draw</div>
+	        <div class="btns" style="position:relative;padding-top:5px;width:50px;height:25px;">Text</div>
+	        <div class="btns" style="position:relative;padding-top:5px;width:50px;height:25px;">Line</div>
+	        <div class="btns" id="14" style="position:relative;width:25px;height:21px;background:lightgrey;border:2px solid darkgrey;display:inline-block;" data-color="Fill" onclick="getType(this)"></div>
+	        <div class="btns" id="15" style="position:relative;width:25px;height:21px;background:lightgrey;border:2px solid darkgrey;display:inline-block;" data-color="Draw" onclick="getType(this)"></div>
+	        <div class="btns" id="17" style="position:relative;width:25px;height:21px;background:lightgrey;border:2px solid darkgrey;display:inline-block;" data-color="Text" onclick="getType(this)"></div>
+	        <div class="btns" id="20" style="position:relative;width:25px;height:21px;background:lightgrey;border:2px solid darkgrey;display:inline-block;" data-color="Line" onclick="getType(this)"></div>
+
+	        <div class="btns" style="position:relative;padding-top:5px;width:50px;height:25px;">Rect</div>
+	        <div class="btns" style="position:relative;padding-top:5px;width:50px;height:25px;">Tria</div>
+	        <div class="btns" style="position:relative;padding-top:5px;width:50px;height:25px;">Circ</div>
+	        <div class="btns" style="position:relative;padding-top:5px;width:50px;height:25px;">.</div>
+	        <div class="btns" id="16" style="position:relative;width:25px;height:21px;background:lightgrey;border:2px solid darkgrey;display:inline-block;" data-color="Rect" onclick="getType(this)"></div>
+	        <div class="btns" id="18" style="position:relative;width:25px;height:21px;background:lightgrey;border:2px solid darkgrey;display:inline-block;" data-color="Tria" onclick="getType(this)"></div>
+	        <div class="btns" id="19" style="position:relative;width:25px;height:21px;background:lightgrey;border:2px solid darkgrey;display:inline-block;" data-color="Circ" onclick="getType(this)"></div>
+        </div>
     </div>
 
      <canvas id="canvasimg" style="display:none;" ></canvas>
-     <!--  <img id="finalImg" style="position:absolute;top:10%;left:52%;display:none;" >-->
 
-      <input type="button" value="clear" id="clr" size="23" onclick="erase()" style="box-shadow: 0px 0px 3px black;background-color: lightgrey;padding:7px;border:0px; position:relative;left:371px;top:-10px;">
-      <a type="button" value="save" id="link" size="23" onclick="save()" style="box-shadow: 0px 0px 3px black;background-color: lightgrey;padding:7px;border:0px; position:relative;left:371px;top:-10px;color:black">Save</a>
+     	<div style="position: absolute;right: 20px;top: 15px;background-color:#594a69;width: 35px;">
+        	<div style="position:relative;background-color:#594a69;text-align:right;">Size</div>
+	    	<button onclick="setSize('Fill',this)" style="position: relative;margin-bottom: 3px;">Fill</button>
+	    	<button onclick="setSize(20,this)" style="position: relative; margin-bottom: 3px;width: 27px;">20</button>
+	    	<button onclick="setSize(10,this)" style="position: relative; margin-bottom: 3px;">10</button>
+	    	<button onclick="setSize(5,this)" style="position: relative; margin-bottom: 3px;">5</button>
+	    	<button onclick="setSize(2,this)" style="position: relative; margin-bottom: 3px;">2</button>
+	    </div>
 
-      <div style="position:relative;left:365px;top:-113px;background-color:#594a69;padding-top:5px;text-align: center;width:75px;height:25px;">Brush Size</div>
-	      <button onclick="setSize(20,this)" style="left: 365px; position: relative;">20</button>
-	      <button onclick="setSize(10,this)" style="left: 365px; position: relative;">10</button>
-	      <button onclick="setSize(5,this)" style="left: 365px; position: relative;">5</button>
-	      <button onclick="setSize(2,this)" style="left: 365px; position: relative;">2</button>
+     <canvas id="can" width="400" height="400" style="z-index: 20;"></canvas>
+
+      <input type="button" value="clear" id="clr" size="23" onclick="erase()" style="box-shadow: 0px 0px 3px black;background-color: lightgrey;padding:7px;border:0px; position:relative;left:371px">
+      <a type="button" value="save" id="link" size="23" onclick="save()" style="box-shadow: 0px 0px 3px black;background-color: lightgrey;padding:7px;border:0px; position:relative;left:371px;color:black">Save</a>
+
+      	<select id="fontPacks" onchange="fontChange()" style="visibility: hidden; left: 65px;position: absolute;">
+			<option value="sans-serif">sans-serif</option>
+			<option value="serif">serif</option>
+			<option value="monospace">monospace</option>
+			<option value="cursive">cursive</option>
+			<option value="fantasy">fantasy</option>
+		</select>
+
+		<select id="fontStyle" onchange="fontStyles()" style="visibility: hidden;left: 165px;position: absolute;">
+			<option value="">None</option>
+			<option value="bold">Bold</option>
+			<option value="italic">Italic</option>
+			<option value="oblique">Oblique</option>
+			<option value="bold italic">Bold Italic</option>
+			<option value="bold oblique">Bold Oblique</option>
+		</select>
+
     </div>
   </body>
 </html>
