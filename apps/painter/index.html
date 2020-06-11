@@ -2,15 +2,16 @@
 <title>Painter</title>
 <!--
 	To Do:
-		- Change size to slider & input field, Turn fill into a toggle
 		- Combine all shapes into "Shape" tool
+		- Change size to slider & input field, Turn fill into a toggle
 		- Add text shadow effect
 		> Hold Shift to lock proportions
-		> Change Fill to flood fill so it only fills same color
+		> Make a version with a fully responsive edge-to-edge design 
 		> Add Curved Line Tool
 	Releases:
 		1.1: Minor UI improvements, Added Drawing Rectanges/Circles/Triangles/Lines, Added Drawing Text, Added Custom Colors, Custom Font, Custom Font Style & Color
 		1.2: Image Upload, Text Adjust (left,center,right), Added Undo Button and Redo Button, Added 2 Brush Styles (Random color & Scatter with custom scatter amount)
+		1.3: Added Flood Fill option (only fills similar pixels), touch controls added (now works on mobile)
 -->
   <style type="text/css">
     *{
@@ -84,7 +85,7 @@
   var currX = 0;
   var prevY = 0;
   var currY = 0;
-  var fillStyle = "black";
+  var fillStyle = "#000000";
   var globalCompositeOperation = "source-over";
   var lineWidth = 2;
 
@@ -101,7 +102,23 @@
     canvas.addEventListener("mouseup", handleMouseEvent);
     canvas.addEventListener("mouseout", handleMouseEvent);
   	document.getElementById("myCheck1").checked = true;
+  	document.getElementById("myCheck2c").checked = true;
+  	canvas.addEventListener("touchstart", handleMouseEvent);
+    canvas.addEventListener("touchend", handleMouseEvent);
+    canvas.addEventListener("touchmove", handleMouseEvent);
   }
+
+	var hexDigits = new Array
+	        ("0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f"); 
+	//Function to convert rgb color to hex format
+	function rgb2hex(rgb) {
+	 rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+	 return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
+	}
+	function hex(x) {
+	  return isNaN(x) ? "00" : hexDigits[(x - x % 16) / 16] + hexDigits[x % 16];
+	 }
+
 var oldbtn2;
 var oldON2=false;
   function getColor(btn) { 
@@ -109,16 +126,15 @@ var oldON2=false;
     //lineWidth = 2;
     switch (btn.getAttribute('data-color')) {
       case "black":
-      fillStyle = "black";
+      fillStyle = "#000000";
       pickColor(btn);
       document.getElementById(btn.id).style.boxShadow="inset 2px 2px 0px grey";
       break;
       case "pink":
-      fillStyle = btn.style.backgroundColor;
+      fillStyle = rgb2hex(btn.style.backgroundColor);
       pickColor(btn);
       break;
       default:
-      console.log(btn.value);
       fillStyle = btn.value;
       pickColor(btn);
       break;
@@ -133,6 +149,7 @@ var oldON2=false;
    	document.getElementById("fontAlign1").style.visibility="hidden";
    	document.getElementById("uploadr").style.visibility="hidden";
    	document.getElementById("brushTyper").style.visibility="hidden";
+   	document.getElementById("colrType").style.visibility="hidden";
 	   	document.getElementById("21").style.boxShadow="0px 0px 0px black";
    		document.getElementById("20").style.boxShadow="0px 0px 0px black";
    		document.getElementById("19").style.boxShadow="0px 0px 0px black";
@@ -146,6 +163,7 @@ var oldON2=false;
       		type="Fill"
 	      	fillorNot=1;
 	      	document.getElementById("14").style.boxShadow="inset 2px 2px 0px black";
+	      	document.getElementById("colrType").style.visibility="visible";
 	      	break;
       	case "Draw":
       		type="Draw";
@@ -203,6 +221,22 @@ var oldON2=false;
       oldbtn2=color;
   }
 
+
+function hexToRgbA(hex){
+    var c;
+    if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
+        c= hex.substring(1).split('');
+        c=(c[4]+c[5]+c[2]+c[3]+c[0]+c[1]);
+        if(c.length== 3){
+            c= [c[0], c[0], c[1], c[1], c[2], c[2]];
+        }
+        c= '0xFF'+c;
+        return c;
+    }
+    throw new Error('Bad Hex');
+}
+
+
     var int1;
   	function draw(dot) {
   		int1=Math.floor(Math.random() * scatterCount - (scatterCount/2));
@@ -210,9 +244,62 @@ var oldON2=false;
   		var ctx = canvas.getContext("2d");
     		ctx.beginPath();
     		ctx.globalCompositeOperation = globalCompositeOperation;
-    	if (fillorNot==1) {
-      		ctx.fillStyle = fillStyle; //getRandomColor();
-      		ctx.fillRect(0, 0, canvas.width, canvas.height);
+    	if (fillorNot==1) { //fill
+    		if (colrType=="All") {
+      			ctx.fillStyle = fillStyle; //getRandomColor();
+      			ctx.fillRect(0, 0, canvas.width, canvas.height);
+    		}else if (colrType=="Same"){
+				//________________________________________________________		
+
+					floodFill(ctx, currX, currY, hexToRgbA(fillStyle));
+
+					function getPixel(pixelData, x, y) {
+					  if (x < 0 || y < 0 || x >= pixelData.width || y >= pixelData.height) {
+					    return -1;  // impossible color
+					  } else { 
+					    return pixelData.data[y * pixelData.width + x];
+					  }
+					}
+
+					function floodFill(ctx, x, y, fillColor) {
+					  // read the pixels in the canvas
+					  const imageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
+					  
+					  // make a Uint32Array view on the pixels so we can manipulate pixels
+					  // one 32bit value at a time instead of as 4 bytes per pixel
+					  const pixelData = {
+					    width: imageData.width,
+					    height: imageData.height,
+					    data: new Uint32Array(imageData.data.buffer),
+					  };
+					  
+					  // get the color we're filling
+					  const targetColor = getPixel(pixelData, x, y);
+					  
+					  // check we are actually filling a different color
+					  if (targetColor !== fillColor) {
+					  
+					    const pixelsToCheck = [x, y];
+					    while (pixelsToCheck.length > 0) {
+					      const y = pixelsToCheck.pop();
+					      const x = pixelsToCheck.pop();
+					      
+					      const currentColor = getPixel(pixelData, x, y);
+					      if (currentColor === targetColor) {
+					        pixelData.data[y * pixelData.width + x] = fillColor;
+					        pixelsToCheck.push(x + 1, y);
+					        pixelsToCheck.push(x - 1, y);
+					        pixelsToCheck.push(x, y + 1);
+					        pixelsToCheck.push(x, y - 1);
+					      }
+					    }
+					    
+					    // put the data back
+					    ctx.putImageData(imageData, 0, 0);
+					  }
+					}
+				//________________________________________________________
+    		}
     	}else if(dot){
       		ctx.fillStyle = fillStyle;
       		ctx.fillRect(currX, currY, 2, 2);
@@ -495,6 +582,71 @@ var oldON2=false;
     		drawLine(e.offsetX,e.offsetY);
     	}
     }
+
+
+    //------------------------------------------------------------
+var rect = canvas.getBoundingClientRect();
+var xt = e.touches[0].clientX - rect.left;
+var yt = e.touches[0].clientY - rect.top;
+
+if (e.type === 'touchstart') {
+    		//undoSave();
+    		canvas.getContext('2d');
+    		dataURL = canvas.toDataURL();
+    	if (type=="Draw" || type=="Fill") {
+	     	mouseClicked = true;
+	    	prevX = currX;
+	    	prevY = currY;
+	    	currX = xt;
+	      	currY = yt;
+	      	draw(true);
+    	}else if (type=="Rect" || type=="Tria" || type=="Circ" || type=="Line") {
+    		mouseClicked = true;
+    		downX=xt;
+    		downY=yt;
+    	}else if (type=="Text") {
+    		var textEnter = prompt("Please enter your Text:", "Text Here");
+			if (textEnter != null) {
+				drawText(xt,yt,textEnter);
+			}
+    	}
+    }
+
+    if (e.type === 'touchend') {
+    	mouseClicked = false;
+    	if (type=="Rect") {
+    		//console.log(e.offsetX+"|"+e.offsetY);
+    		drawRect(xt,yt,"up");
+    	}else if (type=="Tria") {
+    		drawTria(xt,yt);
+    	}else if (type=="Circ") {
+    		drawCirc(xt,yt);
+    	}else if (type=="Line") {
+    		drawLine(xt,yt);
+    	}
+    	undoSave();
+    }
+
+    if (e.type === 'touchmove') {
+    	if (type=="Draw") {
+		     if (mouseClicked) {
+		    	prevX = currX;
+		        prevY = currY;
+		        currX = xt;
+		        currY = yt;
+		        draw();
+		     }
+    	}else if (type=="Rect" && mouseClicked==true) {
+    			drawRect(xt,yt,"move");
+    	}else if (type=="Tria" && mouseClicked==true) {
+    		drawTria(xt,yt);
+    	}else if (type=="Circ" && mouseClicked==true) {
+    		drawCirc(xt,yt);
+    	}else if (type=="Line" && mouseClicked==true) {
+    		drawLine(xt,yt);
+    	}
+    }
+
   }
 
   var oldbtn;
@@ -550,7 +702,16 @@ var oldON2=false;
   	function handleImage2(e){
   		document.getElementById("imageLoader").value=null;
   	}
-
+  	var colrType="Same";
+  	function colrCheck(type){
+  		if (type=="All") {
+  			colrType="All";
+  			document.getElementById("myCheck2c").checked = false;
+  		}else if (type=="Same"){
+  			colrType="Same";
+  			document.getElementById("myCheck1c").checked = false;
+  		}
+  	}
   	var scatterON=false;
   	var randColorOn=false;
   	var scatterCount=20;
@@ -607,26 +768,26 @@ var oldON2=false;
     <div class="grouped"><br>
       
 
-    <div style="left: 65px;top:0px;height:80px;position: relative;background-color: #675877;padding:5px;width: 220px;">Choose Color<p style="margin: 5px;position: relative;">
-        <div id="1" class="colors" style="position:relative;width:25px;height:25px;background:black;" data-color="black" onclick="getColor(this)"></div>
-        <div id="2" class="colors" style="position:relative;width:25px;height:25px;background:red;" data-color="pink" onclick="getColor(this)"></div>
-        <div id="3" class="colors" style="position:relative;width:25px;height:25px;background:yellow;" data-color="pink" onclick="getColor(this)"></div>
-        <div id="4" class="colors" style="position:relative;width:25px;height:25px;background:green;" data-color="pink" onclick="getColor(this)"></div>
-        <div id="5" class="colors" style="position:relative;width:25px;height:25px;background:blue;" data-color="pink" onclick="getColor(this)"></div>
-        <div id="6" class="colors" style="position:relative;width:25px;height:25px;background:purple;" data-color="pink" onclick="getColor(this)"></div>
+    <div style="left: 65px;top:0px;height:80px;position: relative;background-color: #675877;padding:5px;width: 225px;">Choose Color<p style="margin: 5px;position: relative;">
+        <div id="1" class="colors" style="position:relative;width:25px;height:25px;background:#000000;" data-color="black" onclick="getColor(this)"></div>
+        <div id="2" class="colors" style="position:relative;width:25px;height:25px;background:#ff0000;" data-color="pink" onclick="getColor(this)"></div>
+        <div id="3" class="colors" style="position:relative;width:25px;height:25px;background:#ffff00;" data-color="pink" onclick="getColor(this)"></div>
+        <div id="4" class="colors" style="position:relative;width:25px;height:25px;background:#008000;" data-color="pink" onclick="getColor(this)"></div>
+        <div id="5" class="colors" style="position:relative;width:25px;height:25px;background:#0000ff;" data-color="pink" onclick="getColor(this)"></div>
+        <div id="6" class="colors" style="position:relative;width:25px;height:25px;background:#800080;" data-color="pink" onclick="getColor(this)"></div>
 
-        <div id="7" class="colors" style="position:relative;width:25px;height:25px;background:grey;" data-color="pink" onclick="getColor(this)"></div>
-        <div id="13" class="colors" style="position:relative;width:25px;height:25px;background:white;" data-color="pink" onclick="getColor(this)"></div>     
-        <div id="8" class="colors" style="position:relative;width:25px;height:25px;background:orange;" data-color="pink" onclick="getColor(this)"></div>
-        <div id="9" class="colors" style="position:relative;width:25px;height:25px;background:lightyellow;" data-color="pink" onclick="getColor(this)"></div>
-        <div id="10" class="colors" style="position:relative;width:25px;height:25px;background:lightgreen;" data-color="pink" onclick="getColor(this)"></div>
-        <div id="11" class="colors" style="position:relative;width:25px;height:25px;background:lightblue;" data-color="pink" onclick="getColor(this)"></div>
-        <div id="12" class="colors" style="position:relative;width:25px;height:25px;background:pink;" data-color="pink" onclick="getColor(this)"></div> 
+        <div id="7" class="colors" style="position:relative;width:25px;height:25px;background:#808080;" data-color="pink" onclick="getColor(this)"></div>
+        <div id="13" class="colors" style="position:relative;width:25px;height:25px;background:#ffffff;" data-color="pink" onclick="getColor(this)"></div>     
+        <div id="8" class="colors" style="position:relative;width:25px;height:25px;background:#ffa500;" data-color="pink" onclick="getColor(this)"></div>
+        <div id="9" class="colors" style="position:relative;width:25px;height:25px;background:#ffffe0;" data-color="pink" onclick="getColor(this)"></div>
+        <div id="10" class="colors" style="position:relative;width:25px;height:25px;background:#90ee90;" data-color="pink" onclick="getColor(this)"></div>
+        <div id="11" class="colors" style="position:relative;width:25px;height:25px;background:#add8e6;" data-color="pink" onclick="getColor(this)"></div>
+        <div id="12" class="colors" style="position:relative;width:25px;height:25px;background:#ffc0cb;" data-color="pink" onclick="getColor(this)"></div> 
 
     	<input class="bgPickSmall" onchange="getColor(this)" data-color="green" style="position:relative;border:0px;padding:0px;-webkit-appearance: none;text-align: center;height:25px;width: 25px;" type="color" id="124">
     	<div style="position:absolute;right: 0px;bottom: 0px;">Cust.</div>
 
-        <div style="position: absolute; top: 0px; left: 235px;width: 145px; height: 90px;"> 
+        <div style="position: absolute; top: 0px; left: 245px;width: 155px; height: 90px;"> 
 	        <div class="btns" style="position:relative;padding-top:5px;width:50px;height:25px;">Fill</div>
 	        <div class="btns" style="position:relative;padding-top:5px;width:50px;height:25px;">Draw</div>
 	        <div class="btns" style="position:relative;padding-top:5px;width:50px;height:25px;">Text</div>
@@ -674,7 +835,7 @@ var oldON2=false;
 			<option value="fantasy">fantasy</option>
 		</select>
 
-		<select id="fontStyle" onchange="fontStyles()" style="visibility: hidden;left: 165px;position: absolute;">
+		<select id="fontStyle" onchange="fontStyles()" style="visibility: hidden;left: 170px;position: absolute;">
 			<option value="">None</option>
 			<option value="bold">Bold</option>
 			<option value="italic">Italic</option>
@@ -683,7 +844,7 @@ var oldON2=false;
 			<option value="bold oblique">Bold Oblique</option>
 		</select>
 
-		<select id="fontAlign1" onchange="fontAlign()" style="visibility: hidden;left: 280px;position: absolute;">
+		<select id="fontAlign1" onchange="fontAlign()" style="visibility: hidden;left: 290px;position: absolute;">
 			<option value="left">Left</option>
 			<option value="center">Center</option>
 			<option value="right">Right</option>
@@ -712,6 +873,16 @@ var oldON2=false;
 
 			<label style="width: 200px;left: 120px;position: relative;bottom: 18px">Scatter Amount:</label>
 			<input type="number" id="scatterValue" value="20" oninput="brushCheck2();" style="width: 60px;left: 120px;position: relative;bottom: 18px"/>
+		</div>
+
+
+		<div id="colrType" style="left: 65px;width: 200px; position: absolute;bottom: 0px;height: 50px;visibility: hidden;">
+			<label style="position: relative;left: 	7px;">All:</label>
+			<input type="checkbox" id="myCheck1c" onclick="colrCheck('All')" style="position: relative;bottom: -2px;"> 
+			<br>
+			<label style="position: relative;">Same:</label>
+			<input type="checkbox" id="myCheck2c" onclick="colrCheck('Same')" style="position: relative;left: -7px;bottom: -2px;"> 
+			<br>
 		</div>
     </div>
   </body>
