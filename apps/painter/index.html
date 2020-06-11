@@ -3,14 +3,14 @@
 <!--
 	To Do:
 		- Change size to slider & input field, Turn fill into a toggle
-		- Text adjust - left,center,right
-		- Add undo button
-		- Image Upload
-		- Hold Shift to lock proportions
-		- Improve UI / increase canvas size - add room for more buttons
-		- Change Fill to flood fill so it only fills same color
+		- Combine all shapes into "Shape" tool
+		- Add text shadow effect
+		> Hold Shift to lock proportions
+		> Change Fill to flood fill so it only fills same color
+		> Add Curved Line Tool
 	Releases:
 		1.1: Minor UI improvements, Added Drawing Rectanges/Circles/Triangles/Lines, Added Drawing Text, Added Custom Colors, Custom Font, Custom Font Style & Color
+		1.2: Image Upload, Text Adjust (left,center,right), Added Undo Button and Redo Button, Added 2 Brush Styles (Random color & Scatter with custom scatter amount)
 -->
   <style type="text/css">
     *{
@@ -100,6 +100,7 @@
     canvas.addEventListener("mousedown", handleMouseEvent);
     canvas.addEventListener("mouseup", handleMouseEvent);
     canvas.addEventListener("mouseout", handleMouseEvent);
+  	document.getElementById("myCheck1").checked = true;
   }
 var oldbtn2;
 var oldON2=false;
@@ -129,6 +130,10 @@ var oldON2=false;
     //lineWidth = 2;
    	document.getElementById("fontPacks").style.visibility="hidden";
    	document.getElementById("fontStyle").style.visibility="hidden";
+   	document.getElementById("fontAlign1").style.visibility="hidden";
+   	document.getElementById("uploadr").style.visibility="hidden";
+   	document.getElementById("brushTyper").style.visibility="hidden";
+	   	document.getElementById("21").style.boxShadow="0px 0px 0px black";
    		document.getElementById("20").style.boxShadow="0px 0px 0px black";
    		document.getElementById("19").style.boxShadow="0px 0px 0px black";
 	    document.getElementById("18").style.boxShadow="0px 0px 0px black";
@@ -146,6 +151,7 @@ var oldON2=false;
       		type="Draw";
 	      	fillorNot=0;
 	      	document.getElementById("15").style.boxShadow="inset 2px 2px 0px black";
+	      	document.getElementById("brushTyper").style.visibility="visible";
       		break;
       	case "Rect":
       		type="Rect";
@@ -155,6 +161,7 @@ var oldON2=false;
 	    case "Text":
 	    	document.getElementById("fontPacks").style.visibility="visible";
 	    	document.getElementById("fontStyle").style.visibility="visible";
+	    	document.getElementById("fontAlign1").style.visibility="visible";
       		type="Text";
 	      	fillorNot=0;
 	      	document.getElementById("17").style.boxShadow="inset 2px 2px 0px black";
@@ -174,6 +181,12 @@ var oldON2=false;
 	      	fillorNot=0;
 	      	document.getElementById("20").style.boxShadow="inset 2px 2px 0px black";
 	      	break;
+	    case "Upld":
+      		type="Upld";
+	      	fillorNot=0;
+	      	document.getElementById("21").style.boxShadow="inset 2px 2px 0px black";
+	      	document.getElementById("uploadr").style.visibility="visible";
+	      	break;
     }
   }
 
@@ -190,22 +203,33 @@ var oldON2=false;
       oldbtn2=color;
   }
 
-    
+    var int1;
   	function draw(dot) {
+  		int1=Math.floor(Math.random() * scatterCount - (scatterCount/2));
+
   		var ctx = canvas.getContext("2d");
     		ctx.beginPath();
     		ctx.globalCompositeOperation = globalCompositeOperation;
     	if (fillorNot==1) {
-      		ctx.fillStyle = fillStyle;
+      		ctx.fillStyle = fillStyle; //getRandomColor();
       		ctx.fillRect(0, 0, canvas.width, canvas.height);
     	}else if(dot){
       		ctx.fillStyle = fillStyle;
       		ctx.fillRect(currX, currY, 2, 2);
     	} else {
       		ctx.beginPath();
-      		ctx.moveTo(prevX, prevY);
-      		ctx.lineTo(currX, currY);
-      		ctx.strokeStyle = fillStyle;
+      		if (scatterON==false) {
+      			ctx.moveTo(prevX, prevY);
+      			ctx.lineTo(currX, currY);
+      		}else if (scatterON==true){
+      			ctx.moveTo(prevX+int1, prevY+int1);
+      			ctx.lineTo(currX+int1, currY+int1);
+      		}
+      		if (randColorOn==false) {
+      			ctx.strokeStyle = fillStyle;
+    		}else if (randColorOn==true) {
+    			ctx.strokeStyle = getRandomColor();
+    		}
       		if (filled==false) {
       		ctx.lineWidth = lineWidth;
       		}else{
@@ -218,6 +242,18 @@ var oldON2=false;
 	function drawRect(xStart,yStart,updown){
 	var ctx = canvas.getContext("2d");
 		if (updown=="up") {
+
+			var img = new Image;
+			img.src = dataURL;
+			ctx.clearRect(0,0,canvas.width,canvas.height);
+			if (img.complete){
+				ctx.drawImage(img, 0, 0);
+			}else {
+		    	img.onload = function () {
+				ctx.drawImage(img, 0, 0);
+		        } 
+		    }
+
 			ctx.beginPath();
 				if (filled==false) {
 					ctx.lineWidth = lineWidth;
@@ -233,7 +269,13 @@ var oldON2=false;
 			var img = new Image;
 			img.src = dataURL;
 			ctx.clearRect(0,0,canvas.width,canvas.height);
-			ctx.drawImage(img, 0, 0);
+			if (img.complete){
+				ctx.drawImage(img, 0, 0);
+			}else {
+		    	img.onload = function () {
+		        	ctx.drawImage(img, 0, 0);
+		        } 
+		    }
 			ctx.beginPath();	
 				if (filled==false) {
 					ctx.lineWidth = lineWidth;
@@ -251,7 +293,13 @@ var oldON2=false;
 		img.src = dataURL;
 		var ctx = canvas.getContext("2d");
 		ctx.clearRect(0,0,canvas.width,canvas.height);
-		ctx.drawImage(img, 0, 0);
+		if (img.complete){
+			ctx.drawImage(img, 0, 0);
+		}else {
+	    	img.onload = function () {
+			ctx.drawImage(img, 0, 0);
+	        } 
+	    }
 		ctx.beginPath();		
 		ctx.moveTo(downX, downY);
 		ctx.lineTo(xStart, yStart);
@@ -273,7 +321,13 @@ var oldON2=false;
 		img.src = dataURL;
 		var ctx = canvas.getContext("2d");
 		ctx.clearRect(0,0,canvas.width,canvas.height);
-		ctx.drawImage(img, 0, 0);
+		if (img.complete){
+			ctx.drawImage(img, 0, 0);
+		}else {
+	    	img.onload = function () {
+			ctx.drawImage(img, 0, 0);
+	        } 
+	    }
 		ctx.beginPath();
 		if (downX<xStart) {
 			ctx.arc(downX, downY, xStart-downX,0, 2 * Math.PI);
@@ -315,34 +369,77 @@ var oldON2=false;
 		if (filled==false) {
 			ctx.font =fontType+" "+lineWidth+"px "+font;
 			ctx.fillStyle = fillStyle;
+			ctx.textAlign = fontAlignType;
 			ctx.fillText(textDraw, xStart, yStart);
 		}else {
 			ctx.font =fontType+" "+"50px "+font;
 			ctx.fillStyle = fillStyle;
+			ctx.textAlign = fontAlignType;
 			ctx.fillText(textDraw, xStart, yStart);
 		}
+		undoSave();
 	}
-  function erase() {
-    if (confirm("Want to clear")) {
-    	var ctx = canvas.getContext("2d");
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      document.getElementById("canvasimg").style.display = "none";
-    }
-  }
+  	function erase() {
+    	if (confirm("Are you sure you want to clear?")) {
+    		var ctx = canvas.getContext("2d");
+      	ctx.clearRect(0, 0, canvas.width, canvas.height);
+      	document.getElementById("canvasimg").style.display = "none";
+    	}
+  	}
+  	function save() {
+	 	var link = document.getElementById('link');
+	  	link.setAttribute('download', 'painter.png');
+	  	link.setAttribute('href', canvas.toDataURL("image/png").replace("image/png", "image/octet-stream"));
+  	}
+  	var dataURLundo=[];
+  	var iUndo=-1;
+  	function undoSave(){
+  		iUndo=iUndo+1;
+  		canvas.getContext('2d');
+    	dataURLundo[iUndo] = canvas.toDataURL();
+  	}
+  	function undo(){
+  		if ((iUndo)>0) {
+			iUndo=iUndo-1;
+	  		var ctx = canvas.getContext("2d");
+	  		var img = new Image;
+			img.src = dataURLundo[iUndo];
+			ctx.clearRect(0,0,canvas.width,canvas.height);
+			if (img.complete){
+				ctx.drawImage(img, 0, 0);
+			}else {
+		    	img.onload = function () {
+		        	ctx.drawImage(img, 0, 0);
+		        } 
+		    }
+		}
+  	}
+  	function redo(){
+  		if ((iUndo)<(dataURLundo.length-1)) {
+			iUndo=iUndo+1;
+	  		var ctx = canvas.getContext("2d");
+	  		var img = new Image;
+			img.src = dataURLundo[iUndo];
+			ctx.clearRect(0,0,canvas.width,canvas.height);
+			if (img.complete){
+				ctx.drawImage(img, 0, 0);
+			}else {
+		    	img.onload = function () {
+		        	ctx.drawImage(img, 0, 0);
+		        } 
+		    }
+  		}
+  	}
 
-  function save() {
-	 var link = document.getElementById('link');
-	  link.setAttribute('download', 'painter.png');
-	  link.setAttribute('href', canvas.toDataURL("image/png").replace("image/png", "image/octet-stream"));
-  }
   	rect = {},
 	drag = false;
-var downX;
-var downY;
-var destCtx;
-var dataURL;
+	var downX;
+	var downY;
+	var destCtx;
+	var dataURL;
   function handleMouseEvent(e) {
     if (e.type === 'mousedown') {
+    		//undoSave();
     		canvas.getContext('2d');
     		dataURL = canvas.toDataURL();
     	if (type=="Draw" || type=="Fill") {
@@ -376,6 +473,7 @@ var dataURL;
     	}else if (type=="Line") {
     		drawLine(e.offsetX,e.offsetY);
     	}
+    	undoSave();
     }
 
     if (e.type === 'mousemove') {
@@ -433,6 +531,76 @@ var dataURL;
   	function fontStyles(){
 		fontType=document.getElementById("fontStyle").value;
   	}
+  	var fontAlignType="left";
+  	function fontAlign(){
+  		fontAlignType=document.getElementById("fontAlign1").value;
+  	}
+
+  	var checkType="Fill";
+  	function handleCheck(type){
+  		console.log(type);
+  		if (type=="Fill") {
+  			checkType="Fill";
+  			document.getElementById("myCheck2").checked = false;
+  		}else if (type=="Fit"){
+  			checkType="Fit";
+  			document.getElementById("myCheck1").checked = false;
+  		}
+  	}
+  	function handleImage2(e){
+  		document.getElementById("imageLoader").value=null;
+  	}
+
+  	var scatterON=false;
+  	var randColorOn=false;
+  	var scatterCount=20;
+  	function brushCheck(type){
+  		console.log(type+randColorOn);
+  		if (type=="Scatter") {
+  			if (scatterON==false) {
+	  			scatterON=true;
+  			}else{
+  				scatterON=false;
+  			}
+  		}else if (type=="RandColor"){
+  			if (randColorOn==false) {
+	  			randColorOn=true;
+  			}else{
+  				randColorOn=false;
+  			}
+  		}
+  	}
+  	function brushCheck2(){
+  		console.log(document.getElementById("scatterValue").value);
+  		scatterCount=document.getElementById("scatterValue").value;
+  	}
+
+	function handleImage(e){
+	var ctx = canvas.getContext('2d');	
+	    var reader = new FileReader();
+	    reader.onload = function(event){
+	        var img = new Image();
+	        img.onload = function(){
+	        	if (checkType=="Fill") {
+	            	ctx.drawImage(img,0,0);
+	        	}else if (checkType=="Fit") {
+		            ctx.drawImage(img, 0, 0, img.width, img.height,0, 0, canvas.width, canvas.height);
+	        	}
+	        }
+	        img.src = event.target.result;
+	    }
+	    reader.readAsDataURL(e.target.files[0]);
+	    undoSave();
+	}
+	function getRandomColor() {
+	  var letters = '0123456789ABCDEF';
+	  var color = '#';
+	  for (var i = 0; i < 6; i++) {
+	    color += letters[Math.floor(Math.random() * 16)];
+	  }
+	  return color;
+	}
+
   </script>
 
   <body onload="init()">Painter
@@ -471,10 +639,11 @@ var dataURL;
 	        <div class="btns" style="position:relative;padding-top:5px;width:50px;height:25px;">Rect</div>
 	        <div class="btns" style="position:relative;padding-top:5px;width:50px;height:25px;">Tria</div>
 	        <div class="btns" style="position:relative;padding-top:5px;width:50px;height:25px;">Circ</div>
-	        <div class="btns" style="position:relative;padding-top:5px;width:50px;height:25px;">.</div>
+	        <div class="btns" style="position:relative;padding-top:5px;width:50px;height:25px;">Upld</div>
 	        <div class="btns" id="16" style="position:relative;width:25px;height:21px;background:lightgrey;border:2px solid darkgrey;display:inline-block;" data-color="Rect" onclick="getType(this)"></div>
 	        <div class="btns" id="18" style="position:relative;width:25px;height:21px;background:lightgrey;border:2px solid darkgrey;display:inline-block;" data-color="Tria" onclick="getType(this)"></div>
 	        <div class="btns" id="19" style="position:relative;width:25px;height:21px;background:lightgrey;border:2px solid darkgrey;display:inline-block;" data-color="Circ" onclick="getType(this)"></div>
+	        <div class="btns" id="21" style="position:relative;width:25px;height:21px;background:lightgrey;border:2px solid darkgrey;display:inline-block;" data-color="Upld" onclick="getType(this)"></div>
         </div>
     </div>
 
@@ -490,6 +659,9 @@ var dataURL;
 	    </div>
 
      <canvas id="can" width="400" height="400" style="z-index: 20;"></canvas>
+
+		<input type="button" value="Undo" id="clrA" size="23" onclick="undo()" style="box-shadow: 0px 0px 3px black;background-color: lightgrey;padding:7px;border:0px; position:absolute;left:10px;bottom: 90px;">
+		<input type="button" value="Redo" id="clrB" size="23" onclick="redo()" style="box-shadow: 0px 0px 3px black;background-color: lightgrey;padding:7px;border:0px; position:absolute;left:10px;bottom: 55px;">
 
       <input type="button" value="clear" id="clr" size="23" onclick="erase()" style="box-shadow: 0px 0px 3px black;background-color: lightgrey;padding:7px;border:0px; position:relative;left:371px">
       <a type="button" value="save" id="link" size="23" onclick="save()" style="box-shadow: 0px 0px 3px black;background-color: lightgrey;padding:7px;border:0px; position:relative;left:371px;color:black">Save</a>
@@ -511,6 +683,36 @@ var dataURL;
 			<option value="bold oblique">Bold Oblique</option>
 		</select>
 
+		<select id="fontAlign1" onchange="fontAlign()" style="visibility: hidden;left: 280px;position: absolute;">
+			<option value="left">Left</option>
+			<option value="center">Center</option>
+			<option value="right">Right</option>
+		</select>
+
+		<div id="uploadr" style="left: 65px;width: 200px; position: absolute;bottom: 0px;height: 50px;visibility: hidden;">
+			<label style="position: relative;left: 	7px;">Fit:</label>
+			<input type="checkbox" id="myCheck1" onclick="handleCheck('Fill')" style="position: relative;bottom: -2px;"> 
+			<br>
+			<label style="position: relative;">Fill:</label>
+			<input type="checkbox" id="myCheck2" onclick="handleCheck('Fit')" style="position: relative;left: -7px;bottom: -2px;"> 
+			<br>
+
+			<label style="width: 200px;left: 80px;position: relative;bottom: 37px">File Import:</label>
+			<input type="file" id="imageLoader" name="imageLoader" onclick="handleImage2(event);" oninput="handleImage(event);" style="width: 200px;left: 80px;position: relative;bottom: 37px"/>
+		</div>
+
+		<div id="brushTyper" style="left: 65px;width: 200px; position: absolute;bottom: 0px;height: 50px;visibility: visible;">
+
+			<label style="position: relative;left: 	0px;">Random Color:</label>
+			<input type="checkbox" id="myCheck1a" onclick="brushCheck('RandColor')" style="position: relative;bottom: -2px;left: -6px;"> 
+			<br>
+			<label style="position: relative;left: 35px;">Scatter:</label>
+			<input type="checkbox" id="myCheck2a" onclick="brushCheck('Scatter')" style="position: relative;left: 30px;bottom: -2px;"> 
+			<br>
+
+			<label style="width: 200px;left: 120px;position: relative;bottom: 18px">Scatter Amount:</label>
+			<input type="number" id="scatterValue" value="20" oninput="brushCheck2();" style="width: 60px;left: 120px;position: relative;bottom: 18px"/>
+		</div>
     </div>
   </body>
 </html>
