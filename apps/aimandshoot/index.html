@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html onclick="hitCount()">
+<html onclick="hitCount(event)">
 	<!--
 	To Do:
 		- Style +score in bubble depending on value e.g. >18 = gold.
@@ -10,6 +10,7 @@
 	Releases:
 		- v1.1: Mutiple Targets, Start button color changed, Advanced Scoreboard, High Score Sound
 		- v1.2: Scores show for popped balls for 2 seconds, Miss Sound Effect Added
+		- v1.3: - Style Score in bubble, Show -5 text when missed at mouse location
 
 	-->
 	<head>
@@ -130,6 +131,30 @@
 					x=(timer-(that.getAttribute('data-countr'))+20);
 					that.innerHTML="+"+x;
 					that.style.zIndex=-1;
+					
+						//add conditional styling based on x variable
+						//background-image: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+						that.style.color="white";
+						that.style.fontSize=x+"px";
+						that.style.height="20px";
+						that.style.width="50px";
+						that.style.lineHeight="20px";
+						that.style.marginLeft="25px";
+						that.style.marginTop="40px";
+						if (x>19){
+							that.style.background="mediumslateblue";
+							that.style.color="white";
+							//that.style.textShadow="0px 0px 5px #ff0000";
+						}else if (x>18) {
+							that.style.backgroundColor="#f3be00";
+						}
+						else if (x>16) {
+							that.style.backgroundColor="#b7b7b7";
+						}
+						else if (x>0) {
+							that.style.backgroundColor="#a17419";
+						}
+
 					that.setAttribute('data-countr', timer);
 					that.setAttribute("data-click", "TRUE");
 					//console.log(that.getAttribute('data-countr'));
@@ -155,7 +180,8 @@
 				}
 			}
 			var startcount=0;
-			function hitCount(){
+			var counterB=0;
+			function hitCount(e){
 				if (timer>0) {
 					hitCounter=hitCounter+1;
 					startcount=startcount+1;
@@ -164,15 +190,46 @@
 							if (!audio3.ended){
 								audio3.currentTime = 0;				
 							}
-							audio3.play();	
+							audio3.play();
+							negativeScore();	
 						}
 					}
 					//console.log((hitCounter-targetCount)*5);
 					scoreInt=scoreInt-((hitCounter-targetCount)*5);
 					document.getElementById("score").innerHTML="Score: "+scoreInt;
+					
+					//add -score on hitcount negative
+
 					hitCounter=0;
 					targetCount=0;
+
 				}
+			}
+
+			function negativeScore(){
+				top1 = event.clientY-50;
+				left1 = event.clientX-50;
+				counter=counter+1;
+
+				var targeted = document.createElement("DIV");
+				targeted.setAttribute("class", "target");
+				targeted.setAttribute("id", counter);
+				targeted.style.top=top1+"px";
+				targeted.style.left=left1+"px";
+				targeted.innerHTML="-5";
+				targeted.style.backgroundColor="red";
+				targeted.style.color="white";
+				targeted.style.fontSize="20px";
+				targeted.style.height="20px";
+				targeted.style.width="50px";
+				targeted.style.lineHeight="20px";
+				targeted.style.marginLeft="25px";
+				targeted.style.marginTop="40px";
+				targeted.style.boxShadow="0px 0px black";
+				targeted.style.zIndex=-1;
+				targeted.setAttribute("data-countr", timer);
+				targeted.setAttribute("data-click", "TRUE");
+				document.body.appendChild(targeted);
 			}
 		</script>
 	</head>
