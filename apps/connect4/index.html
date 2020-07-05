@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 
 <!-- To Do:
-	- Turn yellow arrows into an animation moving back and forward
 	- Get blocks to animate falling downwards.
 	- Change Reset sound to pieces falling into tray
 	- Clean code by creating elements in a for loop
@@ -9,7 +8,7 @@
 
 	Releases:
 			- 1.1: Wins Detected, Winning Line Shown, Reset Button Added, Piece Placement Location Indicators Added
-			- 
+			- 1.2: Turn yellow arrows into an animation moving back and forward
 
 -->
 
@@ -405,6 +404,26 @@
 				    visibility: hidden;
 			    color: black;
 			    visibility: hidden;
+			}
+			#btn2b{
+				animation-name: movement;
+  				animation-duration: 0.5s;
+  				animation-iteration-count: infinite;
+  				animation-direction: alternate;
+			}
+			#btn2c{
+				animation-name: movementB;
+  				animation-duration: 0.5s;
+  				animation-iteration-count: infinite;
+  				animation-direction: alternate;
+			}
+			@keyframes movement {
+			  from {margin-left: 5px;}
+			  to {margin-left: -5px;}
+			}
+			@keyframes movementB {
+			  from {margin-left: -5px;}
+			  to {margin-left: 5px;}
 			}
 		</style>
 	</head>
