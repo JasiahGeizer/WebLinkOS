@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+	  	<title>Snake</title>
+
+	  	<style type="text/css">
+	  		body{
+	  			background: skyblue;
+	  		}
+	  		.grouped{
+				position: relative;
+				background-color: lightgreen;
+				width: 500px;
+				height: 500px;
+				top: 50px;
+				margin: 0 auto;
+				border-radius: 20px;
+				box-shadow: 0px 2px 13px #00000059;	
+				color: white;		
+
+				/*background-image:
+			      linear-gradient(45deg, #ccc 25%, transparent 25%), 
+			      linear-gradient(135deg, #ccc 25%, transparent 25%),
+			      linear-gradient(45deg, transparent 75%, #ccc 75%),
+			      linear-gradient(135deg, transparent 75%, #ccc 75%);
+			    background-size:50px 50px;
+			    background-position:0 0, 25px 0, 25px -25px, 0px 25px; */
+			}
+
+			.worm{
+				width:24px;
+				height: 24px;
+				background: #9c27b0;
+				box-shadow: 0px 0px 7px #00000059;	
+
+				text-align: center;
+				line-height: 21px;
+				border-radius: 10px;
+				border:1px solid #ffffff4d;
+				
+				font-size: 19px;
+
+				position: absolute;
+				transform: rotate(90deg);
+				transition: 0.2s;
+			}
+			#apple{
+				width:24px;
+				height: 24px;
+				background: #f44336;
+				box-shadow: 0px 0px 7px #00000059;	
+
+				text-align: center;
+				line-height: 21px;
+				border-radius: 24px;
+				border:1px solid black;
+				
+				font-size: 19px;
+
+				position: absolute;
+				z-index: 9;
+			}
+	  	</style>
+	</head>
+	<body onkeypress="moveSelection(event)">
+		<div class="grouped" id="grouped">
+			<div class="worm" id="worm0" style="top:25px;left: 25px;z-index:10"> :) </div>
+			<div id="apple" style="top:250px;left: 250px;"> </div>
+		</div>
+
+
+
+		<script type="text/javascript">
+			worm = document.getElementById("worm0");
+			
+			var lastDirection; //current direction chosen by player
+			var lastPosition; //previous position of head of worm
+
+		    function moveSelection(evt) { //wasd to move  
+                switch (evt.keyCode) {
+                    case 97:
+                    	//leftArrowPressed();
+                    	lastDirection="left";
+                    	break;
+                    case 119:
+                    	//upArrowPressed();
+                    	lastDirection="up";
+                    	break;
+                    case 100:
+                    	//rightArrowPressed();
+                    	lastDirection="right";
+                    	break;
+                    case 115:
+                    	//downArrowPressed();
+						lastDirection="down";
+                    	break;
+                    default:
+                    	break; 
+                    }
+                }
+            var speedInt=25;
+            function upArrowPressed(){
+            	worm.style.top=parseInt(worm.style.top)-speedInt+"px";
+            	lastDirection="up";
+            }
+            function leftArrowPressed() {
+            	worm.style.left=parseInt(worm.style.left)-speedInt+"px";
+            	lastDirection="left";
+            }
+            function rightArrowPressed(){
+            	worm.style.left=parseInt(worm.style.left)+speedInt+"px";
+            	lastDirection="right";
+            }
+            function downArrowPressed(){
+            	worm.style.top=parseInt(worm.style.top)+speedInt+"px";
+            	lastDirection="down";
+            }
+
+            //add timer to move worm in direction of lastDirection variable
+            //move next worm piece to last position until none left
+            var playerMoving = setInterval(playerMove, 200);
+
+            function playerMove() {
+            	apple2Worm();
+            	blobFollow();
+            	//console.log(lastDirection);
+            	switch (lastDirection) {
+                    case "left":
+                    	leftArrowPressed();
+                    	break;
+                    case "up":
+                    	upArrowPressed();
+                    	break;
+                    case "right":
+                    	rightArrowPressed();
+                    	break;
+                    case "down":
+                    	downArrowPressed();
+                    	break;
+                    default:
+                    	break; 
+                    }
+            }
+
+
+
+            //DO: stop worm when it hits the edge
+            function apple2Worm(){
+	            var appletop  = parseInt(document.getElementById("apple").style.top);
+	            var appleleft = parseInt(document.getElementById("apple").style.left);
+	            var wormtop   = parseInt(worm.style.top);
+	            var wormleft  = parseInt(worm.style.left);
+
+            	//detect interactions between worm and blobs
+            	for (var i = a; i > 1; i--) {
+            		var blobtop   = parseInt(document.getElementById("worm"+(i)).style.top);
+	            	var blobleft  = parseInt(document.getElementById("worm"+(i)).style.left);
+	            	if (wormtop == blobtop && wormtop == blobtop) {
+	            		if (wormleft == blobleft && wormleft == blobleft) {
+	            			console.log("blob hit");
+                            clearInterval(playerMoving);
+	            		}
+	            	}
+	            }
+
+	            //detect interaction between worm and apple
+            	if (wormtop == appletop && wormtop == appletop) {
+            		if (wormleft == appleleft && wormleft == appleleft) {
+            			console.log("contact made");
+            			newWormBlob();
+            			newApple();
+            		}
+            	}
+
+            	//detect interaction with worm and walls
+            	if (wormtop <= (-5) || wormtop >= (500) || wormleft <= (-5) || wormleft >= (500)) {
+            			console.log("wall hit");
+            			clearInterval(playerMoving);
+            	}
+            } 
+            function newApple(){
+            	var left = (Math.floor(Math.random() * 475)/100);
+                    left =((Math.round(left * 4) / 4).toFixed(2)*100);
+                var top = (Math.floor(Math.random() * 475)/100);
+                    top =((Math.round(top * 4) / 4).toFixed(2)*100);
+            	document.getElementById("apple").style.top = top+"px";
+            	document.getElementById("apple").style.left = left+"px";
+            }
+            var a=0;
+            function newWormBlob(){
+            	console.log("more worm");
+            	a=a+1;
+
+            	var wormBlob = document.createElement("DIV");
+	            wormBlob.id="worm"+a;
+	            wormBlob.className="worm";
+	            wormBlob.style.left=document.getElementById("apple").style.left;
+	            wormBlob.style.top=document.getElementById("apple").style.top;
+            	document.getElementById("grouped").appendChild(wormBlob); 
+            }
+
+            //get each wormBlob to replace position of previous wormblob in loop
+            function blobFollow(){
+            	//console.log("following");
+            	for (var i = a; i > 0; i--) {
+            		document.getElementById("worm"+(i)).style.left=document.getElementById("worm"+(i-1)).style.left;
+        			document.getElementById("worm"+(i)).style.top=document.getElementById("worm"+(i-1)).style.top;
+            	}
+            }
+            //to do:
+                //on collision blink color
+	            //add scoreboard (+timer?)
+	            //apple position should be averaged out to grid (every 25px?)
+	            //add end screen / restart button
+	            //add sound effects
+	            //fix colors (purple worm?)
+
+		</script>
+	</body>
+</html>
+
+
