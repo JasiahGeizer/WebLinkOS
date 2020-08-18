@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+        <!--
+            To Do:
+                - Prevent movement when stopped
+                - Fix difficulty / improve gravity                
+                - Slowly shrink gap size
+                    - Fade & Randomize colors [when difficulty increases] (grouped & body background, boulders) 
+                    - instead of random, Have walls pick number between 5 and 25, and have the walls go up/down by that amount then restrt and alternate direction
+                - Add Sound Effects -rocket firing & ship crashing explosion
+                - improve Rocket animation
+
+            Versions:
+            0.1: Ship Moves down by itself & moves up by player, block moves towards player at random pos., walls change to random size, rocket animated, overflow hidden, ship explosion animation
+        -->
+		<meta charset="utf-8">
+	  	<title>Mars Cave Explorer</title>
+
+	  	<style type="text/css">
+	  		body{
+	  			background: darkslategrey;
+                overflow: hidden;
+                color: white;
+                font-family: monospace;
+	  		}
+	  		.grouped{
+                overflow: hidden;
+				position: relative;
+				background-color: #212121; /*lightgreen*/
+				width: 500px;
+				height: 500px;
+				top: 50px;
+				margin: 0 auto;
+				border-radius: 20px;
+				box-shadow: 0px 2px 13px #00000059;	
+				color: white;
+			}
+
+			.worm{
+				width:24px;
+				height: 24px;
+				background: #b3b3b3;
+				box-shadow: 0px 0px 7px #0000002e;	
+				text-align: center;
+				line-height: 21px;
+				/*border-radius: 10px;*/
+				border:1px solid #ababab;
+                color: black;
+				font-size: 19px;
+				position: absolute;
+				transition: 0.2s;
+                border-top-right-radius: 100%;
+                border-top-left-radius: 100%;
+                border-bottom-left-radius: 50%;
+                border-bottom-right-radius: 50%;
+                animation: forwards ease-out explosion 0.2s 1;
+                animation-play-state: paused;
+			}
+
+            .boulder{
+                z-index: 14;
+                width: 100px;
+                height: 100px;
+                position: relative;
+                display: inline-block;
+                background: #cb875e;
+                padding: 0px;
+                border: 0px;text-align: center;
+            }
+            #b1{border-radius: 20px 0px 0px 0px;}
+            #b10{border-radius: 0px 20px 0px 0px;}
+            #d10{border-radius: 0px 0px 20px 0px;}
+            #d1{border-radius: 0px 0px 0px 20px;}
+
+            #window{
+                border: 1px solid #6d6d6d;
+                background: #a2a2a2;
+                width: 16px;
+                height: 10px;
+                left: 3px;
+                top: 2px;
+                position: relative;
+                border-radius: 100% 100% 50% 50%;
+            }
+            #rocket{
+                z-index: 1;
+                width: 12px;
+                height: 5px;
+                background:grey;
+                position: absolute;
+                left: 6px;
+                top: 25px;
+                border-radius: 0px 0px 4px 4px;
+            }
+            #fire{
+                z-index: 0;
+                width: 14px;
+                height: 50px;
+                position: absolute;
+                top: 28px;
+                left: 5px;
+                /*border-radius: 0px 0px 4px 4px;*/
+                background: linear-gradient(to bottom, #676767 10%, #f5f5f500 100%);
+                visibility: hidden;
+                animation: fumes 0.1s infinite;
+                border-radius: 100% 100% 100% 100%;
+            }
+            @keyframes fumes {
+                from {background: linear-gradient(to bottom, #676767 10%, #f5f5f500 100%);}
+                to {background: linear-gradient(to bottom, #dedddd 10%, #00000000 100%);}
+            }
+            @keyframes explosion {
+                0% {-webkit-filter: blur(0px);}
+                100% {-webkit-filter: blur(50px);opacity: 0;}                
+            }
+	  	</style>
+	</head>
+	<body onload="docReady()" onkeydown="" onkeyup="">
+        <a>Mars Cave Explorer</a>
+		<div class="grouped" id="grouped">
+			<div class="worm" id="worm0" style="top:175px;left: 113px;z-index:10">
+
+                <div id="window"></div>
+                <div id="rocket"></div>
+                <div id="fire"></div>
+
+            </div>
+
+
+            <div style="display: flex;width: 500px;height: 100px;top: 0px;left: 0px;">
+                <div class="boulder" id="b1" style="height: 100px;"> </div>
+                <div class="boulder" id="b2" style="height: 100px;"> </div>
+                <div class="boulder" id="b3" style="height: 100px;"> </div>
+                <div class="boulder" id="b4"> </div>
+                <div class="boulder" id="b5"> </div>
+                <div class="boulder" id="b6">-</div>
+                <div class="boulder" id="b7"> </div>
+                <div class="boulder" id="b8"> </div>
+                <div class="boulder" id="b9" style="text-align: right;"> Score:<br>Highscore: </div>
+                <div class="boulder" id="b10" style="text-align: left;white-space: pre"> 0 <br> 0 </div>
+            </div>
+            <div style="position:absolute;display: flex;width: 500px;height: 100px;bottom: 0px;left: 0px;">
+                <div class="boulder" id="d1" style="height: 100px;"> </div>
+                <div class="boulder" id="d2" style="height: 100px;"> </div>
+                <div class="boulder" id="d3" style="height: 100px;"> </div>
+                <div class="boulder" id="d4"> </div>
+                <div class="boulder" id="d5"> </div>
+                <div class="boulder" id="d6"> </div>
+                <div class="boulder" id="d7"> </div>
+                <div class="boulder" id="d8"> </div>
+                <div class="boulder" id="d9"> </div>
+                <div class="boulder" id="d10" style="height: 100px;"> </div>
+            </div>
+
+            <div class="boulder" id="m1" style="width: 35px;  top: 100px;left: 457px;"> </div>
+		</div>
+        <a><p style="margin-top: 75px;">Press Enter to Start <br> & Spacebar to Move</a>
+
+		<script type="text/javascript">
+            
+            function docReady(){
+                window.addEventListener('keydown', moveSelection);
+                window.addEventListener('keyup', moveSelection2);
+            }
+
+			worm = document.getElementById("worm0");
+
+            var moverUp;
+            var moverDown;
+            var fired3=false;
+            var fired4=false;
+
+		    function moveSelection(evt) { //wasd to move  
+                //console.log(evt.keyCode);
+                switch (evt.keyCode) {
+                    case 32: //space
+                        document.getElementById("fire").style.visibility="visible";
+                        upArrowPressed();
+                    	break;
+                    case 13: //enter
+                        downArrowPressed();
+                        start();
+                    	break;
+                    default:
+                    	break; 
+                    }
+                }
+            function moveSelection2(evt) { //wasd to move  
+                //console.log(evt.keyCode+" ^");
+                switch (evt.keyCode) {
+                    case 32: //space
+                        document.getElementById("fire").style.visibility="hidden";
+                        clearInterval(moverUp);
+                        fired3=false;
+                        break;
+                    case 13: //enter
+                        clearInterval(moverDown);
+                        fired4=false;
+                        break;
+                    default:
+                        break; 
+                    }
+                }
+
+            var fallSet=10;
+            var speedSet=20;
+            var speedInt=speedSet;
+            var fallVelocity=fallSet;
+            function upArrowPressed() {
+                if (fired3==false) {
+                    fired3=true;
+                    moverUp = setInterval(moverU, 100);
+                }
+            }
+            function downArrowPressed() {
+                if (fired4==false) {
+                    fired4=true;
+                    moverDown = setInterval(moverD, 100);
+                }
+            }
+
+
+            function moverU(){
+                //console.log("up"+speedInt);
+            	worm.style.top=parseInt(worm.style.top)-speedInt+"px";
+                if (speedInt<30) {
+                    speedInt=speedInt+1;
+                }
+                 if (fallVelocity>=0) {
+                    fallVelocity=fallVelocity-3;
+                }
+            }
+            function moverD(){
+            	worm.style.top=parseInt(worm.style.top)+5+"px";
+            }
+
+
+            var playerMoving;
+            var backgroundMoving;
+            function start(){
+                reset_animation();
+                end("2");
+                worm.style.top="175px";
+                m1.style.left="457px";
+                m1.style.top="100px";
+                playerMoving = setInterval(playerMove, 100);
+                backgroundMoving = setInterval(bgd, 250);
+
+                //document.getElementById("worm0").className="booger";
+                //document.getElementById("worm0").className="worm";
+            } 
+
+
+            function playerMove() {
+
+                scoreInt=scoreInt+1;
+                document.getElementById("b10").innerHTML=scoreInt+"\n"+highscoreInt;
+
+                worm.style.top=parseInt(worm.style.top)+fallVelocity+"px";
+                if (fallVelocity<30) {
+                    fallVelocity=fallVelocity+1;
+                }
+                if (speedInt>=0 && fired3==false) {
+                    speedInt=speedInt-3;
+                }
+                collisionChk(); 
+            }
+
+
+            var scoreInt=0;
+            var highscoreInt=0;
+            var randInt=0;
+            var randInt2=100;
+            var shrink=200;
+            var m1= document.getElementById("m1");
+            function bgd(){
+                for (var i = 1; i <= 10; i++) {
+                    if (i<10) {
+                        document.getElementById("d"+i).style.height=parseInt(document.getElementById("d"+(i+1)).style.height)+"px";
+                    }else if (i==10){
+                        randInt = Math.floor(Math.random() * 50)-25;
+                        randInt2 = Math.floor(Math.random() * 200)+100; 
+                        if (parseInt(b5.style.height)<=10) {randInt=-30;}
+                        if (parseInt(d5.style.height)<=10) {randInt=10;}
+                        document.getElementById("d"+i).style.height=parseInt(document.getElementById("d"+i).style.height)+randInt+"px";
+                    }
+                    shrink=shrink+0.1;
+                    document.getElementById("d"+i).style.bottom=parseInt(document.getElementById("d"+i).style.height)-100+"px";
+                    document.getElementById("b"+i).style.height=200-parseInt(document.getElementById("d"+i).style.height)+"px";
+                }
+                //block move
+                m1.style.left=parseInt(m1.style.left)-50+"px";
+                if (parseInt(m1.style.left)<-100) {
+                    m1.style.visibility="hidden";
+                    m1.style.left="557px";
+                    m1.style.top=randInt2-parseInt(document.getElementById("d10").style.height)+"px";
+                }
+                if (parseInt(m1.style.left)<-50) {
+                    m1.style.visibility="hidden";
+                }
+                if (parseInt(m1.style.left)<499 && parseInt(m1.style.left)>400) {
+                    m1.style.visibility="visible";
+                }
+            }
+
+
+            var roof=document.getElementById("b3");
+            var floor=document.getElementById("d3");
+            function collisionChk(){
+                //collision with roof
+                if (parseInt(worm.style.top)<parseInt(roof.style.height)) {
+                    console.log("Roof: "+roof.style.height+"\nPlayer"+worm.style.top);
+                    end("1");
+                } 
+                //collision with floor
+                if (parseInt(worm.style.top)>(500-parseInt(floor.style.height))-24) {
+                    console.log("Floor: "+(500-parseInt(floor.style.height))+"\nPlayer: "+worm.style.top);
+                    end("1");
+                }
+                //collision with block
+                if (parseInt(m1.style.left)=="107") {
+                    if (parseInt(worm.style.top)>=(parseInt(m1.style.top)+(100-24))) {
+                        if (parseInt(worm.style.top)<=(parseInt(m1.style.top)+200)) {
+                            //collision detected
+                            console.log("Mid: "+(parseInt(m1.style.top)+100)+"\nplayer: "+worm.style.top); //107
+                            end("1");
+                        }
+                    }
+                }
+            }
+            function end(x){
+                if (x==1) {
+                    document.getElementById("worm0").style.webkitAnimationPlayState = "running";
+                }
+
+                if (scoreInt>highscoreInt) {highscoreInt=scoreInt;}
+                scoreInt=0;
+                clearInterval(playerMoving);
+                clearInterval(backgroundMoving);
+                speedInt=speedSet;
+                fallVelocity=fallSet;
+                randInt=0;
+                randInt2=100;
+
+            }
+            function reset_animation() {
+              var el = document.getElementById('worm0');
+              el.style.animation = 'none';
+              el.offsetHeight; /* trigger reflow */
+              el.style.animation = null; 
+            }
+		</script>
+	</body>
+</html>
+
+

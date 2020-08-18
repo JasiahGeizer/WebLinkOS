@@ -1,37 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
+        <!--
+            To Do:
+                - add highscore
+                - add sound effects
+                - make whole worm blink?
+                - apple bob up and down animation?
+                - add instructions
+                - add arrow key movement as well as wasd?
+            Versions:
+            1.0: Worm colors added, collision detection, apple position averaged to grid (every 25px) 
+            1.1: colors changed, end function, apple eat and game over animations, start / restart function, restart button added, scoreboard added,
+        -->
 		<meta charset="utf-8">
 	  	<title>Snake</title>
 
 	  	<style type="text/css">
 	  		body{
-	  			background: skyblue;
+	  			background: #58a3f1;
 	  		}
 	  		.grouped{
 				position: relative;
-				background-color: lightgreen;
+				background-color: #795548; /*lightgreen*/
 				width: 500px;
 				height: 500px;
 				top: 50px;
 				margin: 0 auto;
 				border-radius: 20px;
 				box-shadow: 0px 2px 13px #00000059;	
-				color: white;		
-
+				color: white;
 				/*background-image:
-			      linear-gradient(45deg, #ccc 25%, transparent 25%), 
-			      linear-gradient(135deg, #ccc 25%, transparent 25%),
-			      linear-gradient(45deg, transparent 75%, #ccc 75%),
-			      linear-gradient(135deg, transparent 75%, #ccc 75%);
+			      linear-gradient(45deg, #7ede7e 25%, transparent 25%), 
+			      linear-gradient(135deg, #7ede7e 25%, transparent 25%),
+			      linear-gradient(45deg, transparent 75%, #7ede7e 75%),
+			      linear-gradient(135deg, transparent 75%, #7ede7e 75%);
 			    background-size:50px 50px;
 			    background-position:0 0, 25px 0, 25px -25px, 0px 25px; */
 			}
+            @keyframes pulse {
+              0% {
+                background-color: #8bc34a;
+              }
+              100% {
+                background-color: #4caf50;
+              }
+            }
+            @keyframes endPulse {
+              0% {
+                background-color: #f44336;
+              }
+              100% {
+                background-color: #9e9e9e;
+              }
+            }
 
 			.worm{
 				width:24px;
 				height: 24px;
-				background: #9c27b0;
+				background: #2ba530;
 				box-shadow: 0px 0px 7px #00000059;	
 
 				text-align: center;
@@ -44,7 +71,14 @@
 				position: absolute;
 				transform: rotate(90deg);
 				transition: 0.2s;
+
+                animation: pulse 1s infinite;
+                animation-direction: alternate; 
 			}
+            .worm2{              
+                animation: endPulse 0.5s infinite;
+                animation-direction: alternate; 
+            }
 			#apple{
 				width:24px;
 				height: 24px;
@@ -61,12 +95,57 @@
 				position: absolute;
 				z-index: 9;
 			}
+            #restartBTN{
+                visibility: hidden;
+                position: relative;
+                left: 320px;
+                top: 10px;
+                z-index: 20;
+                height: 25px;
+                width:75px;
+                background: seagreen;
+                border: none;
+                color: #ffffffbd;
+                text-align: center;
+                text-decoration: none;
+                border:none;
+                outline:none;
+                border-radius: 4px;
+            }
+            #restartBTN:hover{
+                background: forestgreen;
+                color: white;
+                box-shadow: 0px 0px 3px 1px #00000045;
+            }
+            #restartBTN:active{
+                background: #166716;
+                color: white;
+                box-shadow: inset 0px 0px 3px 1px #00000045;
+            }
+            #endScoreboard{
+                position: relative;
+                left: 325px;
+                top: 10px;
+                z-index: 20;
+                height: 25px;
+                width:75px;
+                background: none;
+                border: none;
+                color: #ffffffbd;
+                text-align: center;
+                text-decoration: none;
+                border:none;
+                outline:none;
+                border-radius: 4px;
+            }
 	  	</style>
 	</head>
 	<body onkeypress="moveSelection(event)">
 		<div class="grouped" id="grouped">
 			<div class="worm" id="worm0" style="top:25px;left: 25px;z-index:10"> :) </div>
 			<div id="apple" style="top:250px;left: 250px;"> </div>
+            <button id="restartBTN" onclick="restart()"> Restart? </button>
+            <button id="endScoreboard" onclick="restart()"> Score: 0</button>
 		</div>
 
 
@@ -75,24 +154,19 @@
 			worm = document.getElementById("worm0");
 			
 			var lastDirection; //current direction chosen by player
-			var lastPosition; //previous position of head of worm
 
 		    function moveSelection(evt) { //wasd to move  
                 switch (evt.keyCode) {
                     case 97:
-                    	//leftArrowPressed();
                     	lastDirection="left";
                     	break;
                     case 119:
-                    	//upArrowPressed();
                     	lastDirection="up";
                     	break;
                     case 100:
-                    	//rightArrowPressed();
                     	lastDirection="right";
                     	break;
                     case 115:
-                    	//downArrowPressed();
 						lastDirection="down";
                     	break;
                     default:
@@ -119,7 +193,11 @@
 
             //add timer to move worm in direction of lastDirection variable
             //move next worm piece to last position until none left
-            var playerMoving = setInterval(playerMove, 200);
+            start();
+            var playerMoving;
+            function start(){
+                playerMoving = setInterval(playerMove, 130);
+            } 
 
             function playerMove() {
             	apple2Worm();
@@ -158,8 +236,7 @@
 	            	var blobleft  = parseInt(document.getElementById("worm"+(i)).style.left);
 	            	if (wormtop == blobtop && wormtop == blobtop) {
 	            		if (wormleft == blobleft && wormleft == blobleft) {
-	            			console.log("blob hit");
-                            clearInterval(playerMoving);
+	            			end("Blob Hit");
 	            		}
 	            	}
 	            }
@@ -167,16 +244,17 @@
 	            //detect interaction between worm and apple
             	if (wormtop == appletop && wormtop == appletop) {
             		if (wormleft == appleleft && wormleft == appleleft) {
-            			console.log("contact made");
+                        worm.innerHTML=":o";
             			newWormBlob();
             			newApple();
             		}
-            	}
+            	}else if(endchk==false){
+                    worm.innerHTML=":)";
+                }
 
             	//detect interaction with worm and walls
             	if (wormtop <= (-5) || wormtop >= (500) || wormleft <= (-5) || wormleft >= (500)) {
-            			console.log("wall hit");
-            			clearInterval(playerMoving);
+            			end("Wall Hit");
             	}
             } 
             function newApple(){
@@ -189,8 +267,8 @@
             }
             var a=0;
             function newWormBlob(){
-            	console.log("more worm");
             	a=a+1;
+            	document.getElementById("endScoreboard").innerHTML="Score: "+a;
 
             	var wormBlob = document.createElement("DIV");
 	            wormBlob.id="worm"+a;
@@ -208,14 +286,35 @@
         			document.getElementById("worm"+(i)).style.top=document.getElementById("worm"+(i-1)).style.top;
             	}
             }
-            //to do:
-                //on collision blink color
-	            //add scoreboard (+timer?)
-	            //apple position should be averaged out to grid (every 25px?)
-	            //add end screen / restart button
-	            //add sound effects
-	            //fix colors (purple worm?)
+            var endchk=false;
+            function end(cause){
+                endchk=true;
+                console.log("Score: "+a+"\nEnd: "+cause);
+                clearInterval(playerMoving);
+                worm.innerHTML=":(";
+                worm.classList.add("worm2");
 
+                document.getElementById("restartBTN").style.visibility="visible";
+            }
+            function restart(){
+                endchk=false;
+                for (var i = a; i > 0; i--) {
+                    document.getElementById("worm"+(i)).remove();
+                }
+                a=0;
+                worm.classList.remove("worm2");
+                worm.innerHTML=":)";
+                lastDirection="";
+                worm.style.top="25px";
+                worm.style.left="25px";
+
+                document.getElementById("endScoreboard").innerHTML="Score: "+a;
+                document.getElementById("restartBTN").style.visibility="hidden";
+
+                document.getElementById("apple").style.top = "250px";
+                document.getElementById("apple").style.left = "250px";
+                start();
+            }
 		</script>
 	</body>
 </html>
