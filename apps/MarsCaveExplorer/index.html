@@ -3,23 +3,25 @@
 	<head>
         <!--
             To Do:
-                - Prevent movement when stopped
+                - Make colors fade slowly with each new block, 1 by 1, rather than all at once. 
                 - Fix difficulty / improve gravity                
                 - Slowly shrink gap size
-                    - Fade & Randomize colors [when difficulty increases] (grouped & body background, boulders) 
                     - instead of random, Have walls pick number between 5 and 25, and have the walls go up/down by that amount then restrt and alternate direction
-                - Add Sound Effects -rocket firing & ship crashing explosion
-                - improve Rocket animation
+                - improve Rocket design?
 
             Versions:
             0.1: Ship Moves down by itself & moves up by player, block moves towards player at random pos., walls change to random size, rocket animated, overflow hidden, ship explosion animation
+            1.0: Reset wall position, sound effects added (jet & explosion), jet sound loops, player no longer moves when stopped, background & wall colors change with every +100 score,  
         -->
 		<meta charset="utf-8">
 	  	<title>Mars Cave Explorer</title>
 
 	  	<style type="text/css">
+            *{
+                transition: background 1s;
+            }
 	  		body{
-	  			background: darkslategrey;
+	  			background: #655246;
                 overflow: hidden;
                 color: white;
                 font-family: monospace;
@@ -49,7 +51,7 @@
                 color: black;
 				font-size: 19px;
 				position: absolute;
-				transition: 0.2s;
+				transition: top 0.1s;
                 border-top-right-radius: 100%;
                 border-top-left-radius: 100%;
                 border-bottom-left-radius: 50%;
@@ -100,7 +102,6 @@
                 position: absolute;
                 top: 28px;
                 left: 5px;
-                /*border-radius: 0px 0px 4px 4px;*/
                 background: linear-gradient(to bottom, #676767 10%, #f5f5f500 100%);
                 visibility: hidden;
                 animation: fumes 0.1s infinite;
@@ -158,7 +159,21 @@
         <a><p style="margin-top: 75px;">Press Enter to Start <br> & Spacebar to Move</a>
 
 		<script type="text/javascript">
-            
+            var gameStarted=false;
+            var jetSound = new Audio('jet.wav')
+            var boom = new Audio('boom2.wav');
+            boom.preload = 'auto';
+            jetSound.preload = 'auto';
+
+            jetSound.addEventListener('timeupdate', function(){
+                var buffer = .44
+                if(this.currentTime > this.duration - buffer){
+                    this.currentTime = 0;
+                }
+            });
+
+
+
             function docReady(){
                 window.addEventListener('keydown', moveSelection);
                 window.addEventListener('keyup', moveSelection2);
@@ -172,26 +187,30 @@
             var fired4=false;
 
 		    function moveSelection(evt) { //wasd to move  
-                //console.log(evt.keyCode);
-                switch (evt.keyCode) {
-                    case 32: //space
-                        document.getElementById("fire").style.visibility="visible";
-                        upArrowPressed();
-                    	break;
-                    case 13: //enter
-                        downArrowPressed();
-                        start();
-                    	break;
-                    default:
-                    	break; 
+                    switch (evt.keyCode) {
+                        case 32: //space
+                            if (gameStarted==true) {
+                                document.getElementById("fire").style.visibility="visible";
+                                upArrowPressed();
+                                jetSound.play();
+                            }
+                        	break;
+                        case 13: //enter
+                            downArrowPressed();
+                            start();
+                        	break;
+                        default:
+                        	break; 
+                        }
                     }
-                }
             function moveSelection2(evt) { //wasd to move  
                 //console.log(evt.keyCode+" ^");
                 switch (evt.keyCode) {
                     case 32: //space
                         document.getElementById("fire").style.visibility="hidden";
                         clearInterval(moverUp);
+                        jetSound.pause();
+                        //jetSound.currentTime = 0;
                         fired3=false;
                         break;
                     case 13: //enter
@@ -241,6 +260,7 @@
             function start(){
                 reset_animation();
                 end("2");
+                gameStarted=true;
                 worm.style.top="175px";
                 m1.style.left="457px";
                 m1.style.top="100px";
@@ -249,11 +269,16 @@
 
                 //document.getElementById("worm0").className="booger";
                 //document.getElementById("worm0").className="worm";
+
+                for (var i = 1; i <= 10; i++) {
+                    document.getElementById("d"+i).style.height="100px";
+                    document.getElementById("d"+i).style.bottom="000px";
+                    document.getElementById("b"+i).style.height="100px";
+                }
             } 
 
 
             function playerMove() {
-
                 scoreInt=scoreInt+1;
                 document.getElementById("b10").innerHTML=scoreInt+"\n"+highscoreInt;
 
@@ -302,6 +327,7 @@
                 if (parseInt(m1.style.left)<499 && parseInt(m1.style.left)>400) {
                     m1.style.visibility="visible";
                 }
+                scoreCheck();
             }
 
 
@@ -330,6 +356,22 @@
                 }
             }
             function end(x){
+                if (scoreInt>0) {    
+                    gameStarted=false;
+                    boom.play();
+
+                    //reset wall color
+                    var x2 = document.getElementById("grouped").querySelectorAll(".boulder");
+                    if (scoreInt>1) {
+                        for (i = 0; i < x2.length; i++) {
+                            x2[i].style.backgroundColor = null;
+                        }
+                        document.getElementById("grouped").style.background = null;
+                        document.body.style.backgroundColor = null;
+                    }
+                    s1=s2=s3=s4=s5=false;
+                }
+                jetSound.pause();
                 if (x==1) {
                     document.getElementById("worm0").style.webkitAnimationPlayState = "running";
                 }
@@ -342,13 +384,53 @@
                 fallVelocity=fallSet;
                 randInt=0;
                 randInt2=100;
-
             }
             function reset_animation() {
               var el = document.getElementById('worm0');
               el.style.animation = 'none';
               el.offsetHeight; /* trigger reflow */
               el.style.animation = null; 
+            }
+            var x;
+            var s1=s2=s3=s4=s5=false;
+            function scoreCheck(){
+                if (s1==false && scoreInt>100) {
+                    s1=true;
+                    x = document.getElementById("grouped").querySelectorAll(".boulder");
+                    for (i = 0; i < x.length; i++) {
+                      x[i].style.backgroundColor = "#773005";
+                    }
+                }
+                if (s2==false && scoreInt>200) {
+                    s2=true;
+                    for (i = 0; i < x.length; i++) {
+                      x[i].style.backgroundColor = "#b92525";
+                    }
+                    document.body.style.backgroundColor = "#654646";
+                }
+                if (s3==false && scoreInt>300) {
+                    s3=true;
+                    for (i = 0; i < x.length; i++) {
+                      x[i].style.backgroundColor = "#661588";
+                    }
+                    document.body.style.backgroundColor = "#281a2d";
+                }
+                if (s4==false && scoreInt>400) {
+                    s4=true;
+                    for (i = 0; i < x.length; i++) {
+                      x[i].style.backgroundColor = "#148fa2";
+                    }
+                    
+                    document.body.style.backgroundColor = "#212121";
+                }
+                if (s5==false && scoreInt>500) {
+                    s5=true;
+                    for (i = 0; i < x.length; i++) {
+                      x[i].style.backgroundColor = "#198414";
+                    }
+                    document.body.style.backgroundColor = "black";
+                    document.getElementById("grouped").style.background = "black";
+                }
             }
 		</script>
 	</body>
