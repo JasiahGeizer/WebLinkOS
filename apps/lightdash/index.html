@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+        <!--
+            To Do:               
+                - Add Sound Effects
+                - Prevent heads from going through each other
+                - Fix first block being unhittable
+                > Different playfield sizes
+            
+            Versions:
+                0.1 - Both worms move, detects colision (blobs/walls), restart button, worms/background redesigned
+                1.0 - Display which worm won, Select correct worm head to glow red, keep tally of winner, give animation to border/background, improve worm colors/animation, improve death animation, space or enter to restart, detect & display ties, change name, 
+        -->
+		<meta charset="utf-8">
+	  	<title>Light Dash</title>
+
+	  	<style type="text/css">
+	  		body{
+	  			background: #040144;
+                color: white;
+                font-family: monospace;
+                animation: bgFade 10s infinite alternate;
+	  		}
+	  		.grouped{
+				position: relative;
+				background-color: grey; /*lightgreen*/
+                background: radial-gradient(circle, #000000 0%, #1f1f1f 100%);
+				width: 500px;
+				height: 500px;
+				top: 50px;
+				margin: 0 auto;
+				border-radius: 4px;
+				box-shadow: 0px 2px 13px #00000059;	
+				color: white;
+                border: 1px solid #824caf;
+                animation: bgPulse 1s infinite alternate;
+			}
+            @keyframes pulse {
+              0% {background-color: #ff00b6;}
+              100% {background-color: #5a125d;}
+            }
+            @keyframes pulseB {
+              0% {background-color: #00ff1a;}
+              100% {background-color: #042f00;}
+            }
+            @keyframes endPulse {
+              0% {background-color: #0b00ff;}
+              100% { background-color: #272727;}
+            }
+            @keyframes bgPulse {
+              0% {border: 1px solid #585858;}
+              100% {border: 1px solid #a9a9a9;box-shadow: 0px 2px 50px #7b7b7b;}
+            }
+            @keyframes bgFade {
+              0% {background-color: #040144;}
+              30% { background-color: #000000;}
+              100% { background-color: #000000;}
+            }
+			.worm{
+				width:24px;
+				height: 24px;
+				background: #2ba530;
+				text-align: center;
+				line-height: 21px;
+				border:1px solid #ffffff00;
+				font-size: 19px;
+				position: absolute;
+				/*transform: rotate(90deg);*/
+                animation: pulse 1s infinite;
+                animation-direction: alternate; 
+			}
+            .wormB{
+                width:24px;
+                height: 24px;
+                background: #a5522b;
+                text-align: center;
+                line-height: 21px;
+                border:1px solid #ffffff00;
+                font-size: 19px;
+                position: absolute;
+                /*transform: rotate(90deg);*/
+                animation: pulseB 1s infinite;
+                animation-direction: alternate; 
+            }
+            .worm2{              
+                animation: endPulse 0.5s infinite;
+                animation-direction: alternate; 
+            }
+            #restartBTN{
+                visibility: hidden;
+                position: relative;
+                left: 250px;
+                top: 10px;
+                z-index: 20;
+                height: 25px;
+                width:75px;
+                background: #0b0765;
+                border: 1px solid #0b00f7;
+                color: #ffffffbd;
+                text-align: center;
+                text-decoration: none;
+                outline:none;
+                border-radius: 4px;
+            }
+            #restartBTN:hover{
+                background: #060098;
+                color: white;
+                box-shadow: 0px 0px 5px 1px #0b00f7bd;
+            }
+            #restartBTN:active{
+                background: #03004a;
+                color: grey;
+                border: 1px solid #0800b5;
+            }
+            #endScoreboard{
+                position: relative;
+                left: 250px;
+                top: 10px;
+                z-index: 20;
+                height: 25px;
+                width:150px;
+                background: none;
+                border: none;
+                color: #ffffffbd;
+                text-align: right;
+                white-space: pre-wrap;
+                text-decoration: none;
+                border:none;
+                outline:none;
+                border-radius: 4px;
+            }
+	  	</style>
+	</head>
+	<body onkeydown="moveSelection(event)">Light Dash
+		<div class="grouped" id="grouped">
+			<div class="worm" id="worm0" style="top:25px;left: 25px;z-index:10">  </div>
+            <div class="wormB" id="wormB0" style="top:450px;left: 450px;z-index:10;">  </div>
+            <button id="restartBTN" onclick="restart()"> Restart? </button>
+            <button id="endScoreboard"> </button>
+		</div>Avoid the light beam trails. <br><br>Controls: <br>P1: WASD<br>P2: Arrow Keys<br>Enter or Space to restart
+
+
+
+		<script type="text/javascript">
+			worm = document.getElementById("worm0");
+			wormB = document.getElementById("wormB0");
+
+			var lastDirection="down"; //current direction chosen by player
+            var lastDirectionB="up";
+		    function moveSelection(evt) { //wasd to move
+            //console.log(evt.keyCode);  
+                switch (evt.keyCode) {
+                    case 65:
+                    	lastDirection="left";
+                    	break;
+                    case 87:
+                    	lastDirection="up";
+                    	break;
+                    case 68:
+                    	lastDirection="right";
+                    	break;
+                    case 83:
+						lastDirection="down";
+                    	break;
+                    case 37:
+                        lastDirectionB="left";
+                        break;
+                    case 38:
+                        lastDirectionB="up";
+                        break;
+                    case 39:
+                        lastDirectionB="right";
+                        break;
+                    case 40:
+                        lastDirectionB="down";
+                        break;
+                    case 13:
+                    case 32:
+                        //restart (force tie, end restart)
+                        if (document.getElementById("restartBTN").style.visibility=="visible") {
+                            end("P1");
+                            end("P2");
+                            restart();
+                        }
+                        break;
+                    default:
+                    	break; //l: 37, r: 39, u: 38, d:40  
+                    }
+                }
+            var speedInt=25;
+            function upArrowPressed(){
+            	worm.style.top=parseInt(worm.style.top)-speedInt+"px";
+            	lastDirection="up";
+            }
+            function leftArrowPressed() {
+            	worm.style.left=parseInt(worm.style.left)-speedInt+"px";
+            	lastDirection="left";
+            }
+            function rightArrowPressed(){
+            	worm.style.left=parseInt(worm.style.left)+speedInt+"px";
+            	lastDirection="right";
+            }
+            function downArrowPressed(){
+            	worm.style.top=parseInt(worm.style.top)+speedInt+"px";
+            	lastDirection="down";
+            }
+
+            //add timer to move worm in direction of lastDirection variable
+            //move next worm piece to last position until none left
+            start();
+            var playerMoving;
+            function start(){
+                playerMoving = setInterval(playerMove, 130);
+            } 
+
+            function playerMove() {
+            	apple2Worm();
+                apple2WormB();
+                newWormBlob();
+                newWormBlobB();
+
+            	//console.log(lastDirection);
+            	switch (lastDirection) {
+                    case "left":
+                    	leftArrowPressed();
+                    	break;
+                    case "up":
+                    	upArrowPressed();
+                    	break;
+                    case "right":
+                    	rightArrowPressed();
+                    	break;
+                    case "down":
+                    	downArrowPressed();
+                    	break;
+                    default:
+                    	break; 
+                    }
+                switch (lastDirectionB) {
+                    case "left":
+                        leftArrowPressedB();
+                        break;
+                    case "up":
+                        upArrowPressedB();
+                        break;
+                    case "right":
+                        rightArrowPressedB();
+                        break;
+                    case "down":
+                        downArrowPressedB();
+                        break;
+                    default:
+                        break; 
+                    }
+            }
+
+            function apple2Worm(){
+	            var wormtop   = parseInt(worm.style.top);
+	            var wormleft  = parseInt(worm.style.left);
+
+            	//detect interactions between worm and blobs
+            	for (var i = a; i > 1; i--) {
+            		var blobtop   = parseInt(document.getElementById("worm"+(i)).style.top);
+	            	var blobleft  = parseInt(document.getElementById("worm"+(i)).style.left);
+                    var blobtopB   = parseInt(document.getElementById("wormB"+(i)).style.top);
+                    var blobleftB  = parseInt(document.getElementById("wormB"+(i)).style.left);
+	            	if (wormtop == blobtop && wormtop == blobtop) {
+	            		if (wormleft == blobleft && wormleft == blobleft) {
+	            			end("P2");
+	            		}
+	            	}
+                    if (wormtop == blobtopB && wormtop == blobtopB) {
+                        if (wormleft == blobleftB && wormleft == blobleftB) {
+                            end("P2");
+                        }
+                    }
+	            }
+            	//detect interaction with worm and walls
+            	if (wormtop <= (-5) || wormtop >= (500) || wormleft <= (-5) || wormleft >= (500)) {
+            			end("P2");
+            	}
+            } 
+            var a=0;
+            function newWormBlob(){
+            	a=a+1;
+            	var wormBlob = document.createElement("DIV");
+	            wormBlob.id="worm"+a;
+	            wormBlob.className="worm";
+	            wormBlob.style.left=document.getElementById("worm0").style.left;
+	            wormBlob.style.top=document.getElementById("worm0").style.top;
+            	document.getElementById("grouped").appendChild(wormBlob); 
+            }
+
+            //get each wormBlob to replace position of previous wormblob in loop
+            var endchk=false;
+            var winP1=0;
+            var winP2=0;
+            var endCount=0;
+            function end(cause){
+                endCount=endCount+1;
+                endchk=true;
+                clearInterval(playerMoving);
+                
+                document.getElementById("restartBTN").style.visibility="visible";
+                if (cause=="P2") {
+                    winP2=winP2+1;
+                    document.getElementById("endScoreboard").innerHTML="Player 2 Wins!\n(Purple) Player 1: "+winP1+"\n(Green) Player 2: "+winP2;
+                    worm.innerHTML="--";
+                    worm.classList.add("worm2");
+                }else if(cause=="P1"){
+                    winP1=winP1+1;
+                    document.getElementById("endScoreboard").innerHTML="Player 1 Wins!\n(Purple) Player 1: "+winP1+"\n(Green) Player 2: "+winP2;
+                    wormB.innerHTML="--";
+                    wormB.classList.add("worm2");
+                }
+                if (endCount==2) {
+                    winP1=winP1-1;
+                    winP2=winP2-1;
+                    document.getElementById("endScoreboard").innerHTML="It's a Tie!\n(Purple) Player 1: "+winP1+"\n(Green) Player 2: "+winP2;
+                }
+            }
+            function restart(){
+                endCount=0;
+                endchk=false;
+                for (var i = a; i > 0; i--) {
+                    document.getElementById("worm"+(i)).remove();
+                    document.getElementById("wormB"+(i)).remove();
+                }
+                a=0;
+                ab=0;
+                document.getElementById("endScoreboard").innerHTML="";
+                worm.classList.remove("worm2");
+                worm.innerHTML=" ";
+                wormB.classList.remove("worm2");
+                wormB.innerHTML=" "
+                lastDirection="down";
+                lastDirectionB="up";
+                worm.style.top="25px";
+                worm.style.left="25px";
+                wormB.style.top="450px";
+                wormB.style.left="450px";
+
+                document.getElementById("restartBTN").style.visibility="hidden";
+
+                start();
+            }
+
+
+
+
+            //worm 2 stuff
+
+                function upArrowPressedB(){
+                    wormB.style.top=parseInt(wormB.style.top)-speedInt+"px";
+                    lastDirectionB="up";
+                }
+                function leftArrowPressedB() {
+                    wormB.style.left=parseInt(wormB.style.left)-speedInt+"px";
+                    lastDirectionB="left";
+                }
+                function rightArrowPressedB(){
+                    wormB.style.left=parseInt(wormB.style.left)+speedInt+"px";
+                    lastDirectionB="right";
+                }
+                function downArrowPressedB(){
+                    wormB.style.top=parseInt(wormB.style.top)+speedInt+"px";
+                    lastDirectionB="down";
+                }
+
+
+                function apple2WormB(){
+                var wormtopB   = parseInt(wormB.style.top);
+                var wormleftB  = parseInt(wormB.style.left);
+
+                //detect interactions between worm and blobs
+                for (var ib = ab; ib > 1; ib--) {
+                    var blobtopB   = parseInt(document.getElementById("wormB"+(ib)).style.top);
+                    var blobleftB  = parseInt(document.getElementById("wormB"+(ib)).style.left);
+                    var blobtop   = parseInt(document.getElementById("worm"+(ib)).style.top);
+                    var blobleft  = parseInt(document.getElementById("worm"+(ib)).style.left);
+
+                    if (wormtopB == blobtopB && wormtopB == blobtopB) {
+                        if (wormleftB == blobleftB && wormleftB == blobleftB) {
+                            end("P1");
+                        }
+                    }
+                    if (wormtopB == blobtop && wormtopB == blobtop) {
+                        if (wormleftB == blobleft && wormleftB == blobleft) {
+                            end("P1");
+                        }
+                    }
+                }
+
+                //detect interaction with worm and walls
+                if (wormtopB <= (-5) || wormtopB >= (500) || wormleftB <= (-5) || wormleftB >= (500)) {
+                        end("P1");
+                }
+            } 
+            var ab=0;
+            function newWormBlobB(){
+                ab=ab+1;
+
+                var wormBlobB = document.createElement("DIV");
+                wormBlobB.id="wormB"+ab;
+                wormBlobB.className="wormB";
+                wormBlobB.style.left=document.getElementById("wormB0").style.left;
+                wormBlobB.style.top=document.getElementById("wormB0").style.top;
+                document.getElementById("grouped").appendChild(wormBlobB); 
+            }
+		</script>
+	</body>
+</html>
+
+
