@@ -2,15 +2,17 @@
 <html lang="en">
 	<head>
         <!--
-            To Do:               
+            To Do:
+                - Don't start straight away, wait until space/enter press               
                 - Add Sound Effects
                 - Prevent heads from going through each other
                 - Fix first block being unhittable
+                > Option to vs bots instead of second player
                 > Different playfield sizes
             
             Versions:
                 0.1 - Both worms move, detects colision (blobs/walls), restart button, worms/background redesigned
-                1.0 - Display which worm won, Select correct worm head to glow red, keep tally of winner, give animation to border/background, improve worm colors/animation, improve death animation, space or enter to restart, detect & display ties, change name, 
+                1.0 - Display which worm won, Select correct worm head to glow red, keep tally of winner, give animation to border/background, improve worm colors/animation, improve death animation, space or enter to restart, detect & display ties, change name
         -->
 		<meta charset="utf-8">
 	  	<title>Light Dash</title>
@@ -138,7 +140,8 @@
             <div class="wormB" id="wormB0" style="top:450px;left: 450px;z-index:10;">  </div>
             <button id="restartBTN" onclick="restart()"> Restart? </button>
             <button id="endScoreboard"> </button>
-		</div>Avoid the light beam trails. <br><br>Controls: <br>P1: WASD<br>P2: Arrow Keys<br>Enter or Space to restart
+		</div>
+        <p style="margin-top: 65px;">Avoid the light beam trails. <br><br>Controls: <br>P1: WASD<br>P2: Arrow Keys<br>Enter or Space to restart</p>
 
 
 
