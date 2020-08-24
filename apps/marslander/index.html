@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+        <!--
+            To Do:
+                - Fuel System: have limited fuel, only get new fuel when landing on green tile, don't get destroyed when landing on non-green tiles;
+                - Add walls and collision detection on walls
+
+                > Add random hight to tiles when landed on green tile? - adds difficutly
+
+            Versions:
+            0.1: Ship Moves down by itself & moves up by player, block moves towards player at random pos., walls change to random size, rocket animated, overflow hidden, ship explosion animation
+            1.0: Reset wall position, sound effects added (jet & explosion), jet sound loops, player no longer moves when stopped, background & wall colors change with every +100 score, 
+            ---Coppied / Started--
+            0.1: Convert mars game to land a rocket base game
+            0.2: Add tilt and left/right velocity, landing detection, randomly selected targets to land on, score based on landed on targets
+            0.3: Fix Tilt Speed, Fixed left/right movement and velocity, must land on selected tile, don't change target on small bounce or while landed
+        -->
+		<meta charset="utf-8">
+	  	<title>Mars Lander</title>
+
+	  	<style type="text/css">
+            *{
+                transition: background 1s;
+            }
+	  		body{
+	  			background: #655246;
+                overflow: hidden;
+                color: white;
+                font-family: monospace;
+	  		}
+	  		.grouped{
+                overflow: hidden;
+				position: relative;
+				background-color: #212121; /*lightgreen*/
+				width: 500px;
+				height: 500px;
+				top: 50px;
+				margin: 0 auto;
+				border-radius: 20px;
+				box-shadow: 0px 2px 13px #00000059;	
+				color: white;
+			}
+
+			.worm{
+				width:24px;
+				height: 24px;
+				background: #b3b3b3;
+				box-shadow: 0px 0px 7px #0000002e;	
+				text-align: center;
+				line-height: 21px;
+				/*border-radius: 10px;*/
+				border:1px solid #ababab;
+                color: black;
+				font-size: 19px;
+				position: absolute;
+				transition: top 0.1s;
+                border-top-right-radius: 100%;
+                border-top-left-radius: 100%;
+                border-bottom-left-radius: 50%;
+                border-bottom-right-radius: 50%;
+                animation: forwards ease-out explosion 0.2s 1;
+                animation-play-state: paused;
+			}
+
+            .boulder{
+                z-index: 14;
+                width: 100px;
+                height: 100px;
+                position: relative;
+                display: inline-block;
+                background: #cb875e;
+                padding: 0px;
+                border: 0px;text-align: center;
+            }
+            #b1{border-radius: 20px 0px 0px 0px;}
+            #b10{border-radius: 0px 20px 0px 0px;}
+            #d10{border-radius: 0px 0px 20px 0px;}
+            #d1{border-radius: 0px 0px 0px 20px;}
+
+            #window{
+                border: 1px solid #6d6d6d;
+                background: #a2a2a2;
+                width: 16px;
+                height: 10px;
+                left: 3px;
+                top: 2px;
+                position: relative;
+                border-radius: 100% 100% 50% 50%;
+            }
+            #rocket{
+                z-index: 1;
+                width: 12px;
+                height: 5px;
+                background:grey;
+                position: absolute;
+                left: 6px;
+                top: 25px;
+                border-radius: 0px 0px 4px 4px;
+            }
+            #fire{
+                z-index: 0;
+                width: 14px;
+                height: 50px;
+                position: absolute;
+                top: 28px;
+                left: 5px;
+                background: linear-gradient(to bottom, #676767 10%, #f5f5f500 100%);
+                visibility: hidden;
+                animation: fumes 0.1s infinite;
+                border-radius: 100% 100% 100% 100%;
+            }
+            @keyframes fumes {
+                from {background: linear-gradient(to bottom, #676767 10%, #f5f5f500 100%);}
+                to {background: linear-gradient(to bottom, #dedddd 10%, #00000000 100%);}
+            }
+            @keyframes explosion {
+                0% {-webkit-filter: blur(0px);}
+                100% {-webkit-filter: blur(50px);opacity: 0;}                
+            }
+	  	</style>
+	</head>
+	<body onload="docReady()" onkeydown="" onkeyup="">
+        <a>Mars Lander</a>
+		<div class="grouped" id="grouped">
+			<div class="worm" id="worm0" style="top:175px;left: 113px;z-index:10">
+
+                <div id="window"></div>
+                <div id="rocket"></div>
+                <div id="fire"></div>
+
+            </div>
+
+
+            <div style="display: flex;width: 500px;height: 100px;top: 0px;left: 0px;">
+                <div class="boulder" id="b1" style="height: 100px;"> </div>
+                <div class="boulder" id="b2" style="height: 100px;"> </div>
+                <div class="boulder" id="b3" style="height: 100px;"> </div>
+                <div class="boulder" id="b4"> </div>
+                <div class="boulder" id="b5"> </div>
+                <div class="boulder" id="b6">-</div>
+                <div class="boulder" id="b7"> </div>
+                <div class="boulder" id="b8"> </div>
+                <div class="boulder" id="b9" style="text-align: right;"> Score:<br>Highscore: </div>
+                <div class="boulder" id="b10" style="text-align: left;white-space: pre"> 0 <br> 0 </div>
+            </div>
+            <div style="position:absolute;display: flex;width: 500px;height: 100px;bottom: 0px;left: 0px;">
+                <div class="boulder" id="d1" style="height: 100px;"> </div>
+                <div class="boulder" id="d2" style="height: 100px;"> </div>
+                <div class="boulder" id="d3" style="height: 100px;"> </div>
+                <div class="boulder" id="d4"> </div>
+                <div class="boulder" id="d5"> </div>
+                <div class="boulder" id="d6"> </div>
+                <div class="boulder" id="d7"> </div>
+                <div class="boulder" id="d8"> </div>
+                <div class="boulder" id="d9"> </div>
+                <div class="boulder" id="d10" style="height: 100px;"> </div>
+            </div>
+
+            <div class="boulder" id="m1" style="width: 35px;  top: 0px;left: 464px;"> </div>
+		</div>
+        <a><p style="margin-top: 75px;">
+            Land on the green tile to score points and refuel
+            <br>
+            <br>Controls:
+            <br>- Enter to Start 
+            <br>- Spacebar to Move
+            <br>- A/D or Left/Right Arrow to tilt
+        </a>
+
+		<script type="text/javascript">
+            var gameStarted=false;
+            var jetSound = new Audio('jet.wav')
+            var boom = new Audio('boom2.wav');
+            boom.preload = 'auto';
+            jetSound.preload = 'auto';
+
+            jetSound.addEventListener('timeupdate', function(){
+                var buffer = .44
+                if(this.currentTime > this.duration - buffer){
+                    this.currentTime = 0;
+                }
+            });
+
+
+
+            function docReady(){
+                window.addEventListener('keydown', moveSelection);
+                window.addEventListener('keyup', moveSelection2);
+            }
+
+			worm = document.getElementById("worm0");
+
+            var moverUp;
+            var moverDown;
+            var moverLeft;
+            var moverRight;
+            var fired1=false; //left
+            var fired2=false; //right
+            var fired3=false; //space
+            var fired4=false; //enter
+
+		    function moveSelection(evt) { //wasd to move  
+                    switch (evt.keyCode) {
+                        case 32: //space
+                            if (gameStarted==true) {
+                                document.getElementById("fire").style.visibility="visible";
+                                upArrowPressed();
+                                jetSound.play();
+                            }
+                        	break;
+                        case 13: //enter
+                            downArrowPressed();
+                            start();
+                        	break;
+                        case 65: //A (left)
+                        case 37: //Left (Arrow)
+                            rightArrowPressed();
+                            break;
+                        case 68: //D (right)
+                        case 39: //Right (Arrow)
+                            leftArrowPressed();
+                            break;
+                        default:
+                        	break; 
+                        }
+                    }
+            function moveSelection2(evt) { //wasd to move  
+                //console.log(evt.keyCode+" ^");
+                switch (evt.keyCode) {
+                    case 32: //space
+                        document.getElementById("fire").style.visibility="hidden";
+                        clearInterval(moverUp);
+                        jetSound.pause();
+                        //jetSound.currentTime = 0;
+                        fired3=false;
+                        break;
+                    case 13: //enter
+                        clearInterval(moverDown);
+                        fired4=false;
+                        break;
+                    case 65: //A (left)
+                    case 37: //Left (Arrow)
+                        clearInterval(moverRight);
+                        fired2=false;
+                        break;
+                    case 68: //D (right)
+                    case 39: //Right (Arrow)
+                        clearInterval(moverLeft);
+                        fired1=false;
+                        break;
+                    default:
+                        break; 
+                    }
+                }
+
+            var fallSet=10;
+            var speedSet=20;
+            var speedInt=speedSet;
+            var fallVelocity=fallSet;
+
+            var maxVel = 10;var frict = 0.99;var vx=vy=0;var dv = 0.2;var dt = 1;
+
+            function upArrowPressed() {
+                if (fired3==false) {
+                    fired3=true;
+                    moverUp = setInterval(moverU, 50);
+                }
+            }
+            function downArrowPressed() {
+                if (fired4==false) {
+                    fired4=true;
+                    moverDown = setInterval(moverD, 50);
+                }
+            }
+            function leftArrowPressed() {
+                if (fired1==false) {
+                    fired1=true;
+                    moverLeft = setInterval(moverL, 50);
+                }
+            }
+            function rightArrowPressed() {
+                if (fired2==false) {
+                    fired2=true;
+                    moverRight = setInterval(moverR, 50);
+                }
+            }
+
+
+            function moverU(){
+                //console.log("up"+speedInt);
+            	vx += dv * Math.cos(rotaterDeg*(Math.PI/180));
+                vy += dv * Math.sin(rotaterDeg*(Math.PI/180));
+                if(vx > maxVel){vx = maxVel;}
+                if(vy > maxVel){vy = maxVel;}
+            }
+            function moverD(){
+            	worm.style.top=parseInt(worm.style.top)+5+"px";
+            }
+            var rotaterDeg=0;
+            var forwardVelocity=0;
+            function moverL(){
+                rotaterDeg=rotaterDeg+5;
+                worm.style.transform = "rotate("+rotaterDeg+"deg)"; 
+            }
+            function moverR(){
+                rotaterDeg=rotaterDeg-5;
+                worm.style.transform = "rotate("+rotaterDeg+"deg)";
+            }
+            function moverLR(){
+                worm.style.left=parseInt(worm.style.left)+(forwardVelocity/10)+"px";
+            }
+
+
+            var playerMoving;
+            var backgroundMoving;
+            function start(){
+                reset_animation();
+                end("2");
+                gameStarted=true;
+                worm.style.top="170px";
+                m1.style.left="457px";
+                m1.style.top="100px";
+                playerMoving = setInterval(playerMove, 50);
+
+                //document.getElementById("worm0").className="booger";
+                //document.getElementById("worm0").className="worm";
+
+                for (var i = 1; i <= 10; i++) {
+                    document.getElementById("d"+i).style.height="100px";
+                    document.getElementById("d"+i).style.bottom="000px";
+                    document.getElementById("b"+i).style.height="100px";
+                }
+            } 
+
+
+            function playerMove() {
+                worm.style.top = parseInt(worm.style.top)- vx * dt+"px";
+                worm.style.left = parseInt(worm.style.left) + vy * dt+"px";
+                vx *= frict;
+                vy *= frict;
+                vx=vx-0.1;
+                document.getElementById("b10").innerHTML=scoreInt+"\n"+highscoreInt;
+
+                collisionChk(); 
+            }
+
+            var scoreInt=0;
+            var highscoreInt=0;
+            var m1= document.getElementById("m1");
+
+            var roof=document.getElementById("b3");
+            var floor=document.getElementById("d3");
+            var newfloor=false;
+            var floorSelectL=0;
+            function collisionChk(){
+                switch (floorSelect) {
+                    case 1: //space
+                        floorSelectL=0;
+                        break;
+                    case 2: //space
+                        floorSelectL=50;
+                        break;
+                    case 3: //space
+                        floorSelectL=100;
+                        break;
+                    case 4: //space
+                        floorSelectL=150;
+                        break;
+                    case 5: //space
+                        floorSelectL=200;
+                        break;
+                    case 6: //space
+                        floorSelectL=250;
+                        break;
+                    case 7: //space
+                        floorSelectL=300;
+                        break;
+                    case 8: //space
+                        floorSelectL=350;
+                        break;
+                    case 9: //space
+                        floorSelectL=400;
+                        break;
+                    case 10: //space
+                        floorSelectL=450;
+                        break;
+                    }
+                //collision with roof
+                console.log(vx);
+                if (parseInt(worm.style.top)<parseInt(roof.style.height)) {
+                    //console.log("Roof: "+roof.style.height+"\nPlayer"+worm.style.top);
+                    end("1");
+                } 
+                //collision with floor
+                if (parseInt(worm.style.top)>(500-parseInt(floor.style.height))-24) {
+                    if (parseInt(worm.style.left)<(floorSelectL-30) || parseInt(worm.style.left)>(floorSelectL+30)) {
+                        end("1");
+                    }else if (vx<-2.5|| rotaterDeg>=15 || rotaterDeg<=-15) {
+                        end("1");
+                    }else{
+                        vx=0;
+                        if (newfloor==false) {
+                            newfloor=true;
+                            document.getElementById("d"+floorSelect).style.background="darkgrey";
+                        }
+                    }
+                }else {
+                }
+                if (parseInt(worm.style.top)<360 && newfloor==true) {newfloor=false;selectFloor();}
+                //collision with block
+                if (parseInt(m1.style.left)=="107") {
+                    if (parseInt(worm.style.top)>=(parseInt(m1.style.top)+(100-24))) {
+                        if (parseInt(worm.style.top)<=(parseInt(m1.style.top)+200)) {
+                            //collision detected
+                            //console.log("Mid: "+(parseInt(m1.style.top)+100)+"\nplayer: "+worm.style.top); //107
+                            end("1");
+                        }
+                    }
+                }
+            }
+            function end(x){
+                if (scoreInt>0) {    
+                    gameStarted=false;
+                    boom.play();
+
+                    //reset wall color
+                    var x2 = document.getElementById("grouped").querySelectorAll(".boulder");
+                    if (scoreInt>1) {
+                        for (i = 0; i < x2.length; i++) {
+                            x2[i].style.backgroundColor = null;
+                        }
+                        document.getElementById("grouped").style.background = null;
+                        document.body.style.backgroundColor = null;
+                    }
+                    s1=s2=s3=s4=s5=false;
+                }
+                jetSound.pause();
+                if (x==1) {
+                    document.getElementById("worm0").style.webkitAnimationPlayState = "running";
+                }
+
+                if (scoreInt>highscoreInt) {highscoreInt=scoreInt;}
+                scoreInt=0;
+                clearInterval(playerMoving);
+                clearInterval(backgroundMoving);
+                speedInt=speedSet;
+                vx=0;vy=0;
+                reset_floor();
+            }
+            function reset_animation() {
+              var el = document.getElementById('worm0');
+              el.style.animation = 'none';
+              el.offsetHeight; /* trigger reflow */
+              el.style.animation = null; 
+            }
+            var x;
+            var s1=s2=s3=s4=s5=false;
+            function scoreCheck(){
+                if (s1==false && scoreInt>100) {
+                    s1=true;
+                    x = document.getElementById("grouped").querySelectorAll(".boulder");
+                    for (i = 0; i < x.length; i++) {
+                      x[i].style.backgroundColor = "#773005";
+                    }
+                }
+                if (s2==false && scoreInt>200) {
+                    s2=true;
+                    for (i = 0; i < x.length; i++) {
+                      x[i].style.backgroundColor = "#b92525";
+                    }
+                    document.body.style.backgroundColor = "#654646";
+                }
+                if (s3==false && scoreInt>300) {
+                    s3=true;
+                    for (i = 0; i < x.length; i++) {
+                      x[i].style.backgroundColor = "#661588";
+                    }
+                    document.body.style.backgroundColor = "#281a2d";
+                }
+                if (s4==false && scoreInt>400) {
+                    s4=true;
+                    for (i = 0; i < x.length; i++) {
+                      x[i].style.backgroundColor = "#148fa2";
+                    }
+                    
+                    document.body.style.backgroundColor = "#212121";
+                }
+                if (s5==false && scoreInt>500) {
+                    s5=true;
+                    for (i = 0; i < x.length; i++) {
+                      x[i].style.backgroundColor = "#198414";
+                    }
+                    document.body.style.backgroundColor = "black";
+                    document.getElementById("grouped").style.background = "black";
+                }
+            }
+            var floorSelect=3;
+            var oldFloorSelect=3;
+            function selectFloor(){
+                scoreInt=scoreInt+1;
+                for (var i = 1; i <= 10; i++) {
+                    document.getElementById("d"+i).style.background=null;
+                }
+
+                oldFloorSelect=floorSelect;
+                floorSelect = Math.floor(Math.random() * 9)+1;
+                document.getElementById("d"+floorSelect).style.background="#5ecb66";
+                document.getElementById("d"+oldFloorSelect).style.background="grey";
+                if (floorSelect==oldFloorSelect) {selectFloor();}
+            }
+            reset_floor();
+            function reset_floor(){
+                floorSelect=3;
+                selectFloor();
+                document.getElementById("d3").style.background=null;
+            }
+		</script>
+	</body>
+</html>
+
+

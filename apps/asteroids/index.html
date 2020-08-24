@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!--
+      To Do:
+        - Shoot creates bullet
+        - Collision detection between all bullets and all boulders
+        - Shrink and duplicate boulders on bullet collsion
+        - At start, Add and move boulders at random count / interval 
+        - Add thruster animation
+        - Add sound effects (explosion, shooting, thurster)
+
+        0.1: Added Ship and Asteroid art, added ship movement, added ship loop around
+    -->
+	<head>
+		<meta charset="utf-8">
+	  	<title>Asteroids</title>
+
+	  	<style type="text/css">
+  		body{
+        overflow: hidden;
+  			background: #232323;
+  		}
+      #player{
+        position: absolute;
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 0 15px 30px 15px;
+        border-color: transparent transparent #eaeaea transparent;
+        z-index: 2;
+      }
+      .hexagon {
+          overflow: hidden;
+          visibility: hidden;
+          transform: rotate(120deg);
+          position: absolute;
+          }
+      .hexagon-in1 {
+          overflow: hidden;
+          height: 100%;
+          transform: rotate(-60deg);
+          }
+      .hexagon-in2 {
+          background: grey;
+          height: 100%;
+          visibility: visible;
+          transform: rotate(-60deg);
+          }
+	  	</style>
+	</head>
+	<body onkeydown="moveSelection(event)" onkeyup="moveSelection2(event)">
+      <div id="player" style="left: 200px;top: 200px;"></div>	
+      <div style="left:500px;top:500px;width:100px;height: 100px;" class="hexagon dodecagon">
+        <div class="hexagon-in1"><div class="hexagon-in2"></div></div></div>
+      <div style="left:100px;top:100px;width: 50px;height: 50px;" class="hexagon dodecagon"><div class="hexagon-in1"><div class="hexagon-in2"></div></div></div>
+      <div style="left:200px;top:100px;width: 50px;height: 50px;" class="hexagon dodecagon"><div class="hexagon-in1"><div class="hexagon-in2"></div></div></div>
+      <div style="left:100px;top:300px;width: 25px;height: 25px;" class="hexagon dodecagon"><div class="hexagon-in1"><div class="hexagon-in2"></div></div></div>
+      <div style="left:200px;top:300px;width: 25px;height: 25px;" class="hexagon dodecagon"><div class="hexagon-in1"><div class="hexagon-in2"></div></div></div>
+
+		<script type="text/javascript">
+      var d=u=l=r=s=false;
+      var d1=u1=l1=r1=s1=false;
+      function moveSelection(evt) { //wasd to move  
+      switch (evt.keyCode) {
+          case 37:
+          case 65: //left
+            if (l1==false) {
+              l = setInterval(move, 20, "l");
+              l1=true;
+            }
+            break;
+          case 39:
+          case 68: //Right
+            if (r1==false) {
+              r = setInterval(move, 20, "r");
+              r1=true;
+            }
+            break;
+          case 38:
+          case 87: //up
+            if (u1==false) {
+              u = setInterval(move, 20, "u");
+              u1=true;
+            }
+            break;
+          case 40: //down
+          case 83: //down
+            if (d1==false) {
+              d = setInterval(move, 20, "d");
+              d1=true;
+            }
+            break;
+          case 32: //space
+            if (s1==false) {
+              s = setInterval(move, 20, "s");
+              s1=true;
+            }
+            break;
+          default:
+            break; 
+          }
+      }
+      function moveSelection2(evt) { //wasd to move  
+      switch (evt.keyCode) {
+          case 37:
+          case 65: //left
+              clearInterval(l);
+              l1=false;
+            break;
+          case 39:
+          case 68: //Right
+              clearInterval(r);
+              r1=false;
+            break;
+          case 38:
+          case 87: //up
+              clearInterval(u);
+              u1=false;
+            break;
+          case 40: 
+          case 83: //down
+              clearInterval(d);
+              d1=false;
+            break;
+          case 32: //space
+              clearInterval(s);
+              s1=false;
+            break;
+          default:
+            break; 
+          }
+      }
+      var rotation=0;
+      var speed=0;
+      function move(direction){
+        switch (direction){
+          case "l":
+            rotation=rotation-5;
+            rotate();
+            break;
+          case "r":
+            rotation=rotation+5;
+            rotate();
+            break;
+          case "d":
+            vx=vx/2;
+            vy=vy/2;
+            break;
+          case "u":
+            speed=speed+1;
+            forward();
+            break;
+          case "s":
+            break;
+        }
+      }
+      var p=document.getElementById("player");
+      function rotate(){
+        if (rotation>360) {rotation=0}
+        if (rotation<0) {rotation=360}
+        p.style.transform='rotate('+rotation+'deg)';
+      //console.log(rotation);
+      }
+      var maxVel = 10;
+      var frict = 0.99;
+      var vx=vy=0;
+      var dv = 0.2;
+      var dt = 1;
+      function forward(){
+            vx += dv * Math.cos(rotation*(Math.PI/180));
+            vy += dv * Math.sin(rotation*(Math.PI/180));
+            if(vx > maxVel){vx = maxVel;}
+            if(vy > maxVel){vy = maxVel;}
+          }
+      var intr=setInterval(alwaysOn,20);
+      function alwaysOn(){
+            p.style.top = parseInt(p.style.top)- vx * dt+"px";
+            p.style.left = parseInt(p.style.left) + vy * dt+"px";
+            vx *= frict;
+            vy *= frict;
+            outOfBorders();
+      }
+      var x,y,W,H;
+      function outOfBorders(){
+        H = window.innerWidth;
+        W = window.innerHeight;
+        x = p.style.top;
+        y = p.style.left; 
+        if(parseInt(x) > W){p.style.top = parseInt(x) - parseInt(W)+"px";}
+        if(parseInt(x) < 0){p.style.top = parseInt(W)+"px";}
+        if(parseInt(y) > H){p.style.left = parseInt(y) - parseInt(H)+"px";}
+        if(parseInt(y) < 0){p.style.left = parseInt(H)+"px";}
+      }
+		</script>
+	</body>
+</html>
+
+
