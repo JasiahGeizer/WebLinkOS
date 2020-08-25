@@ -2,14 +2,19 @@
 <html lang="en">
   <!--
       To Do:
-        - Shoot creates bullet
-        - Collision detection between all bullets and all boulders
-        - Shrink and duplicate boulders on bullet collsion
-        - At start, Add and move boulders at random count / interval 
+        - Fix bullet speed / direction
+        - Create better method of bullet and boulder removal (e.g. array or search all variables with "a" in id)
+
+        - At start, Add/move boulders at random location and speed
+          - On collision change smaller boulder direction.  
         - Add thruster animation
         - Add sound effects (explosion, shooting, thurster)
+        - Add win condition / levels
+
+        - boulders loop around
 
         0.1: Added Ship and Asteroid art, added ship movement, added ship loop around
+        0.2: Added collision detection (on boulders/ship), added function for boulder creation, give new boulders random position on screen, added boulder shrinking & destroyable,shoot creates bullets, added bullet movement at ship velocity/direction,added collision detection between bullets and boulders,
     -->
 	<head>
 		<meta charset="utf-8">
@@ -49,15 +54,166 @@
 	  	</style>
 	</head>
 	<body onkeydown="moveSelection(event)" onkeyup="moveSelection2(event)">
-      <div id="player" style="left: 200px;top: 200px;"></div>	
-      <div style="left:500px;top:500px;width:100px;height: 100px;" class="hexagon dodecagon">
-        <div class="hexagon-in1"><div class="hexagon-in2"></div></div></div>
-      <div style="left:100px;top:100px;width: 50px;height: 50px;" class="hexagon dodecagon"><div class="hexagon-in1"><div class="hexagon-in2"></div></div></div>
-      <div style="left:200px;top:100px;width: 50px;height: 50px;" class="hexagon dodecagon"><div class="hexagon-in1"><div class="hexagon-in2"></div></div></div>
-      <div style="left:100px;top:300px;width: 25px;height: 25px;" class="hexagon dodecagon"><div class="hexagon-in1"><div class="hexagon-in2"></div></div></div>
-      <div style="left:200px;top:300px;width: 25px;height: 25px;" class="hexagon dodecagon"><div class="hexagon-in1"><div class="hexagon-in2"></div></div></div>
+      <div id="player" data-rad="15" style="left: 200px;top: 200px;"></div>	
+
+      <div id="b1" data-rad="50" style="left:500px;top:500px;width:100px;height: 100px;" class="hexagon dodecagon">
+                        <div class="hexagon-in1"><div class="hexagon-in2"></div></div></div>
+
+      <div id="b2" data-rad="25" style="left:100px;top:100px;width: 50px;height: 50px;" class="hexagon dodecagon">
+                        <div class="hexagon-in1"><div class="hexagon-in2"></div></div></div>
+
+      <div id="b3" data-rad="25" style="left:200px;top:100px;width: 50px;height: 50px;" class="hexagon dodecagon">
+                        <div class="hexagon-in1"><div class="hexagon-in2"></div></div></div>
+
+      <div id="b4" data-rad="15" style="left:100px;top:300px;width: 30px;height: 30px;" class="hexagon dodecagon">
+                        <div class="hexagon-in1"><div class="hexagon-in2"></div></div></div>
+
+      <div id="b5" data-rad="15" style="left:200px;top:300px;width: 30px;height: 30px;" class="hexagon dodecagon">
+                        <div class="hexagon-in1"><div class="hexagon-in2"></div></div></div>
+
 
 		<script type="text/javascript">
+
+/* _______________________________________ Boulders & Collision _______________________________________ */
+      //var pRad=rad3=15;var rad2=25; rad1=50; 
+
+      var player=document.getElementById("player");
+      var distX,distY,radSum,bRad,bL,bT;
+      var distX2,distY2,radSum2,bRad2,bL2,bT2;
+      var bCount=5;
+      var i;
+      
+      
+      function radiiCheck(){ /*Ship & Boulder Collision*/
+        for (i = 1; i < bCount+1; i++) {
+          bRad=parseInt(document.getElementById("b"+i).getAttribute("data-rad"));
+          bT=(parseInt(document.getElementById("b"+i).style.top)+bRad);
+          bL=(parseInt(document.getElementById("b"+i).style.left)+bRad);
+
+          distX = (parseInt(player.style.top)+15)-bT;
+          distY = (parseInt(player.style.left)+15)-bL;
+          radSum=15+bRad; 
+
+          if (distX * distX + distY * distY <= radSum * radSum && document.getElementById("b"+i).style.display!="none") {
+            console.log(distX * distX + distY * distY,radSum * radSum,"ship hit");
+            shrinkBoulder(document.getElementById("b"+i)); //change to game over
+          }
+        }
+      }
+      function radiiCheck2(){ /*Bullet & Boulder Collision*/
+        for (i9 = 1; i9 < bCount+1; i9++) {
+          bRad2=parseInt(document.getElementById("b"+i9).getAttribute("data-rad"));
+          bT2=(parseInt(document.getElementById("b"+i9).style.top)+bRad2);
+          bL2=(parseInt(document.getElementById("b"+i9).style.left)+bRad2);
+
+          for (var i8 = 1; i8 <= ammoCount; i8++) {
+           thisBullet2 = document.getElementById("a"+i8);
+            distX2 = (parseInt(thisBullet2.style.top)+5)-bT2;
+            distY2 = (parseInt(thisBullet2.style.left)+5)-bL2;
+            radSum2=5+bRad2; 
+          
+            if (distX2 * distX2 + distY2 * distY2 <= radSum2 * radSum2 && document.getElementById("b"+i9).style.display!="none" && document.getElementById("a"+i8).style.display!="none") {
+                console.log(distX2 * distX2 + distY2 * distY2,radSum2 * radSum2,"BULLET HIT");
+                shrinkBoulder(document.getElementById("b"+i9));
+                document.getElementById("a"+i8).style.display="none";
+            }
+          }
+        }
+      }
+
+      function createBoulder(){
+        //create boulder
+        //give boulder location and velocity 
+        //increment boulderCount
+        var newX=Math.floor(Math.random() * W);
+        var newY=Math.floor(Math.random() * H);
+
+        var newB = document.createElement("DIV");
+        newB.style.left=newY+"px"; //change to rand int
+        newB.style.top=newX+"px"; //change to rand int
+        newB.style.width="100px";
+        newB.style.height="100px";
+        newB.id="b"+(bCount+1);
+        newB.setAttribute('class', 'hexagon dodecagon');
+        newB.setAttribute('data-rad', '50');
+        document.body.appendChild(newB);
+
+        var newB2 = document.createElement("DIV");
+        newB2.setAttribute('class', 'hexagon-in1');
+        document.getElementById("b"+(bCount+1)).appendChild(newB2);
+
+        var newB3 = document.createElement("DIV");
+        newB3.setAttribute('class', 'hexagon-in2');
+        document.getElementById("b"+(bCount+1)).childNodes[0].appendChild(newB3);
+        bCount++;
+      }
+
+      function shrinkBoulder(that){
+        //console.log(that);
+        if (that.getAttribute("data-rad")==50) {
+          that.setAttribute('data-rad', '25');
+          that.style.width="50px";
+          that.style.height="50px";
+        
+        var cln = that.cloneNode(true);
+        cln.id="b"+(bCount+1);
+        cln.style.left=parseInt(cln.style.left)+55+"px";
+        cln.style.top=parseInt(cln.style.top)+55+"px";
+        document.body.appendChild(cln);
+        bCount++;
+        }else if (that.getAttribute("data-rad")==25) {
+          that.setAttribute('data-rad', '15');
+          that.style.width="25px";
+          that.style.height="25px";
+        
+        var cln2 = that.cloneNode(true);
+        cln2.id="b"+(bCount+1);
+        cln2.style.left=parseInt(cln2.style.left)+20+"px";
+        cln2.style.top=parseInt(cln2.style.top)+20+"px";
+        document.body.appendChild(cln2);
+        bCount++;
+        }else if (that.getAttribute("data-rad")==15){
+          //that.childNodes[1].childNodes[0]
+          that.style.display="none"; //boulder destroyed
+        }
+      }
+/* _______________________________________ Ammo & Bullets _______________________________________ */
+      var ammoCount=0;
+          var thisBullet;
+          var thisRotation;
+          var thisVX;
+          var thisVY;
+      function shooting(){
+          ammoCount++;
+        var ammo = document.createElement("DIV");
+        ammo.style.height="10px";
+        ammo.style.width="10px";
+        ammo.style.background="red";
+        ammo.style.borderRadius="10px";
+        ammo.style.position="absolute";
+        ammo.setAttribute('data-rot', rotation);
+        ammo.setAttribute('data-vx', vx);
+        ammo.setAttribute('data-vy', vy);
+        ammo.style.left=parseInt(player.style.left)+8+"px";
+        ammo.style.top=parseInt(player.style.top)+8+"px";
+        ammo.id="a"+ammoCount;
+        document.body.appendChild(ammo);
+      }
+      function moveBullets(){ //fix to shoot infront of ship, not behind.
+        for (var i2 = 1; i2 <= ammoCount; i2++) {
+           thisBullet = document.getElementById("a"+i2);
+           thisRotation = thisBullet.getAttribute("data-rot");
+           thisVX = thisBullet.getAttribute("data-vx");
+           thisVY = thisBullet.getAttribute("data-vy");
+
+          thisBullet.style.top = parseInt(thisBullet.style.top)-(thisVX/2)+"px";
+          thisBullet.style.left = parseInt(thisBullet.style.left)+(thisVY/2)+"px";
+
+          //thisBullet.style.top = parseInt(thisBullet.style.top)- (Math.cos(thisRotation*(Math.PI/180))) * 1 +"px";
+          //thisBullet.style.left = parseInt(thisBullet.style.left) + (Math.sin(thisRotation*(Math.PI/180))) * 1 +"px";
+        }
+      }
+/* _______________________________________ Movement & Controls _______________________________________ */
       var d=u=l=r=s=false;
       var d1=u1=l1=r1=s1=false;
       function moveSelection(evt) { //wasd to move  
@@ -92,7 +248,7 @@
             break;
           case 32: //space
             if (s1==false) {
-              s = setInterval(move, 20, "s");
+              s = setInterval(move, 150, "s"); //bullet speed
               s1=true;
             }
             break;
@@ -151,6 +307,7 @@
             forward();
             break;
           case "s":
+            shooting();
             break;
         }
       }
@@ -174,11 +331,14 @@
           }
       var intr=setInterval(alwaysOn,20);
       function alwaysOn(){
+          radiiCheck();radiiCheck2();
+          moveBullets();
             p.style.top = parseInt(p.style.top)- vx * dt+"px";
             p.style.left = parseInt(p.style.left) + vy * dt+"px";
             vx *= frict;
             vy *= frict;
             outOfBorders();
+
       }
       var x,y,W,H;
       function outOfBorders(){
