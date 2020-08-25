@@ -2,19 +2,17 @@
 <html lang="en">
   <!--
       To Do:
-        - Fix bullet speed / direction
-        - Create better method of bullet and boulder removal (e.g. array or search all variables with "a" in id)
-
-        - At start, Add/move boulders at random location and speed
-          - On collision change smaller boulder direction.  
-        - Add thruster animation
         - Add sound effects (explosion, shooting, thurster)
-        - Add win condition / levels
+        - Add thruster animation & Ship explosion animation
 
-        - boulders loop around
+        - Add show when won & levels number
+        - At start, Add boulders, display "level 1" text, increment amount of boulders with each level.
+        - put all boulders and bullets into empty divs to group them
+
 
         0.1: Added Ship and Asteroid art, added ship movement, added ship loop around
         0.2: Added collision detection (on boulders/ship), added function for boulder creation, give new boulders random position on screen, added boulder shrinking & destroyable,shoot creates bullets, added bullet movement at ship velocity/direction,added collision detection between bullets and boulders,
+        0.3: fixed bullet speed and direction, created better method of bullet/boulder removal (querySelectorAll), remove bullets when they hit the edge, boulders move and loop around, boulders change direction on hit, new level function, round win detection, added instructions,
     -->
 	<head>
 		<meta charset="utf-8">
@@ -56,20 +54,9 @@
 	<body onkeydown="moveSelection(event)" onkeyup="moveSelection2(event)">
       <div id="player" data-rad="15" style="left: 200px;top: 200px;"></div>	
 
-      <div id="b1" data-rad="50" style="left:500px;top:500px;width:100px;height: 100px;" class="hexagon dodecagon">
-                        <div class="hexagon-in1"><div class="hexagon-in2"></div></div></div>
-
-      <div id="b2" data-rad="25" style="left:100px;top:100px;width: 50px;height: 50px;" class="hexagon dodecagon">
-                        <div class="hexagon-in1"><div class="hexagon-in2"></div></div></div>
-
-      <div id="b3" data-rad="25" style="left:200px;top:100px;width: 50px;height: 50px;" class="hexagon dodecagon">
-                        <div class="hexagon-in1"><div class="hexagon-in2"></div></div></div>
-
-      <div id="b4" data-rad="15" style="left:100px;top:300px;width: 30px;height: 30px;" class="hexagon dodecagon">
-                        <div class="hexagon-in1"><div class="hexagon-in2"></div></div></div>
-
-      <div id="b5" data-rad="15" style="left:200px;top:300px;width: 30px;height: 30px;" class="hexagon dodecagon">
-                        <div class="hexagon-in1"><div class="hexagon-in2"></div></div></div>
+      <div id="b1" data-x="2" data-y="1" data-rad="50" style="left:100px;top:500px;width:100px;height: 100px;" class="hexagon"><div class="hexagon-in1"><div class="hexagon-in2" style="color: lightgrey;text-align:center;line-height:10px;font-family:monospace;font-size: 12px;"><br>Spacebar<br> to shoot.<br><br>Arrow keys<br> to move.<br><br>Shoot me to begin</div></div></div>
+      <!--<div id="b2" data-x="0" data-y="0" data-rad="25" style="left:100px;top:100px;width: 50px;height: 50px;" class="hexagon dodecagon"><div class="hexagon-in1"><div class="hexagon-in2"></div></div></div>
+      <div id="b3" data-x="0" data-y="0" data-rad="15" style="left:100px;top:300px;width: 30px;height: 30px;" class="hexagon dodecagon"><div class="hexagon-in1"><div class="hexagon-in2"></div></div></div>-->
 
 
 		<script type="text/javascript">
@@ -80,47 +67,56 @@
       var player=document.getElementById("player");
       var distX,distY,radSum,bRad,bL,bT;
       var distX2,distY2,radSum2,bRad2,bL2,bT2;
-      var bCount=5;
+      var bCount=1;
       var i;
       
       
       function radiiCheck(){ /*Ship & Boulder Collision*/
-        for (i = 1; i < bCount+1; i++) {
-          bRad=parseInt(document.getElementById("b"+i).getAttribute("data-rad"));
-          bT=(parseInt(document.getElementById("b"+i).style.top)+bRad);
-          bL=(parseInt(document.getElementById("b"+i).style.left)+bRad);
+        var QSA2 = document.querySelectorAll(".hexagon");
+        if (QSA2.length==0) {newLevel();}
+        for (i = 0; i < QSA2.length; i++) {
+          bRad=parseInt(QSA2[i].getAttribute("data-rad"));
+          bT=(parseInt(QSA2[i].style.top)+bRad);
+          bL=(parseInt(QSA2[i].style.left)+bRad);
 
           distX = (parseInt(player.style.top)+15)-bT;
           distY = (parseInt(player.style.left)+15)-bL;
           radSum=15+bRad; 
 
-          if (distX * distX + distY * distY <= radSum * radSum && document.getElementById("b"+i).style.display!="none") {
+          if (distX * distX + distY * distY <= radSum * radSum) {
             console.log(distX * distX + distY * distY,radSum * radSum,"ship hit");
-            shrinkBoulder(document.getElementById("b"+i)); //change to game over
+            shrinkBoulder(QSA2[i]); //swaps collision end to boulder shrink 
+            end("down");
           }
         }
       }
       function radiiCheck2(){ /*Bullet & Boulder Collision*/
-        for (i9 = 1; i9 < bCount+1; i9++) {
-          bRad2=parseInt(document.getElementById("b"+i9).getAttribute("data-rad"));
-          bT2=(parseInt(document.getElementById("b"+i9).style.top)+bRad2);
-          bL2=(parseInt(document.getElementById("b"+i9).style.left)+bRad2);
+        QSA2 = document.querySelectorAll(".hexagon");
+        for (i9 = 0; i9 < QSA2.length; i9++) {
+          bRad2=parseInt(QSA2[i9].getAttribute("data-rad"));
+          bT2=(parseInt(QSA2[i9].style.top)+bRad2);
+          bL2=(parseInt(QSA2[i9].style.left)+bRad2);
 
-          for (var i8 = 1; i8 <= ammoCount; i8++) {
-           thisBullet2 = document.getElementById("a"+i8);
+          QSA1 = document.querySelectorAll(".bullet");
+          for (var i8 = 0; i8 < QSA1.length; i8++) {
+           thisBullet2 = QSA1[i8];
             distX2 = (parseInt(thisBullet2.style.top)+5)-bT2;
             distY2 = (parseInt(thisBullet2.style.left)+5)-bL2;
             radSum2=5+bRad2; 
           
-            if (distX2 * distX2 + distY2 * distY2 <= radSum2 * radSum2 && document.getElementById("b"+i9).style.display!="none" && document.getElementById("a"+i8).style.display!="none") {
+            if (distX2 * distX2 + distY2 * distY2 <= radSum2 * radSum2) {
                 console.log(distX2 * distX2 + distY2 * distY2,radSum2 * radSum2,"BULLET HIT");
-                shrinkBoulder(document.getElementById("b"+i9));
-                document.getElementById("a"+i8).style.display="none";
+                shrinkBoulder(QSA2[i9]);
+                QSA1[i8].remove();
             }
           }
         }
       }
-
+      function boulderINT(){
+        var bINT = Math.round((Math.random() * 8)-4);
+        if (bINT==0) {bINT=boulderINT();}
+        return bINT;
+      }
       function createBoulder(){
         //create boulder
         //give boulder location and velocity 
@@ -129,13 +125,15 @@
         var newY=Math.floor(Math.random() * H);
 
         var newB = document.createElement("DIV");
-        newB.style.left=newY+"px"; //change to rand int
-        newB.style.top=newX+"px"; //change to rand int
+        newB.style.left=newY+"px"; 
+        newB.style.top=newX+"px"; 
         newB.style.width="100px";
         newB.style.height="100px";
         newB.id="b"+(bCount+1);
-        newB.setAttribute('class', 'hexagon dodecagon');
+        newB.setAttribute('class', 'hexagon');
         newB.setAttribute('data-rad', '50');
+        newB.setAttribute('data-x', boulderINT());
+        newB.setAttribute('data-y', boulderINT());
         document.body.appendChild(newB);
 
         var newB2 = document.createElement("DIV");
@@ -150,41 +148,80 @@
 
       function shrinkBoulder(that){
         //console.log(that);
-        if (that.getAttribute("data-rad")==50) {
+        if (that.id=="b1") {
+          that.remove();
+        }else if (that.getAttribute("data-rad")==50) { //if biggest get hits then make medium and duplicate
           that.setAttribute('data-rad', '25');
           that.style.width="50px";
           that.style.height="50px";
+          that.setAttribute("data-y", boulderINT());
+          that.setAttribute("data-x", boulderINT());
         
-        var cln = that.cloneNode(true);
-        cln.id="b"+(bCount+1);
-        cln.style.left=parseInt(cln.style.left)+55+"px";
-        cln.style.top=parseInt(cln.style.top)+55+"px";
-        document.body.appendChild(cln);
-        bCount++;
-        }else if (that.getAttribute("data-rad")==25) {
-          that.setAttribute('data-rad', '15');
-          that.style.width="25px";
-          that.style.height="25px";
-        
-        var cln2 = that.cloneNode(true);
-        cln2.id="b"+(bCount+1);
-        cln2.style.left=parseInt(cln2.style.left)+20+"px";
-        cln2.style.top=parseInt(cln2.style.top)+20+"px";
-        document.body.appendChild(cln2);
-        bCount++;
-        }else if (that.getAttribute("data-rad")==15){
-          //that.childNodes[1].childNodes[0]
-          that.style.display="none"; //boulder destroyed
+          var cln = that.cloneNode(true);
+          cln.id="b"+(bCount+1);
+          cln.style.left=parseInt(cln.style.left)+55+"px";
+          cln.style.top=parseInt(cln.style.top)+55+"px";
+          cln.setAttribute("data-y", boulderINT());
+          cln.setAttribute("data-x", boulderINT());
+          document.body.appendChild(cln);
+          bCount++;
+          }else if (that.getAttribute("data-rad")==25) { //if medium get hits then make small and duplicate
+            that.setAttribute('data-rad', '15');
+            that.style.width="25px";
+            that.style.height="25px";
+            that.setAttribute("data-y", boulderINT());
+            that.setAttribute("data-x", boulderINT());
+
+            var cln2 = that.cloneNode(true);
+            cln2.id="b"+(bCount+1);
+            cln2.style.left=parseInt(cln2.style.left)+20+"px";
+            cln2.style.top=parseInt(cln2.style.top)+20+"px";
+            cln2.setAttribute("data-y", boulderINT());
+            cln2.setAttribute("data-x", boulderINT());
+            document.body.appendChild(cln2);
+            bCount++;
+            }else if (that.getAttribute("data-rad")==15){ //if smallest get hits then remove
+              //that.childNodes[1].childNodes[0]
+              that.remove(); //boulder destroyed
+            }
+      }
+/* _______________________________________ Boulder Movement and Loop Around _______________________________________ */
+      /*boulder movement
+      function test(){
+        var xx = document.querySelectorAll(".hexagon");
+        var xxx;
+        for (xxx = 0; xxx < xx.length; xxx++) {
+          xx[xxx].style.backgroundColor = "red";
+        }
+      }*/
+
+      function moveBoulders(){
+        QSA2 = document.querySelectorAll(".hexagon");
+        for (var xy = 0; xy < QSA2.length; xy++) {
+          //console.log(QSA2[xy].getAttribute("data-X"),QSA2[xy].getAttribute("data-Y"));
+          QSA2[xy].style.left =   parseInt(QSA2[xy].style.left) + parseInt(QSA2[xy].getAttribute("data-x"))+"px";
+          QSA2[xy].style.top  =   parseInt(QSA2[xy].style.top)  + parseInt(QSA2[xy].getAttribute("data-y"))+"px";
+        }
+      }
+
+      function outOfBordersBoulder(){
+        QSA2 = document.querySelectorAll(".hexagon");
+        H = window.innerWidth;
+        W = window.innerHeight;
+        for (var i3 = 0; i3 < QSA2.length; i3++) {
+          var aBldr = QSA2[i3];
+          
+          if(parseInt(aBldr.style.top) > W){aBldr.style.top = parseInt(aBldr.style.top) - parseInt(W)+"px";}
+          if(parseInt(aBldr.style.top) < 0){aBldr.style.top = parseInt(W)+"px";}
+          if(parseInt(aBldr.style.left) > H){aBldr.style.left = parseInt(aBldr.style.left) - parseInt(H)+"px";}
+          if(parseInt(aBldr.style.left) < 0){aBldr.style.left = parseInt(H)+"px";}
         }
       }
 /* _______________________________________ Ammo & Bullets _______________________________________ */
-      var ammoCount=0;
+
           var thisBullet;
           var thisRotation;
-          var thisVX;
-          var thisVY;
       function shooting(){
-          ammoCount++;
         var ammo = document.createElement("DIV");
         ammo.style.height="10px";
         ammo.style.width="10px";
@@ -192,25 +229,33 @@
         ammo.style.borderRadius="10px";
         ammo.style.position="absolute";
         ammo.setAttribute('data-rot', rotation);
-        ammo.setAttribute('data-vx', vx);
-        ammo.setAttribute('data-vy', vy);
         ammo.style.left=parseInt(player.style.left)+8+"px";
         ammo.style.top=parseInt(player.style.top)+8+"px";
-        ammo.id="a"+ammoCount;
+        ammo.className="bullet";
         document.body.appendChild(ammo);
       }
       function moveBullets(){ //fix to shoot infront of ship, not behind.
-        for (var i2 = 1; i2 <= ammoCount; i2++) {
-           thisBullet = document.getElementById("a"+i2);
+        var QSA1 = document.querySelectorAll(".bullet");
+        for (var i2 = 0; i2 < QSA1.length; i2++) {
+           thisBullet = QSA1[i2];
            thisRotation = thisBullet.getAttribute("data-rot");
-           thisVX = thisBullet.getAttribute("data-vx");
-           thisVY = thisBullet.getAttribute("data-vy");
 
-          thisBullet.style.top = parseInt(thisBullet.style.top)-(thisVX/2)+"px";
-          thisBullet.style.left = parseInt(thisBullet.style.left)+(thisVY/2)+"px";
+          thisBullet.style.top = parseInt(thisBullet.style.top)- (Math.cos(thisRotation*(Math.PI/180))) * 10 +"px";
+          thisBullet.style.left = parseInt(thisBullet.style.left) + (Math.sin(thisRotation*(Math.PI/180))) * 10 +"px";
+        }
+      }
 
-          //thisBullet.style.top = parseInt(thisBullet.style.top)- (Math.cos(thisRotation*(Math.PI/180))) * 1 +"px";
-          //thisBullet.style.left = parseInt(thisBullet.style.left) + (Math.sin(thisRotation*(Math.PI/180))) * 1 +"px";
+      function outOfBordersBullets(){
+        QSA1 = document.querySelectorAll(".bullet");
+        H = window.innerWidth;
+        W = window.innerHeight;
+        for (var i3 = 0; i3 < QSA1.length; i3++) {
+           var thatBullet = QSA1[i3];
+          
+          if (parseInt(thatBullet.style.top) > W || parseInt(thatBullet.style.top) < 0 
+          || parseInt(thatBullet.style.left) > H || parseInt(thatBullet.style.left) < 0) {
+                  thatBullet.remove();
+          }
         }
       }
 /* _______________________________________ Movement & Controls _______________________________________ */
@@ -332,13 +377,12 @@
       var intr=setInterval(alwaysOn,20);
       function alwaysOn(){
           radiiCheck();radiiCheck2();
-          moveBullets();
+          moveBullets();moveBoulders();
             p.style.top = parseInt(p.style.top)- vx * dt+"px";
             p.style.left = parseInt(p.style.left) + vy * dt+"px";
             vx *= frict;
             vy *= frict;
-            outOfBorders();
-
+            outOfBorders();outOfBordersBullets();outOfBordersBoulder();
       }
       var x,y,W,H;
       function outOfBorders(){
@@ -351,7 +395,43 @@
         if(parseInt(y) > H){p.style.left = parseInt(y) - parseInt(H)+"px";}
         if(parseInt(y) < 0){p.style.left = parseInt(H)+"px";}
       }
-		</script>
+/* _______________________________________ Game Start _______________________________________ */
+    var level=1;
+    function newLevel(){
+      for (var i = 1; i < level*2+2; i++) {
+        createBoulder();
+      }
+      level++;
+      end("up");
+    }
+    
+    var health=3;
+    function end(upOrDown){
+      if (upOrDown=="up") {
+        health++;  
+      }else if (upOrDown=="down"){  
+        health--;
+      }
+      switch (health) {
+          case 3:
+            document.getElementById("player").style.borderColor="transparent transparent #eaeaea99 transparent";
+            break;
+          case 2:
+            document.getElementById("player").style.borderColor="transparent transparent #eaeaea87 transparent";
+            break;
+          case 1:
+            document.getElementById("player").style.borderColor="transparent transparent #eaeaea50 transparent";
+            break;
+          case 0:
+            alert("game over"); 
+            document.getElementById("player").remove();
+            break;
+          default:
+            document.getElementById("player").style.borderColor="transparent transparent #eaeaea transparent";
+            break;
+      }
+    }
+	 </script>
 	</body>
 </html>
 
