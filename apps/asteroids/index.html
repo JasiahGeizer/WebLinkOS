@@ -3,17 +3,21 @@
   <!--
       To Do:
         - add gameover sound
-        > Show level number on win and game over
-        > put all boulders and bullets into empty divs to group them
-        >> make bullets loop once around for 100px (detect with boulder color change on loop) from the boarder edge, then remove
-        >>> replace ship div with svg path??
-        >>> add powerups
-
+        - add speed increase and health increase powerups
+        >> Show level number on win and game over?
+        
+        Potential Options:
+        - Turn into survival game - destroying boulders give you either fuel or ammo
+        - Turn into racing game with colored flag orbs you have to reach in a specific amount of time 
+        - Turn into a score-based mutiplayer game?
+        - Turn into player vs player dogfighting game (goal=shoot other player 3 times w/ destructable environments)
+        - Turn into a rouge-like game with upgrades??
 
         0.1: Added Ship and Asteroid art, added ship movement, added ship loop around
         0.2: Added collision detection (on boulders/ship), added function for boulder creation, give new boulders random position on screen, added boulder shrinking & destroyable,shoot creates bullets, added bullet movement at ship velocity/direction,added collision detection between bullets and boulders,
         1.0: fixed bullet speed and direction, created better method of bullet/boulder removal (querySelectorAll), remove bullets when they hit the edge, boulders move and loop around, boulders change direction on hit, new level function - increments boulder count w/ each level, round win detection, added instructions, fixed slow shooing on first press
-        1.1: Added sound effects (player/boulder/rocket/shooting/level up), fixed bullet spawn position, added rocket,  player hit, and player die animations, dont spawn boulders on player, health system changed to 3 tiers of accent colors (changes (rocket/death animation/bullets), smaller boulders can move faster, velocity resets on hit,  on new level, remove current bullets, shooting moves ship back, levelup/negative on hit sounds fixed, game over now resets 
+        1.1: Added sound effects (player/boulder/rocket/shooting/level up), fixed bullet spawn position, added rocket,  player hit, and player die animations, dont spawn boulders on player, health system changed to 3 tiers of accent colors (changes (rocket/death animation/bullets), smaller boulders can move faster, velocity resets on hit,  on new level, remove current bullets, shooting moves ship back, levelup/negative on hit sounds fixed, game over now resets, put all boulders & bullets into empty divs to group them
+        1.2: bullets loop & remove at +100 from border, jet size shrinks with health
     -->
 	<head>
 		<meta charset="utf-8">
@@ -77,15 +81,15 @@
         }
         @keyframes fumes {
             from {background: linear-gradient(to bottom, #676767 10%, #f5f5f500 100%);}
-            to {background: linear-gradient(to bottom, #39FF14 10%, #00000000 100%);}
+            to {height: 40px; background: linear-gradient(to bottom, #39FF14 10%, #00000000 100%);}
         }
         @keyframes fumes2 {
             from {background: linear-gradient(to bottom, #676767 10%, #f5f5f500 100%);}
-            to {background: linear-gradient(to bottom, #ffeb00 10%, #00000000 100%);}
+            to {height: 30px; background: linear-gradient(to bottom, #ffeb00 10%, #00000000 100%);}
         }
         @keyframes fumes3 {
             from {background: linear-gradient(to bottom, #676767 10%, #f5f5f500 100%);}
-            to {background: linear-gradient(to bottom, #ff0000 10%, #00000000 100%);}
+            to {height: 20px; background: linear-gradient(to bottom, #ff0000 10%, #00000000 100%);}
         }
         @keyframes fumes4 {
             from {background: linear-gradient(to bottom, #676767 10%, #f5f5f500 100%);}
@@ -95,7 +99,7 @@
 	</head>
 	<body onkeydown="moveSelection(event)" onkeyup="moveSelection2(event)">
       <div id="player" data-rad="15" style="left: 200px;top: 200px;">
-        <div  id="fire"></div>
+        <div id="fire"></div>
       </div>	
 
 
@@ -306,13 +310,34 @@
         for (var i3 = 0; i3 < QSA1.length; i3++) {
            var thatBullet = QSA1[i3];
           
-          if (parseInt(thatBullet.style.top) > W || parseInt(thatBullet.style.top) < 0 
-          || parseInt(thatBullet.style.left) > H || parseInt(thatBullet.style.left) < 0) {
-                  thatBullet.remove();
+
+          if(parseInt(thatBullet.style.top) > 100 && thatBullet.style.boxShadow=="rgba(0, 0, 0, 0.08) 0px 0px 10px 10px inset") {thatBullet.remove();
+          }
+          if(parseInt(thatBullet.style.top) < W-100 && thatBullet.style.boxShadow=="rgba(0, 0, 0, 0.08) 0px 0px 11px 10px inset") {thatBullet.remove();
+          }
+          if(parseInt(thatBullet.style.left) > 100 && thatBullet.style.boxShadow=="rgba(0, 0, 0, 0.08) 0px 0px 12px 10px inset") {thatBullet.remove();
+          }
+          if(parseInt(thatBullet.style.left) < H-100 && thatBullet.style.boxShadow=="rgba(0, 0, 0, 0.08) 0px 0px 13px 10px inset") {thatBullet.remove();
+          }
+
+          if(parseInt(thatBullet.style.top) > W){
+            thatBullet.style.top = parseInt(thatBullet.style.top) - parseInt(W)+"px";
+            thatBullet.style.boxShadow="rgba(0, 0, 0, 0.08) 0px 0px 10px 10px inset";
+          }
+          if(parseInt(thatBullet.style.top) < 0){
+            thatBullet.style.top = parseInt(W)+"px";
+            thatBullet.style.boxShadow="rgba(0, 0, 0, 0.08) 0px 0px 11px 10px inset";
+          }
+          if(parseInt(thatBullet.style.left) > H){
+            thatBullet.style.left = parseInt(thatBullet.style.left) - parseInt(H)+"px";
+            thatBullet.style.boxShadow="rgba(0, 0, 0, 0.08) 0px 0px 12px 10px inset";
+          }
+          if(parseInt(thatBullet.style.left) < 0){
+            thatBullet.style.left = parseInt(H)+"px";
+            thatBullet.style.boxShadow="rgba(0, 0, 0, 0.08) 0px 0px 13px 10px inset";
           }
         }
       }
-
 
 /* _______________________________________ Sounds & Audio _______________________________________ */
 
