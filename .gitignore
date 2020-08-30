@@ -25,3 +25,7 @@ apps/marscaveexplorer/index - Copy.html
 apps/marscaveexplorer/index_LandARocket.html
 apps/marscaveexplorer/index_LandARocket2.html
 apps/marscaveexplorer/index_rotate.html
+apps/asteroids/PowerDownFast.wav
+apps/asteroids/PowerDownFail3.wav
+apps/asteroids/boom2.wav
+apps/asteroids/coin.wav

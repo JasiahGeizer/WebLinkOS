@@ -2,28 +2,25 @@
 <html lang="en">
   <!--
       To Do:
-        - add gameover sound
-        > add speed increase and health increase powerups ?
+        - add boost?
         
         Potential Options:
+        * Turn into a juke/dodge game, new boulder every 10 seconds, timer=score, no shooting or swap for boost? 1 life
         - Turn into survival game - destroying boulders give you fuel/ammo
-        - Turn into a juke/dodge game, new boulder every 10 seconds, timer=score, no shooting or swap for boost? 1 life
         - Turn into racing game with colored flag orbs you have to reach in a specific amount of time 
         - Turn into a score-based mutiplayer game?
         - Turn into player vs player dogfighting game (goal=shoot other player 3 times w/ destructable environments)
         - Turn into a rouge-like game with upgrades??
         - Turn into maths game like 2048, give each boulder a number
 
-        0.1: Added Ship and Asteroid art, added ship movement, added ship loop around
-        0.2: Added collision detection (on boulders/ship), added function for boulder creation, give new boulders random position on screen, added boulder shrinking & destroyable,shoot creates bullets, added bullet movement at ship velocity/direction,added collision detection between bullets and boulders,
-        1.0: fixed bullet speed and direction, created better method of bullet/boulder removal (querySelectorAll), remove bullets when they hit the edge, boulders move and loop around, boulders change direction on hit, new level function - increments boulder count w/ each level, round win detection, added instructions, fixed slow shooing on first press
-        1.1: Added sound effects (player/boulder/rocket/shooting/level up), fixed bullet spawn position, added rocket,  player hit, and player die animations, dont spawn boulders on player, health system changed to 3 tiers of accent colors (changes (rocket/death animation/bullets), smaller boulders can move faster, velocity resets on hit,  on new level, remove current bullets, shooting moves ship back, levelup/negative on hit sounds fixed, game over now resets, put all boulders & bullets into empty divs to group them
-        1.2: bullets loop & remove at +100 from border, jet size shrinks with health, 
-        1.3: Show level number & restart msg on game over, level 1 restart only takes 1 shot 
+        
+        ----- converted asteriods ----
+
+        0.1: unsued functions removed, add mutiple boulder sizes, score & highscore added, (re)start boulder rounded & green, added bonus closeness points
     -->
 	<head>
 		<meta charset="utf-8">
-	  	<title>Asteroids</title>
+	  	<title>Dodge</title>
 
 	  	<style type="text/css">
     		body{
@@ -42,10 +39,6 @@
           animation-play-state: paused;
         }
         @keyframes hit {
-            from {}
-            to {border-color: transparent transparent #ffeb00 transparent;}
-          }
-        @keyframes hit2 {
             from {}
             to {border-color: transparent transparent #ff0000 transparent}
           }
@@ -83,14 +76,6 @@
         }
         @keyframes fumes {
             from {background: linear-gradient(to bottom, #676767 10%, #f5f5f500 100%);}
-            to {height: 40px; background: linear-gradient(to bottom, #39FF14 10%, #00000000 100%);}
-        }
-        @keyframes fumes2 {
-            from {background: linear-gradient(to bottom, #676767 10%, #f5f5f500 100%);}
-            to {height: 30px; background: linear-gradient(to bottom, #ffeb00 10%, #00000000 100%);}
-        }
-        @keyframes fumes3 {
-            from {background: linear-gradient(to bottom, #676767 10%, #f5f5f500 100%);}
             to {height: 20px; background: linear-gradient(to bottom, #ff0000 10%, #00000000 100%);}
         }
         @keyframes fumes4 {
@@ -100,6 +85,13 @@
         .hexagon-in2{
           color: lightgrey;text-align:center;line-height:10px;font-family:monospace;font-size: 12px;
         }
+        .txt{
+          color: white;
+          font-family: monospace;
+          right: 10%;
+          bottom: 5%;
+          position: absolute;
+        }
 	  	</style>
 	</head>
 	<body onkeydown="moveSelection(event)" onkeyup="moveSelection2(event)">
@@ -107,11 +99,13 @@
         <div id="fire"></div>
       </div>	
 
-
-      <div id="ammoContainer"> </div>
-
       <div id="boulderContainer"> 
-        <div id="b1" data-x="2" data-y="1" data-rad="50" style="left:100px;top:500px;width:100px;height: 100px;" class="hexagon"><div class="hexagon-in1"><div class="hexagon-in2" style="color: lightgrey;text-align:center;line-height:10px;font-family:monospace;font-size: 12px;"><br>Spacebar<br> to shoot.<br><br>Arrow keys<br> to move.<br><br>Shoot me to begin</div></div></div>
+        <div id="b1" data-x="2" data-y="1" data-rad="50" style="left:100px;top:500px;width:100px;height: 100px;" class="hexagon"><div class="hexagon-in1"><div class="hexagon-in2" style="background:#009651;border-radius:100px;color: lightgrey;text-align:center;line-height:10px;font-family:monospace;font-size: 12px;"><br>Avoid the<br>boulders.<br><br>Arrow keys<br> to move.<br><br> go here to begin.</div></div></div>
+      </div>
+
+      <div class="txt">
+        <span id="scoreTXT">Score: 0</span><br> 
+        <span id="highscoreTXT">Highscore: 0</span> 
       </div>
 
 		<script type="text/javascript">
@@ -125,7 +119,7 @@
       var bCount=1;
       var i;
       
-      
+      var startTimer;var boulderTime;
       function radiiCheck(){ /*Ship & Boulder Collision*/
         var QSA2 = document.querySelectorAll(".hexagon");
         //if (QSA2.length==0) {newLevel();}
@@ -141,31 +135,46 @@
           if (distX * distX + distY * distY <= radSum * radSum) {
             //console.log(distX * distX + distY * distY,radSum * radSum,"ship hit");
             shrinkBoulder(QSA2[i], 1); //swaps collision end to boulder shrink 
-            end("down");
+            if (level==false) {
+              end("down");
+            }else{//start game
+              scoreINT=0;
+              newLevel();levelUpSound();
+              startTimer=setInterval(scoreTimer, 100);createBoulder();
+              boulderTime=setInterval(createBoulder, 5000);
+            }
           }
         }
       }
-      function radiiCheck2(){ /*Bullet & Boulder Collision*/
-        QSA2 = document.querySelectorAll(".hexagon");
-        for (i9 = 0; i9 < QSA2.length; i9++) {
-          bRad2=parseInt(QSA2[i9].getAttribute("data-rad"));
-          bT2=(parseInt(QSA2[i9].style.top)+bRad2);
-          bL2=(parseInt(QSA2[i9].style.left)+bRad2);
+      function radiiCheck2(){ /*Ship & Boulder close call Collision*/
+        var QSA2 = document.querySelectorAll(".hexagon");
+        //if (QSA2.length==0) {newLevel();}
+        for (i = 0; i < QSA2.length; i++) {
+          bRad=parseInt(QSA2[i].getAttribute("data-rad"));
+          bT=(parseInt(QSA2[i].style.top)+bRad);
+          bL=(parseInt(QSA2[i].style.left)+bRad);
 
-          QSA1 = document.querySelectorAll(".bullet");
-          for (var i8 = 0; i8 < QSA1.length; i8++) {
-           thisBullet2 = QSA1[i8];
-            distX2 = (parseInt(thisBullet2.style.top)+5)-bT2;
-            distY2 = (parseInt(thisBullet2.style.left)+5)-bL2;
-            radSum2=5+bRad2; 
-          
-            if (distX2 * distX2 + distY2 * distY2 <= radSum2 * radSum2) {
-                //console.log(distX2 * distX2 + distY2 * distY2,radSum2 * radSum2,"BULLET HIT");
-                shrinkBoulder(QSA2[i9], 2);
-                QSA1[i8].remove();
-                QSA2 = document.querySelectorAll(".hexagon");
-                if (QSA2.length==0) {newLevel();levelUpSound();oldlevel=level;}
-            }
+          distX = (parseInt(player.style.top)+15)-bT;
+          distY = (parseInt(player.style.left)+15)-bL;
+          radSum=60+bRad; 
+
+          if (distX * distX + distY * distY <= radSum * radSum && level==false) {
+            //console.log(distX * distX + distY * distY,radSum * radSum,"ship hit");
+              //shrinkBoulder(QSA2[i], 1); //swaps collision end to boulder shrink 
+              QSA2[i].childNodes[0].childNodes[0].style.background="red";
+
+              scoreINT=scoreINT+0.2;
+
+              //console.log(Math.abs(vx),Math.abs(vy),(parseInt(QSA2[i].style.width)/100));
+              if (QSA2[i].childNodes[0].childNodes[0].innerHTML=="") {
+                QSA2[i].childNodes[0].childNodes[0].innerHTML="1";
+              }
+              scoreUpSound();
+              QSA2[i].childNodes[0].childNodes[0].innerHTML="+"+(parseFloat(QSA2[i].childNodes[0].childNodes[0].innerHTML)+0.2).toFixed(1);
+
+          }else if (level==false && QSA2[i].childNodes[0].childNodes[0].style.background=="red") {
+            QSA2[i].childNodes[0].childNodes[0].style.background=null;
+            QSA2[i].childNodes[0].childNodes[0].innerHTML=null;
           }
         }
       }
@@ -183,33 +192,53 @@
           newVar(); //120=distance from player that the boulder needs to be
         }
       }
-      function createBoulder(){
-        //create boulder
-        //give boulder location and velocity 
-        //increment boulderCount
-        
+      function createBoulder(){     
         newVar(); //get x/y location for boulder 
+        var size=Math.random() * 100 + 20;
 
         var newB = document.createElement("DIV");
-        newB.style.left=newY+"px"; 
-        newB.style.top=newX+"px"; 
-        newB.style.width="100px";
-        newB.style.height="100px";
-        newB.id="b"+(bCount+1);
-        newB.setAttribute('class', 'hexagon');
-        newB.setAttribute('data-rad', '50');
-        newB.setAttribute('data-x', boulderINT(8));
-        newB.setAttribute('data-y', boulderINT(8));
-        document.getElementById("boulderContainer").appendChild(newB);
+        if (level!==true) {
+          newB.style.left=newY+"px"; 
+          newB.style.top=newX+"px"; 
+          newB.style.width=size+"px";
+          newB.style.height=size+"px";
+          newB.id="b"+(bCount+1);
+          newB.setAttribute('class', 'hexagon');
+          newB.setAttribute('data-rad', size/2);
+          newB.setAttribute('data-x', boulderINT(8));
+          newB.setAttribute('data-y', boulderINT(8));
+          document.getElementById("boulderContainer").appendChild(newB);
 
-        var newB2 = document.createElement("DIV");
-        newB2.setAttribute('class', 'hexagon-in1');
-        document.getElementById("b"+(bCount+1)).appendChild(newB2);
+          var newB2 = document.createElement("DIV");
+          newB2.setAttribute('class', 'hexagon-in1');
+          document.getElementById("b"+(bCount+1)).appendChild(newB2);
 
-        var newB3 = document.createElement("DIV");
-        newB3.setAttribute('class', 'hexagon-in2');
-        if (level==1) {
-          newB3.innerHTML="<br><br>Game Over!<br><br>You reached level "+oldlevel+".<br><br> Restart?"
+          var newB3 = document.createElement("DIV");
+          newB3.setAttribute('class', 'hexagon-in2');
+          newB3.style.lineHeight=size+"px";
+
+
+        }else if (level==true) {
+          newB.style.left=newY+"px"; 
+          newB.style.top=newX+"px"; 
+          newB.style.width="100px";
+          newB.style.height="100px";
+          newB.id="b"+(bCount+1);
+          newB.setAttribute('class', 'hexagon');
+          newB.setAttribute('data-rad', size/2);
+          newB.setAttribute('data-x', boulderINT(2));
+          newB.setAttribute('data-y', boulderINT(2));
+          document.getElementById("boulderContainer").appendChild(newB);
+
+          var newB2 = document.createElement("DIV");
+          newB2.setAttribute('class', 'hexagon-in1');
+          document.getElementById("b"+(bCount+1)).appendChild(newB2);
+
+          var newB3 = document.createElement("DIV");
+          newB3.setAttribute('class', 'hexagon-in2');
+          newB3.style.borderRadius="100px";
+          newB3.style.background="#009651";
+          newB3.innerHTML="<br><br>Game Over!<br><br>You got a<br> score of "+(Math.floor(scoreINT))+".<br><br> Restart?"
         }
         document.getElementById("b"+(bCount+1)).childNodes[0].appendChild(newB3);
         bCount++;
@@ -219,43 +248,7 @@
         if (playerDeath==2) {
         boulderHitSound();
         }
-        //console.log(that);
-        if (level<=1) {
           that.remove();
-        }else if (that.getAttribute("data-rad")==50) { //if biggest get hits then make medium and duplicate
-          that.setAttribute('data-rad', '25');
-          that.style.width="50px";
-          that.style.height="50px";
-          that.setAttribute("data-y", boulderINT(9));
-          that.setAttribute("data-x", boulderINT(9));
-        
-          var cln = that.cloneNode(true);
-          cln.id="b"+(bCount+1);
-          cln.style.left=parseInt(cln.style.left)+55+"px";
-          cln.style.top=parseInt(cln.style.top)+55+"px";
-          cln.setAttribute("data-y", boulderINT(9));
-          cln.setAttribute("data-x", boulderINT(9));
-          document.getElementById("boulderContainer").appendChild(cln);
-          bCount++;
-          }else if (that.getAttribute("data-rad")==25) { //if medium get hits then make small and duplicate
-            that.setAttribute('data-rad', '15');
-            that.style.width="25px";
-            that.style.height="25px";
-            that.setAttribute("data-y", boulderINT(10));
-            that.setAttribute("data-x", boulderINT(10));
-
-            var cln2 = that.cloneNode(true);
-            cln2.id="b"+(bCount+1);
-            cln2.style.left=parseInt(cln2.style.left)+20+"px";
-            cln2.style.top=parseInt(cln2.style.top)+20+"px";
-            cln2.setAttribute("data-y", boulderINT(10));
-            cln2.setAttribute("data-x", boulderINT(10));
-            document.getElementById("boulderContainer").appendChild(cln2);
-            bCount++;
-            }else if (that.getAttribute("data-rad")==15){ //if smallest get hits then remove
-              //that.childNodes[1].childNodes[0]
-              that.remove(); //boulder destroyed
-            }
       }
 /* _______________________________________ Boulder Movement and Loop Around _______________________________________ */
 
@@ -286,79 +279,11 @@
           var thisBullet;
           var thisRotation;
           var lifecolor="#39FF14";
-      function shooting(){
-        var ammo = document.createElement("DIV");
-        ammo.style.height="10px";
-        ammo.style.width="10px";
-        ammo.style.background=lifecolor;
-        ammo.style.borderRadius="10px";
-        ammo.style.position="absolute";
-        ammo.setAttribute('data-rot', rotation);
-        ammo.style.left=parseInt(player.style.left)+10+"px";
-        ammo.style.top=parseInt(player.style.top)+10+"px";
-        ammo.className="bullet";
-        document.getElementById("ammoContainer").appendChild(ammo);
-        shootSound();
-      }
-      function moveBullets(){ //fix to shoot infront of ship, not behind.
-        var QSA1 = document.querySelectorAll(".bullet");
-        for (var i2 = 0; i2 < QSA1.length; i2++) {
-           thisBullet = QSA1[i2];
-           thisRotation = thisBullet.getAttribute("data-rot");
-
-          thisBullet.style.top = parseInt(thisBullet.style.top)- (Math.cos(thisRotation*(Math.PI/180))) * 10 +"px";
-          thisBullet.style.left = parseInt(thisBullet.style.left) + (Math.sin(thisRotation*(Math.PI/180))) * 10 +"px";
-        }
-      }
-
-      function outOfBordersBullets(){
-        QSA1 = document.querySelectorAll(".bullet");
-        H = window.innerWidth;
-        W = window.innerHeight;
-        for (var i3 = 0; i3 < QSA1.length; i3++) {
-           var thatBullet = QSA1[i3];
-          
-
-          if(parseInt(thatBullet.style.top) > 100 && thatBullet.style.boxShadow=="rgba(0, 0, 0, 0.08) 0px 0px 10px 10px inset") {thatBullet.remove();
-          }
-          if(parseInt(thatBullet.style.top) < W-100 && thatBullet.style.boxShadow=="rgba(0, 0, 0, 0.08) 0px 0px 11px 10px inset") {thatBullet.remove();
-          }
-          if(parseInt(thatBullet.style.left) > 100 && thatBullet.style.boxShadow=="rgba(0, 0, 0, 0.08) 0px 0px 12px 10px inset") {thatBullet.remove();
-          }
-          if(parseInt(thatBullet.style.left) < H-100 && thatBullet.style.boxShadow=="rgba(0, 0, 0, 0.08) 0px 0px 13px 10px inset") {thatBullet.remove();
-          }
-
-          if(parseInt(thatBullet.style.top) > W){
-            thatBullet.style.top = parseInt(thatBullet.style.top) - parseInt(W)+"px";
-            thatBullet.style.boxShadow="rgba(0, 0, 0, 0.08) 0px 0px 10px 10px inset";
-          }
-          if(parseInt(thatBullet.style.top) < 0){
-            thatBullet.style.top = parseInt(W)+"px";
-            thatBullet.style.boxShadow="rgba(0, 0, 0, 0.08) 0px 0px 11px 10px inset";
-          }
-          if(parseInt(thatBullet.style.left) > H){
-            thatBullet.style.left = parseInt(thatBullet.style.left) - parseInt(H)+"px";
-            thatBullet.style.boxShadow="rgba(0, 0, 0, 0.08) 0px 0px 12px 10px inset";
-          }
-          if(parseInt(thatBullet.style.left) < 0){
-            thatBullet.style.left = parseInt(H)+"px";
-            thatBullet.style.boxShadow="rgba(0, 0, 0, 0.08) 0px 0px 13px 10px inset";
-          }
-        }
-      }
 
 /* _______________________________________ Sounds & Audio _______________________________________ */
 
 
-      var shoot = new Audio('shoot3.wav');
-      shoot.preload = 'auto';
-      function shootSound(){
-        if (!shoot.ended) {shoot.currentTime = 0;}
-        shoot.volume=0.7;
-        shoot.play();
-      }
-
-      var boulderHit = new Audio('explosion1.wav');
+      var boulderHit = new Audio('../explosion1.wav');
       boulderHit.preload = 'auto';
       function boulderHitSound(){
         if (!boulderHit.ended) {boulderHit.currentTime = 0;}
@@ -366,7 +291,7 @@
         boulderHit.play();
       }
 
-      var playerHit = new Audio('PowerDown.wav');
+      var playerHit = new Audio('../PowerDown.wav');
       playerHit.preload = 'auto';
       function playerHitSound(){
         if (!playerHit.ended) {playerHit.currentTime = 0;}
@@ -374,7 +299,7 @@
         playerHit.play();
       }
       
-      var jetSound = new Audio('jet.wav')
+      var jetSound = new Audio('../jet.wav')
       jetSound.preload = 'auto';
       jetSound.addEventListener('timeupdate', function(){
         var buffer = .44
@@ -383,12 +308,18 @@
         }
       });
 
-      var levelUp = new Audio('levelup1.wav');
+      var levelUp = new Audio('../levelup1.wav');
       levelUp.preload = 'auto';
       function levelUpSound(){
         //if (!levelUp.ended) {levelUp.currentTime = 0;}
         levelUp.volume=1;
         levelUp.play();
+      }
+      var scoreUp = new Audio('../coin2.wav');
+      function scoreUpSound(){
+        //if (!scoreUp.ended) {scoreUp.currentTime = 0;}
+        scoreUp.volume=1;
+        scoreUp.play();
       }
 
       function playerHitAnimation() { //player hit animation
@@ -436,13 +367,6 @@
             }
             break;
           case 32: //space
-            if (s1==false) {
-              shooting();
-              vx -= (dv * Math.cos(rotation*(Math.PI/180))*10);
-              vy -= (dv * Math.sin(rotation*(Math.PI/180))*10);
-              s = setInterval(move, 150, "s"); //bullet speed
-              s1=true;
-            }
             break;
           default:
             break; 
@@ -473,8 +397,7 @@
               d1=false;
             break;
           case 32: //space
-              clearInterval(s);
-              s1=false;
+            //if (level=1) {newLevel();}
             break;
           default:
             break; 
@@ -501,7 +424,6 @@
             forward();
             break;
           case "s":
-            shooting();
             break;
         }
       }
@@ -526,12 +448,12 @@
       var intr=setInterval(alwaysOn,20);
       function alwaysOn(){
           radiiCheck();radiiCheck2();
-          moveBullets();moveBoulders();
+          moveBoulders();
             p.style.top = parseInt(p.style.top)- vx * dt+"px";
             p.style.left = parseInt(p.style.left) + vy * dt+"px";
             vx *= frict;
             vy *= frict;
-            outOfBorders();outOfBordersBullets();outOfBordersBoulder();
+            outOfBorders();outOfBordersBoulder();
       }
       var x,y,W,H;
       function outOfBorders(){
@@ -545,68 +467,50 @@
         if(parseInt(y) < 0){p.style.left = parseInt(H)+"px";}
       }
 /* _______________________________________ Game Start _______________________________________ */
-    var level=1;
+    var level=true;
     var oldlevel=1;
     function newLevel(){
       QSA1 = document.querySelectorAll(".bullet");
           for (var i8 = 0; i8 < QSA1.length; i8++) {
             QSA1[i8].remove();
           }
-
-      level++;
-      for (var i = 1; i < level*1.75; i++) {
-        createBoulder();
+      if (level==true) {
+          level=false;
       }
-      end("up");
     }
     
     var health=3;
     function end(upOrDown){
-      if (upOrDown=="up") {
-        if (health<3) {
-          health++;  
-        }
-      }else if (upOrDown=="down"){
-        restartLevel();  
-        health--;
+      if (upOrDown=="down"){
+        level=true;
+                level=true;health=0;
+                clearInterval(startTimer);
+                clearInterval(boulderTime);
+
+                QSA2 = document.querySelectorAll(".hexagon");
+                  x=vy=0;
+                  for (i = 0; i < QSA2.length; i++){
+                    QSA2[i].remove();
+                  }    
+        //health--;
         playerHitSound();
-        playerHitAnimation();
-      }
-      switch (health) {
-          case 3:
-            lifecolor="#39FF14";
-            document.getElementById("fire").style.animation="fumes 0.1s infinite";
-            break;
-          case 2:
-            lifecolor="#ffeb00";
-            document.getElementById("fire").style.animation="fumes2 0.1s infinite";
-            document.getElementById("player").style.animation="hit 0.2s 4";
-            break;
-          case 1: 
-            lifecolor="#ff2813";
-            document.getElementById("fire").style.animation="fumes3 0.1s infinite";
-            document.getElementById("player").style.animation="hit2 0.2s 4";
-            break;
-          case 0: 
-            level=1;health=3;
-            restartLevel();
-            //lifecolor="grey";
-            //document.getElementById("fire").style.animation="fumes4 0.1s infinite";
-            document.getElementById("player").style.animation="hit3 0.2s 4";
-            //alert("game over"); 
-            //document.getElementById("player").remove();
-            break;
-          default:
-            break;
+        playerHitAnimation();createBoulder();
       }
     }
-    function restartLevel(){ //restart level
-      QSA2 = document.querySelectorAll(".hexagon");
-        level--;health--;vx=vy=0;
-        for (i = 0; i < QSA2.length; i++){
-          QSA2[i].remove();
-        } newLevel(); 
+
+
+    var scoreINT=1;
+    var highscoreINT=1;
+    function scoreTimer(){
+      scoreINT=scoreINT+0.3;
+      document.getElementById("scoreTXT").innerHTML="Score: "+parseInt(scoreINT);
+      if (scoreINT>highscoreINT) {
+        highscoreINT=parseInt(scoreINT);
+        document.getElementById("highscoreTXT").innerHTML="Highscore: "+highscoreINT;
     }
+      //if (scoreINT%10==0) {createBoulder();}
+    }
+
 	 </script>
 	</body>
 </html>
