@@ -2,14 +2,7 @@
 <html lang="en">
   <!--
       To Do:
-
-        - increase score per second with boulder count
-        - only begin to move starting orb when player moves
-        
-        - Remove animation blink in for starting square & purple
-        - set green orb position to 100/100? (but not if its the players position?)
-        - prevent score orb from having same pos and velocity as any boulder?
-        - wrap around to out of screen for top and left 
+        - add boost?
         
         Potential Options:
         * Turn into a juke/dodge game, new boulder every 10 seconds, timer=score, no shooting or swap for boost? 1 life
@@ -24,8 +17,6 @@
         ----- converted asteriods ----
 
         0.1: unsued functions removed, add mutiple boulder sizes, score & highscore added, (re)start boulder rounded & green, added bonus closeness points
-        0.2: added blink in as unhittable for 2 seconds, added targets that increease score
-        0.3: added target score decreases over time remaining unpoped & increases each hit by boulder count, sound fix, boulder drifting distance widened, added mute toggle and mute instructions 
     -->
 	<head>
 		<meta charset="utf-8">
@@ -71,8 +62,6 @@
             height: 100%;
             visibility: visible;
             transform: rotate(-60deg);
-            animation: blinkIn alternate 0.25s 5;/*to do*/
-            animation-play-state: running;
             }
         #fire{
           z-index: 0;
@@ -103,23 +92,9 @@
           bottom: 5%;
           position: absolute;
         }
-        .txt2{
-          color: white;
-          font-family: monospace;
-          left: 2%;
-          top: 2%;
-          position: absolute;
-        }
-        @keyframes blinkIn {
-            from {opacity: 1}
-            to {opacity: 0.5;}
-          }
 	  	</style>
 	</head>
 	<body onkeydown="moveSelection(event)" onkeyup="moveSelection2(event)">
-
-      <div class="txt2" id="toggle">Press M to toggle audio ( Unmuted / Music Only / SFX Only / Muted )</div>
-
       <div id="player" data-rad="15" style="left: 200px;top: 200px;">
         <div id="fire"></div>
       </div>	
@@ -157,37 +132,17 @@
           distY = (parseInt(player.style.left)+15)-bL;
           radSum=15+bRad; 
 
-
-          if (distX * distX + distY * distY <= radSum * radSum && QSA2[i].style.animationPlayState!=="running") {
+          if (distX * distX + distY * distY <= radSum * radSum) {
             //console.log(distX * distX + distY * distY,radSum * radSum,"ship hit");
-            //TO DO: add if statement for background=purple, then change next to if else
-            if (QSA2[i].childNodes[0].childNodes[0].style.background=="rgb(127, 0, 150)") {
-
-              scoreINT=scoreINT+parseInt(QSA2[i].childNodes[0].childNodes[0].innerHTML);
-              QSA2[i].childNodes[0].childNodes[0].innerHTML="+"+(50+QSA2.length); //increase 50 by boulder count
-
-              QSA2[i].setAttribute('data-x', boulderINT(2));
-              QSA2[i].setAttribute('data-y', boulderINT(2)); 
-
-              newVar(); //get x/y location for boulder 
-              QSA2[i].style.left=newY+"px"; 
-              QSA2[i].style.top=newX+"px"; 
-              levelUpSound();
-
-            }else{  
-              shrinkBoulder(QSA2[i], 1); //swaps collision end to boulder shrink 
-              if (level==false) {
-                end("down");
-              }else{//start game
-                scoreINT=0;
-                newLevel();levelUpSound();
-                startTimer=setInterval(scoreTimer, 100);createBoulder();createBoulderTarget();
-                boulderTime=setInterval(createBoulder, 5000);
-                musicSound();
-                document.getElementById("toggle").style.opacity=0;
-              }
+            shrinkBoulder(QSA2[i], 1); //swaps collision end to boulder shrink 
+            if (level==false) {
+              end("down");
+            }else{//start game
+              scoreINT=0;
+              newLevel();levelUpSound();
+              startTimer=setInterval(scoreTimer, 100);createBoulder();
+              boulderTime=setInterval(createBoulder, 5000);
             }
-
           }
         }
       }
@@ -201,12 +156,11 @@
 
           distX = (parseInt(player.style.top)+15)-bT;
           distY = (parseInt(player.style.left)+15)-bL;
-          radSum=65+bRad; //players distance requirements for boulder drifting 
+          radSum=60+bRad; 
 
-          if (distX * distX + distY * distY <= radSum * radSum && level==false && QSA2[i].childNodes[0].childNodes[0].style.background!=="rgb(127, 0, 150)") {
+          if (distX * distX + distY * distY <= radSum * radSum && level==false) {
             //console.log(distX * distX + distY * distY,radSum * radSum,"ship hit");
               //shrinkBoulder(QSA2[i], 1); //swaps collision end to boulder shrink 
-
               QSA2[i].childNodes[0].childNodes[0].style.background="red";
 
               scoreINT=scoreINT+0.2;
@@ -249,8 +203,6 @@
           newB.style.width=size+"px";
           newB.style.height=size+"px";
           newB.id="b"+(bCount+1);
-          newB.style.animationPlayState="running";
-          newB.addEventListener("webkitAnimationEnd", myEndFunction);
           newB.setAttribute('class', 'hexagon');
           newB.setAttribute('data-rad', size/2);
           newB.setAttribute('data-x', boulderINT(8));
@@ -272,10 +224,8 @@
           newB.style.width="100px";
           newB.style.height="100px";
           newB.id="b"+(bCount+1);
-          //newB.style.animationPlayState="running";
-          newB.addEventListener("webkitAnimationEnd", myEndFunction);
           newB.setAttribute('class', 'hexagon');
-          newB.setAttribute('data-rad', 50);
+          newB.setAttribute('data-rad', size/2);
           newB.setAttribute('data-x', boulderINT(2));
           newB.setAttribute('data-y', boulderINT(2));
           document.getElementById("boulderContainer").appendChild(newB);
@@ -308,7 +258,6 @@
           //console.log(QSA2[xy].getAttribute("data-X"),QSA2[xy].getAttribute("data-Y"));
           QSA2[xy].style.left =   parseInt(QSA2[xy].style.left) + parseInt(QSA2[xy].getAttribute("data-x"))+"px";
           QSA2[xy].style.top  =   parseInt(QSA2[xy].style.top)  + parseInt(QSA2[xy].getAttribute("data-y"))+"px";
-          
         }
       }
 
@@ -325,16 +274,6 @@
           if(parseInt(aBldr.style.left) < 0){aBldr.style.left = parseInt(H)+"px";}
         }
       }
-
-      var incrementScore = setInterval(scoreINCR, 500);
-      function scoreINCR(){
-        QSA2 = document.querySelectorAll(".hexagon");
-        for (var xy = 0; xy < QSA2.length; xy++) {
-          if (QSA2[xy].childNodes[0].childNodes[0].style.background=="rgb(127, 0, 150)" && (parseInt(QSA2[xy].childNodes[0].childNodes[0].innerHTML)>QSA2.length)) {
-            QSA2[xy].childNodes[0].childNodes[0].innerHTML="+"+((parseInt(QSA2[xy].childNodes[0].childNodes[0].innerHTML)-1));
-          }
-        }
-      }
 /* _______________________________________ Ammo & Bullets _______________________________________ */
 
           var thisBullet;
@@ -342,46 +281,22 @@
           var lifecolor="#39FF14";
 
 /* _______________________________________ Sounds & Audio _______________________________________ */
-      var music = new Audio('music3.wav');
-      music.preload = 'auto';
-      function musicSound(){
-        if (muteToggle==1 || muteToggle==2) {
-          if (!menuMusic.ended) {menuMusic.currentTime = 0;menuMusic.pause();}
-          music.volume=1;
-          music.loop = true;
-          music.play();
-        }
-      }
-      //menuMusicSound(); //start playing menu music on launch
-      var menuMusic = new Audio('music1.wav');
-      music.preload = 'auto';
-      function menuMusicSound(){
-        if (muteToggle==1 || muteToggle==2) {
-          if (!music.ended) {music.currentTime = 0;music.pause();}
-          menuMusic.volume=1;
-          menuMusic.loop = true;
-          menuMusic.play();
-        }
-      }
+
 
       var boulderHit = new Audio('../explosion1.wav');
       boulderHit.preload = 'auto';
       function boulderHitSound(){
-        if (muteToggle==1 || muteToggle==3) {
-          if (!boulderHit.ended) {boulderHit.currentTime = 0;}
-          boulderHit.volume=0.3;
-          boulderHit.play();
-        }
+        if (!boulderHit.ended) {boulderHit.currentTime = 0;}
+        boulderHit.volume=0.3;
+        boulderHit.play();
       }
 
       var playerHit = new Audio('../PowerDown.wav');
       playerHit.preload = 'auto';
       function playerHitSound(){
-        if (muteToggle==1 || muteToggle==3) {
-          if (!playerHit.ended) {playerHit.currentTime = 0;}
-          playerHit.volume=1;
-          playerHit.play();
-        }
+        if (!playerHit.ended) {playerHit.currentTime = 0;}
+        playerHit.volume=1;
+        playerHit.play();
       }
       
       var jetSound = new Audio('../jet.wav')
@@ -396,19 +311,15 @@
       var levelUp = new Audio('../levelup1.wav');
       levelUp.preload = 'auto';
       function levelUpSound(){
-        if (muteToggle==1 || muteToggle==3) {
-          if (!levelUp.ended) {levelUp.currentTime = 0;}
-          levelUp.volume=1;
-          levelUp.play();
-        }
+        //if (!levelUp.ended) {levelUp.currentTime = 0;}
+        levelUp.volume=1;
+        levelUp.play();
       }
       var scoreUp = new Audio('../coin2.wav');
       function scoreUpSound(){
-        if (muteToggle==1 || muteToggle==3) {
         //if (!scoreUp.ended) {scoreUp.currentTime = 0;}
         scoreUp.volume=1;
         scoreUp.play();
-        }
       }
 
       function playerHitAnimation() { //player hit animation
@@ -422,18 +333,8 @@
 /* _______________________________________ Movement & Controls _______________________________________ */
       var d=u=l=r=s=false;
       var d1=u1=l1=r1=s1=false;
-      var strt=false
-      var muteToggle=1;
       function moveSelection(evt) { //wasd to move  
       switch (evt.keyCode) {
-          case 77: //m - mute toggle
-            muteToggle++;
-            if (muteToggle==5) {muteToggle=1;}
-            if (muteToggle>2) {menuMusic.pause();music.pause();}
-            if (muteToggle==1 && level==false) {musicSound();}else if (muteToggle==1 && level==true){menuMusicSound();}
-            if (muteToggle==2 || muteToggle==4) {jetSound.pause();}
-            //if (muteToggle==1 || muteToggle==3) {u1=true;}
-            break;
           case 37:
           case 65: //left
             if (l1==false) {
@@ -450,14 +351,11 @@
             break;
           case 38:
           case 87: //up
-            if (strt==false) {strt=true;menuMusicSound();}
             if (u1==false) {
               document.getElementById("fire").style.visibility="visible";
               u = setInterval(move, 20, "u");
-              if (muteToggle==1 || muteToggle==3) {
-                jetSound.volume=0.5;
-                jetSound.play();
-              }
+              jetSound.volume=0.5;
+              jetSound.play();
               u1=true;
             }
             break;
@@ -597,7 +495,6 @@
         //health--;
         playerHitSound();
         playerHitAnimation();createBoulder();
-        menuMusicSound();
       }
     }
 
@@ -614,44 +511,6 @@
       //if (scoreINT%10==0) {createBoulder();}
     }
 
-
-
-    /*_________________________________________________________*/
-
-    function createBoulderTarget(){ //change +100 to timer counting down     
-        newVar(); //get x/y location for boulder 
-        var size=Math.random() * 100 + 20;
-
-        var newB = document.createElement("DIV");
-          newB.style.left=newY+"px"; 
-          newB.style.top=newX+"px"; 
-          newB.style.width="100px";
-          newB.style.height="100px";
-          newB.id="b"+(bCount+1);
-          //newB.addEventListener("webkitAnimationEnd", myEndFunction);
-          newB.setAttribute('class', 'hexagon');
-          newB.setAttribute('data-rad', 50);
-          newB.setAttribute('data-x', boulderINT(2));
-          newB.setAttribute('data-y', boulderINT(2));
-          document.getElementById("boulderContainer").appendChild(newB);
-
-          var newB2 = document.createElement("DIV");
-          newB2.setAttribute('class', 'hexagon-in1');
-          document.getElementById("b"+(bCount+1)).appendChild(newB2);
-
-          var newB3 = document.createElement("DIV");
-          newB3.setAttribute('class', 'hexagon-in2');
-          newB3.style.borderRadius="100px";
-          newB3.style.background="#7f0096"; //960068
-          newB3.innerHTML="+50"
-          newB3.style.lineHeight="100px"
-        document.getElementById("b"+(bCount+1)).childNodes[0].appendChild(newB3);
-        bCount++;
-      }
-
-    function myEndFunction(){
-      this.style.animationPlayState="paused";
-    }
 	 </script>
 	</body>
 </html>
