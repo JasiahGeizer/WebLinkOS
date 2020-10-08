@@ -3,15 +3,14 @@
 	<head>
         <!--
             To Do:
-                - add highscore
-                - add sound effects
                 - make whole worm blink?
-                - apple bob up and down animation?
-                - add instructions
-                - add arrow key movement as well as wasd?
+                - prevent going reverse if worm size is >2 
+                - add music 
+
             Versions:
             1.0: Worm colors added, collision detection, apple position averaged to grid (every 25px) 
-            1.1: colors changed, end function, apple eat and game over animations, start / restart function, restart button added, scoreboard added,
+            1.1: colors changed, end function, apple eat and game over animations, start / restart function, restart button added, scoreboard added
+            1.2: highscore added, apple bob up & down animation added, space/enter to restart, arrow keys or wasd to move, instructions added, die/eat sound added
         -->
 		<meta charset="utf-8">
 	  	<title>Snake</title>
@@ -94,7 +93,12 @@
 
 				position: absolute;
 				z-index: 9;
+                animation: aple 1s infinite alternate;
 			}
+            @keyframes aple {
+              from {background: #ff1100; box-shadow: 0px 0px 7px #00000059;}
+              to {background: #f44336; box-shadow: 0px 0px 10px 2px #00000059;}
+            }
             #restartBTN{
                 visibility: hidden;
                 position: relative;
@@ -132,7 +136,7 @@
                 background: none;
                 border: none;
                 color: #ffffffbd;
-                text-align: center;
+                text-align: left;
                 text-decoration: none;
                 border:none;
                 outline:none;
@@ -140,35 +144,56 @@
             }
 	  	</style>
 	</head>
-	<body onkeypress="moveSelection(event)">
+	<body onkeydown="moveSelection(event)">
 		<div class="grouped" id="grouped">
 			<div class="worm" id="worm0" style="top:25px;left: 25px;z-index:10"> :) </div>
 			<div id="apple" style="top:250px;left: 250px;"> </div>
             <button id="restartBTN" onclick="restart()"> Restart? </button>
             <button id="endScoreboard" onclick="restart()"> Score: 0</button>
 		</div>
-
-
+        
+        <div style="color: white;font-family: monospace;padding-top: 70px;"> 
+            WASD or Arrow Keys to Move.
+            <p style="margin: 0px;"> 
+            Space or Enter to restart.
+        </div>
 
 		<script type="text/javascript">
+            var biteSound = new Audio('bite.wav')
+            biteSound.preload = 'auto';
+
+            var wrongSound = new Audio('wrong4.wav')
+            wrongSound.preload = 'auto';
+            wrongSound.volume=0.5;
+
 			worm = document.getElementById("worm0");
 			
 			var lastDirection; //current direction chosen by player
 
 		    function moveSelection(evt) { //wasd to move  
                 switch (evt.keyCode) {
-                    case 97:
+                    case 37:
+                    case 65: 
                     	lastDirection="left";
                     	break;
-                    case 119:
+                    case 38:
+                    case 87:
                     	lastDirection="up";
                     	break;
-                    case 100:
+                    case 39:
+                    case 68:
                     	lastDirection="right";
                     	break;
-                    case 115:
+                    case 40:
+                    case 83:
 						lastDirection="down";
                     	break;
+                    case 13:
+                    case 32:
+                        if (endchk==true) {
+                            restart();
+                        }
+                        break;
                     default:
                     	break; 
                     }
@@ -247,6 +272,7 @@
                         worm.innerHTML=":o";
             			newWormBlob();
             			newApple();
+                        biteSound.play();
             		}
             	}else if(endchk==false){
                     worm.innerHTML=":)";
@@ -265,7 +291,8 @@
             	document.getElementById("apple").style.top = top+"px";
             	document.getElementById("apple").style.left = left+"px";
             }
-            var a=0;
+            var a=0; //score
+            var b=0; //highscore
             function newWormBlob(){
             	a=a+1;
             	document.getElementById("endScoreboard").innerHTML="Score: "+a;
@@ -289,6 +316,11 @@
             var endchk=false;
             function end(cause){
                 endchk=true;
+                
+                if(b<=a){b=a;}console.log(b);//highscore
+                document.getElementById("endScoreboard").innerHTML="Score: "+a+"\nHighscore:"+b;
+                wrongSound.play();
+
                 console.log("Score: "+a+"\nEnd: "+cause);
                 clearInterval(playerMoving);
                 worm.innerHTML=":(";
