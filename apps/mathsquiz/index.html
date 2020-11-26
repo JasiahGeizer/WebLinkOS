@@ -2,6 +2,8 @@
 <!--
 	To Do:
 		- Better graphical representation of question 
+		- Fix division questions
+		- change bg to grey once level finished
 
 	Releases:
 		- 1.1: Added Replay and Highscore
@@ -9,6 +11,7 @@
 		- 1.3: Addition and Subtraction UI Added
 		- 1.4: Addition, Subtraction, Division Functionality Added. Any Combination Possible.
 		- 1.5: Fixed Restart Button (Stops Timer), Added "Faster" Button & Levels Label, Unlocks at a score of 10.
+		- 1.6: Faster btn shown mid-game at >9, shows wrong answer inputed next to correct answer, level unlock sound added, txt box padding fixed    
 -->
 <html>
 <title>Maths Quiz</title>
@@ -40,7 +43,7 @@
 			}
 			#wordTXT{
 				/*border-radius: 3px;*/
-				width: 100%;
+				/*width: 100%;*/
 				border:0px;
 				box-shadow: 0px 0px 0px grey;
 				/*padding: 3px;*/
@@ -68,7 +71,7 @@
 			#all{
 				left: 50%;
 				top: 50%;
-				width: 614px;
+				/*width: 614px;*/
 				position: absolute;
 				transform: translate(-50%, -50%);
 				/*box-shadow: 0px 0px 10px darkgrey;*/
@@ -93,7 +96,7 @@
 			#wrongWords{
 				font-size: 25px;
 				/*text-align: right;*/
-				line-height: 40px;
+				line-height: 32px;
 				color:white;
 				width: 150px;
 				display: none;
@@ -206,6 +209,7 @@
 				var cal;
 				var audio = new Audio('correct.wav');
 				var audio2 = new Audio('wrong.wav');
+				var audio3 = new Audio('levelup.wav');
 				var Nana=false;
 				var myVar;
 				var highscore=0;
@@ -222,7 +226,9 @@
 						document.body.style.backgroundColor = "#20b257";
 						document.getElementById("score").innerHTML = "Score: "+score;
 						widthr = widthr - 5;
+						if (score!=10) {
 						audio.play();
+						}
 					}else if(document.getElementById("wordTXT").value !== val){
 						wrong=wrong+1;
 						document.body.style.backgroundColor = "#c73c4c";
@@ -231,9 +237,16 @@
 
 						document.getElementById("wrongWords").innerHTML = document.getElementById("wrongWords").innerHTML
 						+"\r\n"
-						+document.getElementById("ToSpell").innerHTML+" "+val;
+						+document.getElementById("ToSpell").innerHTML+" "
+						+" <S style='color:#00000099'><i>"+document.getElementById("wordTXT").value+"</i></S> "//show wrong answer crossed out 
+						+val
+						;
 						audio2.play();
-					}	
+					}	if (score==10) { //show faster when game still going
+						document.getElementById("speeding").style.display="block";
+						audio3.play();
+						//play sound
+					}
 				}
 				if(start==false){
 					cal = document.getElementById("wordTXT").value;

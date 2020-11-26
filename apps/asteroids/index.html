@@ -20,6 +20,9 @@
         1.1: Added sound effects (player/boulder/rocket/shooting/level up), fixed bullet spawn position, added rocket,  player hit, and player die animations, dont spawn boulders on player, health system changed to 3 tiers of accent colors (changes (rocket/death animation/bullets), smaller boulders can move faster, velocity resets on hit,  on new level, remove current bullets, shooting moves ship back, levelup/negative on hit sounds fixed, game over now resets, put all boulders & bullets into empty divs to group them
         1.2: bullets loop & remove at +100 from border, jet size shrinks with health, 
         1.3: Show level number & restart msg on game over, level 1 restart only takes 1 shot 
+
+        - to do: add blink in as unhittable for 2 seconds, add music add mute toggle and mute instructions 
+        - to do (new): alternate shoot btn, like backwards
     -->
 	<head>
 		<meta charset="utf-8">
@@ -348,7 +351,27 @@
       }
 
 /* _______________________________________ Sounds & Audio _______________________________________ */
-
+      var music = new Audio('dodge/music3.wav');
+      music.preload = 'auto';
+      function musicSound(){
+        if (muteToggle==1 || muteToggle==2) {
+          if (!menuMusic.ended) {menuMusic.currentTime = 0;menuMusic.pause();}
+          music.volume=1;
+          music.loop = true;
+          music.play();
+        }
+      }
+      //menuMusicSound(); //start playing menu music on launch
+      var menuMusic = new Audio('dodge/music1.wav');
+      music.preload = 'auto';
+      function menuMusicSound(){
+        if (muteToggle==1 || muteToggle==2) {
+          if (!music.ended) {music.currentTime = 0;music.pause();}
+          menuMusic.volume=1;
+          menuMusic.loop = true;
+          menuMusic.play();
+        }
+      }
 
       var shoot = new Audio('shoot3.wav');
       shoot.preload = 'auto';
@@ -402,8 +425,18 @@
 /* _______________________________________ Movement & Controls _______________________________________ */
       var d=u=l=r=s=false;
       var d1=u1=l1=r1=s1=false;
+      var strt=false;
+      var muteToggle=1;
       function moveSelection(evt) { //wasd to move  
       switch (evt.keyCode) {
+          case 77: //m - mute toggle
+            muteToggle++;
+            if (muteToggle==5) {muteToggle=1;}
+            if (muteToggle>2) {menuMusic.pause();music.pause();}
+            if (muteToggle==1 && level==false) {musicSound();}else if (muteToggle==1 && level==true){menuMusicSound();}
+            if (muteToggle==2 || muteToggle==4) {jetSound.pause();}
+            //if (muteToggle==1 || muteToggle==3) {u1=true;}
+            break;
           case 37:
           case 65: //left
             if (l1==false) {
@@ -420,6 +453,7 @@
             break;
           case 38:
           case 87: //up
+            if (strt==false) {strt=true;menuMusicSound();}
             if (u1==false) {
               document.getElementById("fire").style.visibility="visible";
               u = setInterval(move, 20, "u");
@@ -553,6 +587,7 @@
             QSA1[i8].remove();
           }
 
+      if(level==1){musicSound();menuMusic.pause();} //need to stop it from playing mutiple times
       level++;
       for (var i = 1; i < level*1.75; i++) {
         createBoulder();
