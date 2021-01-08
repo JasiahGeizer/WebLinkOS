@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+
+<!-- To Do:
+	- Detect wins and add "you win" text & flash diff. colors for 2 sec
+	- Add visual indicator of speed increase levels
+	
+	~ Add sound effects
+	~ Add "Crazy" mode with random speed at each level
+	~ Save highscore??
+
+	Releases:
+		- 0.1: 3 blocks at a time, move to next row, keep block previous row block posistion, space to save block position and go next level, enter to start, stop loop at end/lose, only keep blocks under a block, if none are under any blocks = game over, restart game button (enter), block count reduces with miss
+		- 0.2: block count fix - swap from int plusing on greater miss count to int color change to black (all ints still fire), added autostart, speed up at level 10 & 14, added mob. support / onscreen button, added 2 colors
+-->
+
+<html>
+	<head>
+		<style type="text/css">
+			html, body {
+				height: 99%;
+				user-select: none;
+				-moz-user-select: none;
+				background-color: #383838;
+				font-family: monospace;
+				color:white;	
+			}			
+			.items1{
+				float: left;
+				margin:2px;
+				background-color: #000;
+				width: 40px;
+				height: 40px;
+				/*border-radius: 10px;*/
+				/*border: 3px solid #0053c9;*/
+				box-shadow: inset 4px 4px 0px 0px #ffffff24, inset -4px -4px 0px 0px #0000002b;
+			}
+			.items1:hover{
+				background-color: #868686;
+				border-color: #868686;
+				/*box-shadow: 0px -10px 1px yellow;*/
+			}
+			.grouped{
+				position: relative;
+				width: 360px;
+				height: 690px;
+				top: 50px;
+				margin: 0 auto;
+				border-radius: 3px;
+				box-shadow: 0px 0px 25px #0c0c0c;
+				color: white;		
+			}
+			.btn{
+				background-color:#1d381c;
+				width: 175px;
+				height:100px;
+				display: inline-block;
+				left:50%;
+				top:-50px;
+				margin-left: 190px;
+				color:grey;
+				font-size: 20px;
+				text-align: center;
+			}
+			ul {
+			    margin: 0 auto;
+			    padding-left: 25px; 
+			    padding-right: 15px; 
+			    padding-top: 0px;
+			    list-style-type: none;
+			    display:block;
+			    font-family: sans-serif;
+			}	
+			p{
+				height: 5px;
+			}		
+			li {
+				color: darkslateblue;
+				text-align: center;
+				line-height: 25px;
+				font-size: 0px;
+			}
+			li:hover {
+				font-size: 12px;
+				color: black;
+			}
+		</style>
+	</head>
+
+
+	<body onload="docReady()" onkeydown="" onkeyup="">
+		Block Stacker
+		<i>
+			<br>
+				enter to restart, space to place block
+		</i>
+		<div class="grouped" style="background-color: #383838">
+			<br>
+			
+			<ul>
+				<li class="items1" id="105" ></li>
+				<li class="items1" id="104" ></li>
+				<li class="items1" id="103" ></li>
+				<li class="items1" id="102" ></li>
+				<li class="items1" id="101" ></li>
+				<li class="items1" id="100" ></li>
+				<li class="items1" id="99" ></li>		
+			</ul>
+			<ul>
+				<li class="items1" id="98" ></li>
+				<li class="items1" id="97" ></li>
+				<li class="items1" id="96" ></li>
+				<li class="items1" id="95" ></li>
+				<li class="items1" id="94" ></li>
+				<li class="items1" id="93" ></li>
+				<li class="items1" id="92" ></li>		
+			</ul>
+			<ul>
+				<li class="items1" id="91" ></li>
+				<li class="items1" id="90" ></li>
+				<li class="items1" id="89" ></li>
+				<li class="items1" id="88" ></li>
+				<li class="items1" id="87" ></li>
+				<li class="items1" id="86" ></li>
+				<li class="items1" id="85" ></li>		
+			</ul>
+			<ul>
+				<li class="items1" id="84" ></li>
+				<li class="items1" id="83" ></li>
+				<li class="items1" id="82" ></li>
+				<li class="items1" id="81" ></li>
+				<li class="items1" id="80" ></li>
+				<li class="items1" id="79" ></li>
+				<li class="items1" id="78" ></li>		
+			</ul>
+			<ul>
+				<li class="items1" id="77" ></li>
+				<li class="items1" id="76" ></li>
+				<li class="items1" id="75" ></li>
+				<li class="items1" id="74" ></li>
+				<li class="items1" id="73" ></li>
+				<li class="items1" id="72" ></li>
+				<li class="items1" id="71" ></li>		
+			</ul>
+			<ul>
+				<li class="items1" id="70" ></li>
+				<li class="items1" id="69" ></li>
+				<li class="items1" id="68" ></li>
+				<li class="items1" id="67" ></li>
+				<li class="items1" id="66" ></li>
+				<li class="items1" id="65" ></li>
+				<li class="items1" id="64" ></li>		
+			</ul>
+			<ul>
+				<li class="items1" id="63" ></li>
+				<li class="items1" id="62" ></li>
+				<li class="items1" id="61" ></li>
+				<li class="items1" id="60" ></li>
+				<li class="items1" id="59" ></li>
+				<li class="items1" id="58" ></li>
+				<li class="items1" id="57" ></li>		
+			</ul>
+			<ul>
+				<li class="items1" id="56" ></li>
+				<li class="items1" id="55" ></li>
+				<li class="items1" id="54" ></li>
+				<li class="items1" id="53" ></li>
+				<li class="items1" id="52" ></li>
+				<li class="items1" id="51" ></li>
+				<li class="items1" id="50" ></li>		
+			</ul>
+			<ul>
+				<li class="items1" id="49" ></li>
+				<li class="items1" id="48" ></li>
+				<li class="items1" id="47" ></li>
+				<li class="items1" id="46" ></li>
+				<li class="items1" id="45" ></li>
+				<li class="items1" id="44" ></li>
+				<li class="items1" id="43" ></li>		
+			</ul>
+			<ul>
+				<li class="items1" id="42" ></li>
+				<li class="items1" id="41" ></li>
+				<li class="items1" id="40" ></li>
+				<li class="items1" id="39" ></li>
+				<li class="items1" id="38" ></li>
+				<li class="items1" id="37" ></li>
+				<li class="items1" id="36" ></li>		
+			</ul>
+			<ul>
+				<li class="items1" id="35" ></li>
+				<li class="items1" id="34" ></li>
+				<li class="items1" id="33" ></li>
+				<li class="items1" id="32" ></li>
+				<li class="items1" id="31" ></li>
+				<li class="items1" id="30" ></li>
+				<li class="items1" id="29" ></li>		
+			</ul>
+			<ul>
+				<li class="items1" id="28" ></li>
+				<li class="items1" id="27" ></li>
+				<li class="items1" id="26" ></li>
+				<li class="items1" id="25" ></li>
+				<li class="items1" id="24" ></li>
+				<li class="items1" id="23" ></li>
+				<li class="items1" id="22" ></li>		
+			</ul>
+			<ul>
+				<li class="items1" id="21" ></li>
+				<li class="items1" id="20" ></li>
+				<li class="items1" id="19" ></li>
+				<li class="items1" id="18" ></li>
+				<li class="items1" id="17" ></li>
+				<li class="items1" id="16" ></li>
+				<li class="items1" id="15" ></li>		
+			</ul>
+			<ul>
+				<li class="items1" id="14" ></li>
+				<li class="items1" id="13" ></li>
+				<li class="items1" id="12" ></li>
+				<li class="items1" id="11" ></li>
+				<li class="items1" id="10" ></li>
+				<li class="items1" id="9" ></li>
+				<li class="items1" id="8" ></li>		
+			</ul>
+			<ul>
+				<li class="items1" id="7" ></li>
+				<li class="items1" id="6" ></li>
+				<li class="items1" id="5" ></li>
+				<li class="items1" id="4" ></li>
+				<li class="items1" id="3" ></li>
+				<li class="items1" id="2" ></li>
+				<li class="items1" id="1" ></li>		
+			</ul>
+
+			</div>
+		</div>
+		<div class="grouped btn" onmousedown="if(level<=14){nextLevel();}"> 
+			<br>SET
+			<br><br>
+				<i>
+					(spacebar)
+				</i>
+		</div>
+		<div class="grouped btn btn2" style="background-color:#381c1c;top:-160px;margin-left: -183px;" onclick="restart()"> 
+			<br> RESET
+			<br><br>
+				<i>
+					(enter)
+				</i>
+		</div>
+
+		<script type="text/javascript">
+
+			function docReady() {
+	          window.addEventListener('keydown', moveSelection);
+				order=4;
+				orderSub1=3;
+				orderSub2=2;
+				orderSub3=1;
+				colorPick=colorPicker();
+				level=0;
+				missCount=0;
+				SpeedSet();
+				for (var i = 105; i >= 1; i--) {
+					document.getElementById(i).style.background="black";
+				}
+	        }
+
+			var order=4;
+			var orderSub1=3;
+			var orderSub2=2;
+			var orderSub3=1;
+			var colorPick=colorPicker();
+			var level=0;
+			function lightBlocks() {
+				if (level==10) { //speed up at level 10
+					clearInterval(speed);
+					speed = setInterval(lightBlocks, 85);
+				}
+				if (level==14) { //speed up at level 10
+					clearInterval(speed);
+					speed = setInterval(lightBlocks, 70);
+				}
+
+
+				order++;
+				orderSub1++;
+				orderSub2++;
+				orderSub3++;
+				if (order>=(8+(7*level))) 		{order=1+(7*level);}
+				if (orderSub1>=(8+(7*level))) 	{orderSub1=1+(7*level);}
+				if (orderSub2>=(8+(7*level))) 	{orderSub2=1+(7*level);}
+				if (orderSub3>=(8+(7*level))) 	{orderSub3=1+(7*level);}
+
+				//console.log((order+(7*level)));
+				
+
+				if (missCount<3) {
+					document.getElementById(order).style.background=colorPick;
+				}else{
+					end();
+					document.getElementById(order).style.background="black";
+				}
+
+				if (missCount<2) {
+					document.getElementById(orderSub1).style.background=colorPick;
+				}else{
+					document.getElementById(orderSub1).style.background="black";
+				}
+
+				if (missCount<1) {
+					document.getElementById(orderSub2).style.background=colorPick;
+				}else{
+					document.getElementById(orderSub2).style.background="black";
+				}
+
+				document.getElementById(orderSub3).style.background="black";
+			}
+			var speed;
+			function SpeedSet(){
+				speed = setInterval(lightBlocks, 100);
+			}
+
+			function colorPicker(){
+				switch(Math.floor((Math.random() * 7) + 1)){
+					case 1: 
+						return "#00f1fc"; //light blue
+						break;
+					case 2:
+						return "#ffff01"; //yellow
+						break;
+					case 3:
+						return "#0055fe"; //dark blue
+						break;
+					case 4:
+						return "#e91e63"; //red
+						break;
+					case 5:
+						return "#ff6801"; //orange
+						break;
+					case 6:
+						return "#01ff09"; //green
+						break;
+					case 7:
+						return "#cb00fe"; //red - unused
+						break;
+				}
+			}
+
+			function nextLevel(){
+				stackCheck();
+				if (level==14) {
+					end();
+				}
+				level++;
+				colorPick=colorPicker();
+				order=order+7;
+				orderSub1=orderSub1+7;
+				orderSub2=orderSub2+7;
+				orderSub3=orderSub3+7;
+				//console.log(missCount);
+			}
+
+	        function moveSelection(evt){
+	        	//console.log(evt.keyCode+" 1");
+	        	switch(evt.keyCode){
+	        		case 32: //spacebar
+	        			if(level<=14){
+		        			nextLevel();
+		        			//console.log(level);
+	        			}
+	        			break;
+	        		case 13: //enter
+	        			restart();
+	        			break;
+	        	}
+	        }
+
+	        var OrderPrev, OrderPrev1, OrderPrev2, OrderPrev3, missCount;
+	        function stackCheck(){
+	        	missCount=0;
+	        	//console.log(level,order%7,orderSub1%7,orderSub2%7,orderSub3%7);
+
+	        	//if its not the first level, check that the block getting saved has block under it
+	        	if (level>0) {
+		        	if (order%7==OrderPrev || order%7==OrderPrev1 || order%7==OrderPrev2) {
+		        	}else{document.getElementById(order).style.background="black";}
+
+		        	if (orderSub1%7==OrderPrev || orderSub1%7==OrderPrev1 || orderSub1%7==OrderPrev2) {
+		        	}else{document.getElementById(orderSub1).style.background="black";}
+
+		        	if (orderSub2%7==OrderPrev || orderSub2%7==OrderPrev1 || orderSub2%7==OrderPrev2) {
+		        	}else{document.getElementById(orderSub2).style.background="black";}
+	        	}
+
+	        	//if its not blank, save previous block position
+	        	if (document.getElementById(order).style.background!=="black") {
+		        	OrderPrev=order%7;}else{OrderPrev=null;missCount++;}
+
+		        if (document.getElementById(orderSub1).style.background!=="black") {
+		        	OrderPrev1=orderSub1%7;}else{OrderPrev1=null;missCount++;}
+
+		        if (document.getElementById(orderSub2).style.background!=="black") {
+		        	OrderPrev2=orderSub2%7;}else{OrderPrev2=null;missCount++;}
+
+		       
+	        }
+
+	        function end(){
+	        	clearInterval(speed);
+	        	speed=null;
+	        }
+	        function restart(){
+    			if(!speed){
+    				order=4;
+					orderSub1=3;
+					orderSub2=2;
+					orderSub3=1;
+					colorPick=colorPicker();
+					level=0;
+        			missCount=0;
+        			SpeedSet();
+    				for (var i = 105; i >= 1; i--) {
+    					document.getElementById(i).style.background="black";
+    				}
+    			}
+	        }
+		</script>
+	</body>
+</html>
