@@ -1,99 +1,112 @@
 <!DOCTYPE html>
+
 <html>
 	<head>
-<style>/*
-<!-- To Do:
-	- change menu to event.stopPropagation() instead of variable
-	- fix preview box
-		- show selected tower's design?
-		- if selected on field tower - show current dmg/rng/spd and 2 upgrade buttons
-		- increase preview box size for menu towers (vs field towers).
-	- hide preview (stop propogation? // mouseover?) of new towers when over path instead of playfield?
-	- need to spread out the enemy spawns on game start
-	- need to increase enemy count for each new level
-	- preview enemy type of next level 
-	- give enemy different speeds
-	- esc to deselect 
+		<meta charset="UTF-8">
+		<style>/*
+			To Do:
+				- give max range
+				- on deselect of tower on menu - empty previewbox
+				- update all tower descriptions for upgrade screen
 
-	---
+				- need to spread out the enemy spawns on game start
+				- need to increase enemy count for each new level
+				- give enemy different speeds/health/strength against diff attack types
 
-	- need item preview/description & next level preview/description
-		- preview description must include 2 upgrade buttons
-			- add box shadow to distinguish design
+				- preview enemy the type of next level 
+				- esc to deselect 
+				- hide preview (stop propogation? // mouseover?) of new towers when over path instead of playfield?
 
-	- preview hover needs to show range
-	- preview box needs to show description text & building preview
+				---
 
-	- give enemies health
-	- make towers shoot
-	- make on hit > enemies lose health
-	
-	~ preview tower placement (& range of tower) on mouse hover over playfield
-	~ make existing towers selectable 
-		~ to destroy 
-		~ to upgrade
-		~ to move (for a fee)
-		~ to show range (range as data attribute)
+				- give enemies health
+				- make towers shoot
+				- make on hit > enemies lose health
+				
+				~ make existing towers selectable 
+					~ to upgrade
+					~ to move (for a fee)
+					~ to show range (range as data attribute)
 
-		- on click (div)
-			- show in preview, give red border
-				- show upgrade options
-				- add "Delete" & "Move" icons
-				- move range preview to div position
-		- on click playfield
-			- deselect tower
+					- on click (div) - show in preview, give red border
+						- show upgrade options
+						- add "Move" icons
+						- move range preview to div position
 
-	Bugs:
-		- if scrolled down - preview/place position is wrong
-		- if deselected - hide preview
-		- when trying to place over another tower, it selects tower, but doesn't remove preview
-		- need to remove expensive items at startup
+			Bugs:
+				- change menu to event.stopPropagation() instead of variable
+				- if scrolled down - preview/place position is wrong
+				- if deselected - hide preview
+				- when trying to place over another tower, it selects tower, but doesn't remove preview
+				- need to disable/rm bg of expensive items at startup
+				- can't change selection from startup
+				- stop upgrade screen hiding on upgrade button press
 
-	Releases:
-		- 0.1: 
-			Menu and playfield created in div, 
-			selectable elements in menu, able to unselect items from menu, 
-			working preview box, create selected item on mouse click, 
-			if price > income - make unclickable
-		- 0.2: 
-			Show and updateable price, 
-			Box greys out if can't afford-after each click, 
-			if can't afford selected box - it goes red, 
-			change box selection - they stay the correct color, 
-			buildings colored & 50px square, Fixed: when deselect & click - check if null before placement, 
-			Fix: can adjust browser window after placement, 
-			can only can place inside playfield, 
-			hide preview if out of playfield, 
-			preview shows actual color from data attribute
-		- 0.3: 
-			theme'd all items w/ color & name, 
-			adjusted prices (grouped by level), 
-			added enemy: spawn/design/basic movement/end goal, 
-			added go button, 
-			lives and level variable/text added, 
-			lives decrease on reaching the edge, 
-			game over detected on 0 lives, 
-			enemies given random top position within 50px of border
-		- 0.4: 
-			Start button greys out & increments next level, 
-			hide preview hover on menu deselect, 
-			made towers clickable, 
-			fix: only click on tower not whole playfield. 
-			Fix: select 1 tower at a time, 
-			option to delete selected tower, 
-			only show delete when tower's selected, 
-			changed menu btn bg to color, 
-			changed select color change to box shadow, 
-			added collsision detection between path and new towers, 
-			prevent new towers from being placed over paths, enemies follow path, 
-			enemy spawns on start, 
-			start button resets on game win, 
-			Fix: unbuyable items disable, 
-			fixed preview box size/position, 
-			added dmg/rng/spd to preview box 
-			dmg/rng/spd/description change in preview box with menu selection
--->*/
-</style>
+			Releases:
+				- 0.1: 
+					Menu and playfield created in div, 
+					selectable elements in menu, able to unselect items from menu, 
+					working preview box, create selected item on mouse click, 
+					if price > income - make unclickable
+				- 0.2: 
+					Show and updateable price, 
+					Box greys out if can't afford-after each click, 
+					if can't afford selected box - it goes red, 
+					change box selection - they stay the correct color, 
+					buildings colored & 50px square, Fixed: when deselect & click - check if null before placement, 
+					Fix: can adjust browser window after placement, 
+					can only can place inside playfield, 
+					hide preview if out of playfield, 
+					preview shows actual color from data attribute
+				- 0.3: 
+					theme'd all items w/ color & name, 
+					adjusted prices (grouped by level), 
+					added enemy: spawn/design/basic movement/end goal, 
+					added go button, 
+					lives and level variable/text added, 
+					lives decrease on reaching the edge, 
+					game over detected on 0 lives, 
+					enemies given random top position within 50px of border
+				- 0.4: 
+					Start button greys out & increments next level, 
+					hide preview hover on menu deselect, 
+					made towers clickable, 
+					fix: only click on tower not whole playfield. 
+					Fix: select 1 tower at a time, 
+					option to delete selected tower, 
+					only show delete when tower's selected, 
+					changed menu btn bg to color, 
+					changed select color change to box shadow, 
+					added collsision detection between path and new towers, 
+					prevent new towers from being placed over paths, enemies follow path, 
+					enemy spawns on start, 
+					start button resets on game win, 
+					Fix: unbuyable items disable, 
+					fixed preview box size/position, 
+					added dmg/rng/spd to preview box 
+					dmg/rng/spd/description change in preview box with menu selection
+				- 0.5:
+					added range preview
+					range preview visibility toggles w/ tower preview
+					range preview - on tower field click - set to position
+					if deselected - hide preview & deselect
+					hide stats in previewbox on playfield tower click
+					working upgrade buttons
+					upgrading save to tower dataset
+				- 0.6:
+					press escape to unclick tower and remove selection
+					description updates on playfield tower click
+					price shows in upgrade options
+					cost increases with each upgrade
+					price disables if too expensive
+					on playfield tower deselect - empty previewbox
+					range onfieldclick adjusts to div rng size  
+					preview range adjusts to div rng size
+					range updates instantly on upgrade
+					fixed: it tried to read preview when unclicked
+
+			*/
+		</style>
 		<title>Tower Defence</title>
 		<style type="text/css">
 			html, body {
@@ -104,7 +117,6 @@
 				font-family: monospace;
 				color:white;	
 			}			
-
 			.grouped{
 				position: relative;
 				width: 700px;
@@ -185,7 +197,6 @@
 			.button:active{
 				box-shadow: inset 0px 0px 3px 1px black, inset 0px 0px 0px 1px black;
 			}
-
 			.path{
 				background: palegoldenrod;
 				width: 50px;
@@ -196,18 +207,39 @@
 			p{
 				margin: 0px;
 			}
+			#upgrades{
+				display: none;
+			}
+			.upgradeBox{
+				box-shadow: 0px 0px 0px 1px black;
+				background: orange;
+				width: 100px;
+				margin-top:5px;
+				color: black;
+				padding-left: 11px;
+				height: 20px;
+				line-height: 20px;
+			}
+			.upgradeBox:hover{
+				box-shadow: 0px 0px 2px 1px black;
+				background: #ffd400;
+				color: black;
+			}
+			.upgradeBox:active{
+				box-shadow: inset 0px 0px 1px 1px black;
+				background: #ff6a00;
+			}
 		</style>
 	</head>
 
-
-	<body onload="" onkeydown="" onkeyup="">
+	<body onload="" onkeydown="btnPress(event)" onkeyup="">
 		Tower Defence
 		<i>
 			<br>
 				enter to restart, space to place block
 		</i>
 		<div class="grouped" style="background: #383838">
-			<div id="bg" class="menu" onclick="removeSelected()">
+			<div id="bg" class="menu" onclick="removeSelected(event)">
 				Menu - level: <span id="level"> 1</span>
 				<p id="income" style="margin: 0px; margin-top: 2px;">$: 1</p>
 				<p id="lives" style="margin: 0px; margin-bottom: 2px;">♥: 20</p>
@@ -253,7 +285,7 @@
 					<div style="margin: 0px;bottom: 220px;position: absolute;">
 						<li class="button" id="delete" onclick="removeTower();" style="background: red;font-size: 13px;width: 58px;visibility: hidden;">Delete</li>
 					</div>
-					<ul style="margin: 0px;bottom: 60px;position: absolute;">
+					<ul style="margin: 0px;bottom: 60px;position: absolute;" onclick="updateRevenue()">
 						<li style="width: 112px;height: 148px;background: crimson;">Preview
 							<p id="previewBox">This is a description of what the item does.</p>
 							<p id="dmgBox"> 
@@ -263,6 +295,11 @@
 							</p>
 							<p id="rngBox">🎯: 10</p>
 							<p id="speedBox">⚡: 10</p>
+							<div id="upgrades">
+								<div class="upgradeBox" id="upgrade1" onclick="upgrade(1, this)">🎯</div>
+								<div class="upgradeBox" id="upgrade2" onclick="upgrade(2, this)">⚡</div>
+							</div>
+							
 						</li>
 					</ul>
 					<div style="margin: 0px;bottom: 10px;position: absolute;">
@@ -270,13 +307,14 @@
 					</div>
 				</ul>
 			</div>
-			<div class="field"  id="plyfld" onclick="createInput(event)" onmousemove="previewHovr(event)">
+			<div class="field" id="plyfld" onclick="createInput(event)" onmousemove="previewHovr(event)">
 				Playfield
 
 				<!--
 					 onmouseleave="previewHide()"-->
 
 					<div id="preview" style="width: 50px; height: 50px; background: hotpink; position: fixed; left: 718px; top: 617px;opacity: 0.75;z-index: 10;">1</div>
+					<div id="preview2" style="border-radius: 500px; width: 150px; height: 150px; background: #e4145b; position: fixed; left: 668px; top: 570px;opacity: 0.2;z-index: 9;"></div>
 
 					<div id="enemyContainer">
 						
@@ -290,6 +328,10 @@
 						<div class="path" style="left: 300px;top: 200px;width: 200px;"></div>
 						<div class="path" style="left: 450px;top: 200px;height: 390px;"></div>
 					</div>
+
+					<div id="towerContainer">
+						
+					</div>
 			</div>
 		</div>
 
@@ -302,6 +344,9 @@
 			var boxInfo;
 
 			function bgChange(that){ //menu item selection
+				if (document.getElementById("delete").style.visibility="visible") {
+					unClickTower();
+				}
 				//document.getElementById(selected).style.background="orange";
 				for (var i = 12; i >= 1; i--) {
 					document.getElementById(i).style.background=document.getElementById(i).dataset.color;
@@ -313,7 +358,6 @@
 				liFired=true;
 				//document.getElementById("previewBox").innerHTML=selected;
 				
-				console.log(that,"asdf")
 				boxInfo = getBoxInfo(that);
 				//dmg1 // dmg2 // rngBox // speedBox
 				document.getElementById("previewBox").innerHTML=boxInfo[0];
@@ -324,12 +368,16 @@
 
 				availableCoin();
 			}
-			function removeSelected(){ //menu deselection
+			function removeSelected(event){ //menu deselection
+				if (towerClicked!=null) {towerClicked.style.boxShadow=null;}
+				document.getElementById("delete").style.visibility="hidden";
+				unpreviewUpgrades("that");
 				if (liFired==false) {
 					for (var i = 12; i >= 1; i--) {
 						document.getElementById(i).style.background=document.getElementById(i).dataset.color;
 					}
 					selected=null;
+					document.getElementById("preview2").style.visibility="hidden";
 					document.getElementById("preview").style.visibility="hidden";
 				}else{
 					//console.log("clck");
@@ -337,6 +385,7 @@
 				liFired=false;
 				//document.getElementById("previewBox").innerHTML=selected;
 				availableCoin();
+				//event.stopPropagation(); //todo: not working
 			}
 			var rect2;
 			var rect1;
@@ -370,9 +419,17 @@
 							  newthing.style.width="50px";
 							  newthing.style.height="50px";
 							  newthing.style.zIndex="10";
+							
+							  var stats = getBoxInfo(selected);
+							  newthing.dataset.id=selected;
+							  newthing.dataset.rng=stats[5];
+							  newthing.dataset.spd=stats[6];
+
+							  var size = newthing.dataset.rng*13; //preview size
+
 							  newthing.style.background=document.getElementById(selected).dataset.color;
 							  newthing.setAttribute("onclick", "playClicked(this)");                  
-							  document.getElementById("plyfld").appendChild(newthing); // Your existing code
+							  document.getElementById("towerContainer").appendChild(newthing); // Your existing code
 
 
 							  // get the coordinates of the mouse
@@ -386,8 +443,6 @@
 							  newthing.dataset.price=document.getElementById(selected).dataset.price;
 								
 							  checkPlacement(newthing);
-
-							  console.log(document.getElementById(selected).dataset.price);
 
 							  revenue=revenue-document.getElementById(selected).dataset.price;
 							  document.getElementById("income").innerHTML="$: "+revenue;
@@ -436,25 +491,45 @@
 					}
 				}
 			}
+			var typePrev2;
 			function previewHovr(event){ //hover over game field - placement preview 
 				if (document.getElementById("preview").style.visibility=="hidden" && selected!=null) {
 					document.getElementById("preview").style.visibility="visible"
+					document.getElementById("preview2").style.visibility="visible";
 				}
-				if ((event.clientX-(window.innerWidth/2-190)<=515) && (event.clientY-115<546) && (event.clientX-(window.innerWidth/2-190)>=-5) && (event.clientY-115>=-5)) {	
+				if (document.getElementById("delete").style.visibility=="hidden") {
 
-				var prev = document.getElementById("preview");
-				var x = event.clientX-(window.innerWidth/2-190);     // get the horizontal coordinate
-				var y = event.clientY-115;   // get the vertical coordinate
+					if ((event.clientX-(window.innerWidth/2-190)<=515) && (event.clientY-115<546) && (event.clientX-(window.innerWidth/2-190)>=-5) && (event.clientY-115>=-5) && selected!=null) {	
+					var prev = document.getElementById("preview");
+					var x = event.clientX-(window.innerWidth/2-190);     // get the horizontal coordinate
+					var y = event.clientY-115;   // get the vertical coordinate
 
-				// position newthing using the coordinates
-				prev.style.position = "absolute"; // fixes el relative to page. Could use absolute.
-				prev.style.left = x + "px";
-				prev.style.top = y + "px";
+					// position newthing using the coordinates
+					prev.style.position = "absolute"; // fixes el relative to page. Could use absolute.
+					prev.style.left = x + "px";
+					prev.style.top = y + "px";
 
-				}else{
-					document.getElementById("preview").style.visibility="hidden";
+					//range box//
+					var prev2 = document.getElementById("preview2");
+					var x = (event.clientX-(window.innerWidth/2-190)-50); // change 50 to variable for range
+					var y = (event.clientY-115)-50;   // change 50 to variable for range
+
+					// position newthing using the coordinates
+
+					typePrev2=getBoxInfo(selected);
+					
+					prev2.style.position = "absolute";
+					prev2.style.left = x+74-((typePrev2[5]*13+100)/2)+ "px";
+					prev2.style.top = y+74-((typePrev2[5]*13+100)/2) + "px";
+
+					prev2.style.width = typePrev2[5]*13+100+"px";
+					prev2.style.height = typePrev2[5]*13+100+"px";
+
+					}else{
+						document.getElementById("preview2").style.visibility="hidden";
+						document.getElementById("preview").style.visibility="hidden";
+					}
 				}
-				
 			}
 
 			function enemySpawn(type){
@@ -558,34 +633,168 @@
 				bgUpdate();
 			}
 
-			var towerClicked=null;
+			var towerClicked=document.getElementById(1);
 			function playClicked(that){
-				removeSelected();
-				if (towerClicked!=null) {towerClicked.style.boxShadow=null;}
 
-				console.log(that, that.innerHTML, that.style.background);
+				updateStats(that);
+
+				removeSelected(event);
+				//if (towerClicked!=null) {towerClicked.style.boxShadow=null;}
+				
+				//-Need to create bool for follow mouse vs stick to tower - need fix if mouseleave dont hide -//
+				document.getElementById("preview2").style.visibility="visible";
+				document.getElementById("preview2").style.left=parseInt(that.style.left);
+				//--//
+
+
 				//turn preview box into function that recieves color, price variables
 				that.style.boxShadow="0px 0px 0px 2px red";
 				document.getElementById("delete").style.visibility="visible";
+				unpreviewUpgrades("that");
 				towerClicked=that;
+
+				//range preview
+					/*var prev2 = document.getElementById("preview2");
+					var x = (parseInt(that.style.left)+24-((that.dataset.rng*13+100)/2)); // checkange 50 to variable for range
+					var y = (parseInt(that.style.top))+24-((that.dataset.rng*13+100)/2);   // change 50 to variable for range
+
+					// position newthing using the coordinates
+					prev2.style.position = "absolute";
+					prev2.style.left = x + "px";
+					prev2.style.top = y + "px";
+
+					prev2.style.width=that.dataset.rng*13+100+"px";
+					prev2.style.height=that.dataset.rng*13+100+"px";*/
+					updateRNG(that);
+
+				previewUpgrades(that);
+				event.stopPropagation();
+			}
+			function updateRNG(that){
+					var prev2 = document.getElementById("preview2");
+					var x = (parseInt(that.style.left)+24-((that.dataset.rng*13+100)/2)); // checkange 50 to variable for range
+					var y = (parseInt(that.style.top))+24-((that.dataset.rng*13+100)/2);   // change 50 to variable for range
+
+					// position newthing using the coordinates
+					prev2.style.position = "absolute";
+					prev2.style.left = x + "px";
+					prev2.style.top = y + "px";
+
+					prev2.style.width=that.dataset.rng*13+100+"px";
+					prev2.style.height=that.dataset.rng*13+100+"px";
+			}
+			function previewUpgrades(that){
+				//console.log(that);
+				if (document.getElementById("delete").style.visibility!=="hidden") {					
+					document.getElementById("dmg1").style.display="none";
+					document.getElementById("dmg2").style.display="none";
+					document.getElementById("rngBox").style.display="none";
+					document.getElementById("speedBox").style.display="none";
+
+					//todo: show upgrade box
+					document.getElementById("upgrades").style.display="inline";
+				}
+			}
+			function unpreviewUpgrades(that){
+				if (document.getElementById("delete").style.visibility!=="visible") {					
+					document.getElementById("dmg1").style.display="inline";
+					document.getElementById("dmg2").style.display="inline";
+					document.getElementById("rngBox").style.display="inline";
+					document.getElementById("speedBox").style.display="inline";
+
+					//todo: hide upgrade box
+					document.getElementById("upgrades").style.display="none";
+				}
+			}
+
+			function upgrade(that, that2){
+				//todo: need to check if can afford
+				//console.log(that2); //need to get id to get the range/speed to upgrade it 
+				if (that==1){
+					if (revenue-(parseInt(tempID.dataset.spd)*1.5)>0){
+						revenue=revenue-(tempID.dataset.spd*1.5); //todo: get exact price // reevauluate if can afford upgrade
+						tempID.dataset.spd=parseInt(tempID.dataset.spd)+2;
+					}
+
+				}else if (that==2) {
+					if (revenue-(parseInt(tempID.dataset.rng)*1.5)>0){
+						revenue=revenue-(tempID.dataset.rng*1.5); //todo: get exact price
+						tempID.dataset.rng=parseInt(tempID.dataset.rng)+2;
+					}
+				}
+				updateStats2(tempID);
+				updateRNG(towerClicked);
+				updateRevenue();
+				availableCoin();
 				event.stopPropagation();
 			}
 
 			function unClickTower(){
 				document.getElementById("delete").style.visibility="hidden";
+				document.getElementById("preview2").style.visibility="hidden";
+				unpreviewUpgrades("that");
 				towerClicked.style.boxShadow=null;
 				//if delete visible > make invisible
+				previewDeselect();
 			}
 
 			function removeTower(){ //delete tower
 				towerClicked.remove();
 				document.getElementById("delete").style.visibility="hidden";
+				unpreviewUpgrades("that");
+			}
+
+			function updateRevenue(){
+				document.getElementById("income").innerHTML="$: "+revenue;
+			}
+
+			var tempID;
+			var test;
+			function updateStats(that){
+				document.getElementById("upgrade1").innerHTML="$"+(that.dataset.spd*1.5)+" "+" ⚡ "+that.dataset.spd+"+"+2;
+				document.getElementById("upgrade2").innerHTML="$"+(that.dataset.rng*1.5)+" "+" 🎯 "+that.dataset.rng+"+"+2;
+				//document.getElementById("previewBox").innerHTML=that[0];
+
+				tempID=that;
+
+
+				test = getBoxInfo(that.dataset.id);
+				document.getElementById("previewBox").innerHTML=test[0];
+
+				if ((parseInt(that.dataset.spd)*1.5)>revenue) {
+					document.getElementById("upgrade1").style.background="grey";
+				}else{
+					document.getElementById("upgrade1").style.background="orange"; 
+				}
+				if ((parseInt(that.dataset.rng)*1.5)>revenue) {
+					document.getElementById("upgrade2").style.background="grey";
+				}else{
+					document.getElementById("upgrade2").style.background="orange"; 
+				}
+			}
+			function updateStats2(that){
+				document.getElementById("upgrade1").innerHTML="$"+(that.dataset.spd*1.5)+" "+" ⚡ "+that.dataset.spd+"+"+2;
+				document.getElementById("upgrade2").innerHTML="$"+(that.dataset.rng*1.5)+" "+" 🎯 "+that.dataset.rng+"+"+2;
+				//document.getElementById("previewBox").innerHTML=that[0];
+
+				tempID=that;
+
+				if ((parseInt(that.dataset.spd)*1.5)>revenue) {
+					document.getElementById("upgrade1").style.background="grey";
+				}else{
+					document.getElementById("upgrade1").style.background="orange"; 
+				}
+				if ((parseInt(that.dataset.rng)*1.5)>revenue) {
+					document.getElementById("upgrade2").style.background="grey";
+				}else{
+					document.getElementById("upgrade2").style.background="orange"; 
+				}
 			}
 
 			/*on startup*/
 				availableCoin();
 				bgUpdate();
-				document.getElementById("income").innerHTML="$: "+revenue;
+				updateRevenue()
 				//document.getElementById(1).style.background="#de7100";
 			/*----------*/
 
@@ -690,9 +899,30 @@
 						break;	
 				}
 			}
-			var test = getBoxInfo(1);
 
+			function btnPress(event){
+				if (event.keyCode==27) {
+					if (document.getElementById("delete").style.visibility="visible") {
+						unClickTower();
+					}
+					removeSelected(event);
+				}
+			}
 
+			function previewDeselect(){
+				if (document.getElementById("delete").style.visibility=="visible") {
+					//document.getElementById("dmg1").innerHTML="";
+					//document.getElementById("dmg2").innerHTML="";
+					//document.getElementById("rngBox").innerHTML="";
+					//document.getElementById("speedBox").innerHTML="";
+				}else{
+					document.getElementById("previewBox").innerHTML="";
+					document.getElementById("dmg1").innerHTML="";
+					document.getElementById("dmg2").innerHTML="";
+					document.getElementById("rngBox").innerHTML="";
+					document.getElementById("speedBox").innerHTML="";
+				}
+			}
 		</script>
 	</body>
 </html>
