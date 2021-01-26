@@ -5,25 +5,26 @@
 		<meta charset="UTF-8">
 		<style>/*
 			To Do:
+
 				- balance game difficulty - make harder - increase tower health & decrease damage/attack speed
 				- make enemies walk faster at harder levels
-
-				- make some towers direct target enemys - rotating turret div w/ moving bullets +css animation explosion 
 
 				- update all tower descriptions for upgrade screen
 
 				- play animation at speed of attack (restart animation)
 
 				- increase tower speed cost by damage potential
+				
+				- make bullet color = tower color
 
 			Planned:
-				~ change delete to sell (and give some money back) - show what its worth eg: "Sell ($4)"
-				~ (!Easy!) add buttons 1 to 9 as shortcuts for towers?
+				~ add buttons 1 to 9 as shortcuts for towers?
 				~ show slight design change on tower attack upgrade?
+				~ add button to speed everything up (replace greyed out start button with ">>" for fast-forward)
 				~ make existing towers movable (for a fee)
 				~ add randomness to path position
 				~ design towers/enemys as pngs 
-				~ add sound / music
+				~ add sound / music / mute btn
 				~ add mutiple maps (new path layout/design - new playfield background)
 				~ explain how different types inter-play with each other?
 
@@ -33,6 +34,10 @@
 				- list type of onfield tower onclick in previewbox
 				- fix type error bug
 				- fix towers only attacking 1 at a time
+				- when clicked on a tower with upgrade you can't afford, if you get the money, it stays greyed out
+				- after tower destroys bullet and gets money, previously unafordable items stay greyed out
+				- (!!) more bullets shoot when more enemies on the field
+					- need to add variable counter that spaces shots out - like first 4 towers 
 
 			Releases:
 				- 0.1: 
@@ -128,6 +133,20 @@
 					upgrading tower speed increase speed 
 					increased cost of tower speed upgrade
 					revenue increase (based on enemy starting health) for each enemy killed
+					bug fixed: no longer removes "at max on deselct and reselect"
+				- 1.1: 
+					changed btn press if/then to case 
+					added esc/del to sell
+					cost of tower shows in dataset
+					sell button gives listed money back & updates income/options
+					added (non-working) move button
+				- 1.2:
+					show cost in preview
+					type 5 towers rotate to face enemy
+					type 5 towers spawn bullets
+					bullets move and follow rotation
+					tower rotation is animated 
+
 			*/
 		</style>
 		<title>Tower Defence</title>
@@ -259,10 +278,11 @@
 			}
 			#previewTXT{
 				background: darkslategrey;
-				padding-right: 61px;
 				padding-top: 4px;
 				margin-left:-4px;
 				box-shadow:0px 1px black;
+				display: inline-block;
+				width: 112px;
 				padding-left: 4px;
 			}
 			#previewBox{
@@ -306,6 +326,26 @@
 				40% {box-shadow: inset 0 0 0 30px #ffffff7a;}
 				100% {box-shadow: inset 0 0 0 0 #00000000}
 			}
+			.optionButton{
+				    background: red;
+				    font-size: 13px;
+				    width: 54px;
+				    height: 44px;
+				    line-height: 15px;
+				    padding-left: 5px;
+				    padding-top: 5px;
+				    text-align: left;
+				    display: inline-grid;
+			}
+			.bullet{
+				width:10px;
+				height: 10px;
+				position: absolute;
+				border-radius: 10px;
+				z-index: 10;
+				background: black;
+				transition:all 0.2s;
+			}
 		</style>
 	</head>
 
@@ -313,7 +353,7 @@
 		Tower Defence
 		<i>
 			<br>
-				enter to start level, esc to remove current selection
+				enter to start level, esc to remove current selection, delete/backspace to sell
 		</i>
 		<div class="grouped" style="background: #383838">
 			<div id="bg" class="menu" onclick="removeSelected(event)">
@@ -360,10 +400,11 @@
 					</li>
 
 					<div style="margin: 0px;bottom: 230px;position: absolute;">
-						<li class="button" id="delete" onclick="removeTower();" style="background: red;font-size: 13px;width: 58px;visibility: hidden;">Sell $0</li>
+						<li class="optionButton" id="delete" onclick="removeTower();" style="visibility: hidden;">Sell $0</li>
+						<li class="optionButton" id="delete2" onclick="removeTower();" style="visibility: hidden;background: orange">Move $20</li>
 					</div>
 					<ul style="margin: 0px;bottom: 60px;position: absolute;" onclick="updateRevenue()">
-						<li style="width: 112px;height: 158px;background: crimson;"><span id="previewTXT">Preview</span>
+						<li style="padding-top:1px;width: 112px;height: 158px;background: crimson;"><span style="width: 111px" id="previewTXT">Preview</span>
 							<i><p id="previewBox">This is a description of what the item does.</p></i>
 							<p id="dmgBox"> 
 								<span id="dmg1">💨 10 / 🔥 10 </span> 
@@ -409,6 +450,10 @@
 					<div id="towerContainer">
 						
 					</div>
+
+					<div id="bulletContainer">
+						
+					</div>
 			</div>
 		</div>
 
@@ -444,10 +489,13 @@
 				document.getElementById("speedBox").innerHTML=" ⚡: "+boxInfo[6];
 
 				availableCoin();
+
+				document.getElementById("previewTXT").innerHTML="Preview / $"+document.getElementById(that).dataset.price;
 			}
 			function removeSelected(event){ //menu deselection
 				if (towerClicked!=null) {towerClicked.style.boxShadow=null;}
 				document.getElementById("delete").style.visibility="hidden";
+				document.getElementById("delete2").style.visibility="hidden";
 				unpreviewUpgrades("that");
 				if (liFired==false) {
 					for (var i = 12; i >= 1; i--) {
@@ -456,7 +504,7 @@
 					selected=null;
 					document.getElementById("preview2").style.visibility="hidden";
 					document.getElementById("preview").style.visibility="hidden";
-
+					document.getElementById("previewTXT").innerHTML="Preview";
 					previewDeselect();
 				}else{
 					//console.log("clck");
@@ -498,12 +546,14 @@
 							  newthing.style.width="50px";
 							  newthing.style.height="50px";
 							  newthing.style.zIndex="10";
-							  newthing.className="tower"
+							  newthing.className="tower";
+							  newthing.style.transition="all 0.2s";
 							
 							  var stats = getBoxInfo(selected);
 							  newthing.dataset.id=selected;
 							  newthing.dataset.rng=stats[5];
 							  newthing.dataset.spd=stats[6];
+							  newthing.dataset.cost=document.getElementById(selected).dataset.price;
 							  newthing.dataset.spdr=15-parseInt(newthing.dataset.spd);
 
 							  var size = newthing.dataset.rng*13; //preview size
@@ -643,6 +693,7 @@
 			}
 
 			function moveEnemies(){ //need to keep on path
+				bulletMove();
 				var x = document.getElementById("enemyContainer").querySelectorAll(".enemyStyle");
 				if (x.length==0 && allSpawned==true) {levelWin();}//todoasdf
 				var i;
@@ -741,6 +792,7 @@
 				document.getElementById("start").style.color=null;
 				bgUpdate();
 				unClickTower();
+				clearBullets();
 			}
 
 			var towerClicked=document.getElementById(1);
@@ -760,6 +812,7 @@
 				//turn preview box into function that recieves color, price variables
 				that.style.boxShadow="0px 0px 0px 2px red";
 				document.getElementById("delete").style.visibility="visible";
+				document.getElementById("delete2").style.visibility="visible";
 				unpreviewUpgrades("that");
 				towerClicked=that;
 
@@ -804,15 +857,20 @@
 			}
 
 			function upgrade(that, that2){
+				var amount;
 				if (that==1 && (parseInt(tempID.dataset.spd)<=14)){
 					if (revenue-(parseInt(tempID.dataset.spd)*5)>0){
-						revenue=revenue-(tempID.dataset.spd*5); //todo: get exact price
+						amount=(tempID.dataset.spd*5);
+						revenue=revenue-amount; //todo: get exact price
+						tempID.dataset.cost=parseInt(tempID.dataset.cost)+amount;
 						tempID.dataset.spd=parseInt(tempID.dataset.spd)+1;
 					}
 
 				}else if (that==2) { //is rng upgrade too expensive or at max?
-					if (revenue-(parseInt(tempID.dataset.rng)*1.5)>0 && (parseInt(tempID.dataset.rng)<=97)){		
-							revenue=revenue-(tempID.dataset.rng*1.5); //todo: get exact price
+					if (revenue-(parseInt(tempID.dataset.rng)*1.5)>0 && (parseInt(tempID.dataset.rng)<=97)){
+							amount=(tempID.dataset.rng*1.5);	
+							revenue=revenue-amount; //todo: get exact price
+							tempID.dataset.cost=parseInt(tempID.dataset.cost)+amount;
 							tempID.dataset.rng=parseInt(tempID.dataset.rng)+2;
 					}
 				}
@@ -825,6 +883,7 @@
 
 			function unClickTower(){
 				document.getElementById("delete").style.visibility="hidden";
+				document.getElementById("delete2").style.visibility="hidden";
 				document.getElementById("preview2").style.visibility="hidden";
 				unpreviewUpgrades("that");
 				towerClicked.style.boxShadow=null;
@@ -833,8 +892,17 @@
 			}
 
 			function removeTower(){ //delete tower
+				//create a new dataset called "value" - add to each each upgrade?
+				//get cost of original tower - call tower values?
+				//add in upgrade costs - division required?
+				//mutiple by 0.8
+				//add back that value
+				revenue=parseInt(revenue)+Math.round(parseInt(towerClicked.dataset.cost)*0.8);
+				updateRevenue();
 				towerClicked.remove();
+				removeSelected(event);
 				document.getElementById("delete").style.visibility="hidden";
+				document.getElementById("delete2").style.visibility="hidden";
 				unpreviewUpgrades("that");
 			}
 
@@ -845,6 +913,7 @@
 			var tempID;
 			var test;
 			function updateStats(that){
+				document.getElementById("delete").innerHTML="Sell: $"+Math.round(that.dataset.cost*0.8);
 				document.getElementById("upgrade1").innerHTML="$"+(that.dataset.spd*5)+" "+" ⚡ "+that.dataset.spd+"+"+1;
 				document.getElementById("upgrade2").innerHTML="$"+(that.dataset.rng*1.5)+" "+" 🎯 "+that.dataset.rng+"+"+2;
 				//document.getElementById("previewBox").innerHTML=that[0];
@@ -855,36 +924,7 @@
 				test = getBoxInfo(that.dataset.id);
 				document.getElementById("previewBox").innerHTML=test[0];
 
-				if ((parseInt(that.dataset.spd)*5)>revenue) {
-					document.getElementById("upgrade1").style.background="grey";
-				}else{
-					if (parseInt(that.dataset.spd)<=14) { 
-						document.getElementById("upgrade1").style.background="orange"; 
-					}else{
-						document.getElementById("upgrade1").style.background="grey"; 
-					}
-				}
-
-
-				if ((parseInt(that.dataset.rng)*1.5)>revenue) {
-					document.getElementById("upgrade2").style.background="grey";
-				}else{
-					if (parseInt(that.dataset.rng)<=97) { 
-						console.log(that.dataset.rng);
-						document.getElementById("upgrade2").style.background="orange"; 
-					}else{
-						document.getElementById("upgrade2").style.background="grey"; 
-					}
-				}
-			}
-			function updateStats2(that){
-				document.getElementById("upgrade1").innerHTML="$"+(that.dataset.spd*5)+" "+" ⚡ "+that.dataset.spd+"+"+2;
-				document.getElementById("upgrade2").innerHTML="$"+(that.dataset.rng*1.5)+" "+" 🎯 "+that.dataset.rng+"+"+2;
-				//document.getElementById("previewBox").innerHTML=that[0];
-
-				tempID=that;
-
-				if ((parseInt(that.dataset.spd)*5)>revenue) {
+				if ((parseInt(that.dataset.spd)*5)>revenue && (parseInt(that.dataset.spd)<=14)) {
 					document.getElementById("upgrade1").style.background="grey";
 				}else{
 					if (parseInt(that.dataset.spd)<=14) { 
@@ -895,7 +935,39 @@
 					}
 				}
 
-				if ((parseInt(that.dataset.rng)*1.5)>revenue) {
+
+				if ((parseInt(that.dataset.rng)*1.5)>revenue && parseInt(that.dataset.rng)<=97) {
+					document.getElementById("upgrade2").style.background="grey";
+				}else{
+					if (parseInt(that.dataset.rng)<=97) { 
+						//console.log(that.dataset.rng);
+						document.getElementById("upgrade2").style.background="orange"; 
+					}else{
+						document.getElementById("upgrade2").style.background="grey"; 
+						document.getElementById("upgrade2").innerHTML="AT MAX";
+					}
+				}
+			}
+			function updateStats2(that){
+				document.getElementById("delete").innerHTML="Sell: $"+Math.round(that.dataset.cost*0.8);
+				document.getElementById("upgrade1").innerHTML="$"+(that.dataset.spd*5)+" "+" ⚡ "+that.dataset.spd+"+"+2;
+				document.getElementById("upgrade2").innerHTML="$"+(that.dataset.rng*1.5)+" "+" 🎯 "+that.dataset.rng+"+"+2;
+				//document.getElementById("previewBox").innerHTML=that[0];
+
+				tempID=that;
+
+				if ((parseInt(that.dataset.spd)*5)>revenue && (parseInt(that.dataset.spd)<=14)) {
+					document.getElementById("upgrade1").style.background="grey";
+				}else{
+					if (parseInt(that.dataset.spd)<=14) { 
+						document.getElementById("upgrade1").style.background="orange"; 
+					}else{
+						document.getElementById("upgrade1").style.background="grey"; 
+						document.getElementById("upgrade1").innerHTML="AT MAX";
+					}
+				}
+
+				if ((parseInt(that.dataset.rng)*1.5)>revenue && parseInt(that.dataset.rng)<=97) {
 					document.getElementById("upgrade2").style.background="grey";
 				}else{
 					if (parseInt(that.dataset.rng)<=97) { 
@@ -1017,14 +1089,37 @@
 			}
 
 			function btnPress(event){
-				if (event.keyCode==27) {
-					if (document.getElementById("delete").style.visibility="visible") {
-						unClickTower();
-					}
-					removeSelected(event);
-				}
-				if (event.keyCode==13) {
-					start();
+
+				switch(event.keyCode){
+					case 27:
+						if (document.getElementById("delete").style.visibility="visible") {
+							unClickTower();
+						}
+						removeSelected(event);
+						break;
+					case 13:
+						start();
+						break;
+					case 46:
+					case 8:
+						if (document.getElementById("delete").style.visibility="visible") {
+							removeTower();
+							unClickTower();
+						}
+					break;
+				/*case 57: bgChange(10);break;
+				case 49: bgChange(1);break;
+				case 50: bgChange(2);break;
+				case 51: bgChange(3);break;
+				case 52: bgChange(4);break;
+				case 53: bgChange(5);break;
+				case 54: bgChange(6);break;
+				case 55: bgChange(7);break;
+				case 56: bgChange(8);break;
+				case 57: bgChange(9);break;*/
+					default:
+						//console.log(event.keyCode);
+						break;
 				}
 			}
 
@@ -1132,71 +1227,49 @@
 
 						    //y[ii].classList.add("enemyAnimate1");
 
-						    y[ii].style.animation = 'pulse6 0.2s';
-						    y[ii].addEventListener("animationend", listener, false);
 
+						    
+						    
 
 						    //animate tower attack
 						    switch(parseInt(x[i3].dataset.id)){
 						    	case 1:
+						    		y[ii].style.animation = 'pulse6 0.2s';
+						    		y[ii].addEventListener("animationend", listener, false);
 						    		x[i3].style.animation ="pulse1 0.5s";
+						    		towerAttacks(x[i3], y[ii]);
 						    		break;
 						    	case 2:
+						    		y[ii].style.animation = 'pulse6 0.2s';
+						    		y[ii].addEventListener("animationend", listener, false);
 						    		x[i3].style.animation ="pulse2 0.5s";
+						    		towerAttacks(x[i3], y[ii]);
 						    		break;
 						    	case 3:
+						    		y[ii].style.animation = 'pulse6 0.2s';
+						    		y[ii].addEventListener("animationend", listener, false);
 						    		x[i3].style.animation ="pulse3 0.5s";
+						    		towerAttacks(x[i3], y[ii]);
 						    		break;
 						    	case 4:
+						    		y[ii].style.animation = 'pulse6 0.2s';
+						    		y[ii].addEventListener("animationend", listener, false);
 						    		x[i3].style.animation ="pulse4 0.5s";
+						    		towerAttacks(x[i3], y[ii]);
 						    		break;
 						    	default:
 						    		x[i3].style.animation ="pulse5 0.5s";
+						    		bulletShoot(x[i3], y[ii]);//remove health if within range
+
 						    }
 						    x[i3].addEventListener("animationend", listener, false);
 
-						    //remove health if within range
-						    var atkType = getBoxInfo(x[i3].dataset.id);
-						    //dmg wind, fire, earth, water
-						    switch(parseInt(y[ii].dataset.type)){
-								case 1: //wind
-									if (parseInt(x[i3].dataset.spdr)==0) {
-										x[i3].dataset.spdr=15-(parseInt(x[i3].dataset.spd));
-										y[ii].dataset.health=parseInt(y[ii].dataset.health)
-											-((atkType[1]*0)+(atkType[2]*0.5)
-											+(atkType[3]*1)+(atkType[4]*0.5));
-									}
-									break;
-								case 2: //fire
-									if (parseInt(x[i3].dataset.spdr)==0) {
-										x[i3].dataset.spdr=15-(parseInt(x[i3].dataset.spd));
-										y[ii].dataset.health=parseInt(y[ii].dataset.health)
-											-((atkType[1]*0.5)+(atkType[2]*0)
-											+(atkType[3]*0.5)+(atkType[4]*1));
-									}
-									break;
-								case 3: //earth
-									if (parseInt(x[i3].dataset.spdr)==0) {
-										x[i3].dataset.spdr=15-(parseInt(x[i3].dataset.spd));
-										y[ii].dataset.health=parseInt(y[ii].dataset.health)
-											-((atkType[1]*1)+(atkType[2]*0.5)
-											+(atkType[3]*0)+(atkType[4]*0.5));
-									}
-									break;
-								case 4: //water
-									if (parseInt(x[i3].dataset.spdr)==0) {
-										x[i3].dataset.spdr=15-(parseInt(x[i3].dataset.spd));
-										y[ii].dataset.health=parseInt(y[ii].dataset.health)
-											-((atkType[1]*0.5)+(atkType[2]*1)
-											+(atkType[3]*0.5)+(atkType[4]*0));
-									}
-									break;
-							}
+						    
 
 						    //y[ii].style.boxShadow="inset "+y[ii].dataset.health+"px 0px red";
 						    y[ii].lastChild.style.boxShadow="red "+y[ii].dataset.health+"px 0px inset";
 						    if (y[ii].dataset.health<=0) {
-						    	console.log(y[ii].lastChild.style.width);
+						    	//console.log(y[ii].lastChild.style.width);
 						    	revenue=revenue+Math.round((parseInt(y[ii].lastChild.style.width)/3.2)+10);
 						    	y[ii].remove(); 
 						    	updateRevenue();
@@ -1219,11 +1292,112 @@
 
 			//for each bullet - check distance from enemy 
 			//if <0 distance - remove bullet - damage enemy - dataset bullet attack 
-			function hitDetection(){
 
+			/*todo:
+				- move bullets in container in direction listed in dataset
+				- if a bullet is within range of an enemy - remove both
+				- if bullet is outside of tower range (list as dataset?) - remove bullet
+				- if a bullet leaves the border - remove
+			*/
+			function towerAttacks(x,y){ console.log(x.dataset.id, y.dataset.type);
+				var atkType = getBoxInfo(x.dataset.id);
+			    //dmg wind, fire, earth, water
+			    switch(parseInt(y.dataset.type)){
+					case 1: //wind
+						if (parseInt(x.dataset.spdr)==0) {
+							x.dataset.spdr=15-(parseInt(x.dataset.spd));
+							y.dataset.health=parseInt(y.dataset.health)
+								-((atkType[1]*0)+(atkType[2]*0.5)
+								+(atkType[3]*1)+(atkType[4]*0.5));
+						}
+						break;
+					case 2: //fire
+						if (parseInt(x.dataset.spdr)==0) {
+							x.dataset.spdr=15-(parseInt(x.dataset.spd));
+							y.dataset.health=parseInt(y.dataset.health)
+								-((atkType[1]*0.5)+(atkType[2]*0)
+								+(atkType[3]*0.5)+(atkType[4]*1));
+						}
+						break;
+					case 3: //earth
+						if (parseInt(x.dataset.spdr)==0) {
+							x.dataset.spdr=15-(parseInt(x.dataset.spd));
+							y.dataset.health=parseInt(y.dataset.health)
+								-((atkType[1]*1)+(atkType[2]*0.5)
+								+(atkType[3]*0)+(atkType[4]*0.5));
+						}
+						break;
+					case 4: //water
+						if (parseInt(x.dataset.spdr)==0) {
+							x.dataset.spdr=15-(parseInt(x.dataset.spd));
+							y.dataset.health=parseInt(y.dataset.health)
+								-((atkType[1]*0.5)+(atkType[2]*1)
+								+(atkType[3]*0.5)+(atkType[4]*0));
+						}
+						break;
+				}
 			}
 
+			function bulletShoot(tower, target){
+				//console.log(tower,target);
+				
+				if (parseInt(tower.dataset.spdr)==0) {
+				tower.dataset.spdr=20-(parseInt(tower.dataset.spd));
 
+					var bullet = document.createElement("div");    
+						bullet.style.left=parseInt(tower.style.left)+20+"px";
+						bullet.style.top=parseInt(tower.style.top)+20+"px";
+						bullet.className="bullet"
+						bullet.dataset.id=tower.dataset.id;
+						//bullet.style.background="white";
+
+						bullet.dataset.deg=Math.atan2(
+							(parseInt(tower.style.top)-parseInt(target.style.top)), 
+							(parseInt(tower.style.left)-parseInt(target.style.left))
+							) * 180 / Math.PI + 270;
+
+					document.getElementById("bulletContainer").appendChild(bullet);
+
+					tower.style.transform="rotate("+Math.round(bullet.dataset.deg)+"deg)";
+				}
+			}
+
+			var dx2, dy2, distance2
+			function bulletMove(){
+				var x = document.getElementById("enemyContainer").querySelectorAll(".enemyStyle");
+				var y = document.getElementById("bulletContainer").querySelectorAll(".bullet");
+
+				for (var i = y.length - 1; i >= 0; i--) { //each bullet: loop			
+          			y[i].style.left = parseInt(y[i].style.left) + (Math.sin(y[i].dataset.deg*(Math.PI/180))) * 10 +"px";
+					y[i].style.top = parseInt(y[i].style.top)- (Math.cos(y[i].dataset.deg*(Math.PI/180))) * 10 +"px";
+
+					for (var i4 = x.length - 1; i4 >= 0; i4--) { //each enemy: loop
+						//check if distance < sum of radius (enemy/bullet)
+						dx2 = parseInt(x[i4].style.left)-parseInt(y[i].style.left);
+						dy2 = parseInt(x[i4].style.top)-parseInt(y[i].style.top);
+						distance2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
+					
+
+						if (distance2 <= parseInt(x[i4].style.width)) {
+							x[i4].style.animation = 'pulse6 0.2s';
+						    x[i4].addEventListener("animationend", listener, false);
+							y[i].remove();
+							//todo:fix health to be amount for tower type - not just all 10;
+							x[i4].dataset.health=parseInt(x[i4].dataset.health)-10;
+						}
+
+						//todo: if out of border - remove y[i];
+						//todo: fix bug: hits enemy even if close & just out of range
+					}
+				}
+			}
+			function clearBullets(){ //clear bullets at end of game
+				var x = document.getElementById("bulletContainer").querySelectorAll(".bullet");
+				for (var i = x.length - 1; i >= 0; i--) {
+					x[i].remove();
+				}
+			}
+			
 
 			//list dmg type in enemy
 			//list dmg of all 4 in tower
