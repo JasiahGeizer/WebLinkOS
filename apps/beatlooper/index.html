@@ -1,9 +1,17 @@
 <!DOCTYPE html>
 
 <!-- To Do:
-	- Mute row - button
-	- Save/load to local storage or export sound file
-	- Change any sound manually by dragging a sound file on it.
+	- (bug) on loading 4/4 save in 2/2 - fix position
+	- make spacebar start/stop
+	- bug: when you duplicate a selected beat - it duplicates the highlight  
+	- add a volume slider for preview sounds and keep it for onclick
+
+	- add an indicator for where each bar ends (in 4/4 and 2/4)
+	
+	~ add mobile support - (only for dragging)
+	~ auto-save sound edits - auto-start saving in slot 1
+	~ Save/load to local storage or export sound file
+	~ Change any sound manually by dragging a sound file on it.
 
 	Releases:
 		- 1.1: Now Working, Drag-and-Drop Added, Beats Play in Order
@@ -12,6 +20,9 @@
 		- 1.4: Alternate Version Combined to Drop-Down Menu, Individual Sounds can be played with Keyboard Presses, 3 save slots can be Loaded with Keyboard Presses
 		- 1.5: Swap between 4/2 and 4/4, 4/4 now Catergorises beats by type, stop/stop no longer moves whole row, Manualy enter a BPM
 		- 1.6: Hold Shift while dragging to duplicate a beat, bpm change only returns numbers,  Saves volume level of each row, title added
+		- 1.7: tempo/drum no longer reset when switching time signature,  pattern start from the beginning after stopping/switching, fix the text to be fully visible, fixed last block won't change, fixed resizes save files, fixed send half blocks now remove, fixed first half blocks go to correct position on switch, Added press delete/backspace to remove last selected beats, 2/4 and 4/4 highlights when swapped, fixed bug where last/first column not removing when swapping from 4/4 to 2/4
+		- 1.8: show last save file opened or saved, instead of highlighting the opened save slot - press it in
+
 -->
 
 <html>
@@ -138,12 +149,12 @@
 			.drumpad{
 				padding: 2px;
 				font-size: 12px;
-				line-height: 55px;
 				text-align:center;
 				box-shadow: 4px 4px 8px #424242,-4px -4px 8px #5a5a5a;
 				color: #989898ed;
 				width: 55px;
-				height: 55px;
+				height: 45px;
+				padding-top: 10px;
 				/*background: linear-gradient(145deg, #424242cf, #2e795a96);*/
     			border: none; 
     			overflow: hidden;
@@ -152,7 +163,7 @@
     			margin:6px;
 			}
 			.drumpad:active{
-				box-shadow: inset 4px 4px 8px #383838f7,inset -4px -4px 8px #5a5a5a;
+				box-shadow: inset 4px 4px 8px #383838f7,inset -4px -4px 8px #5a5a5a !important;
 			}
 			button{
 				margin-left: 15px;
@@ -218,6 +229,45 @@
 				box-shadow: inset 3px 3px 6px #424242, inset -3px -3px 6px #5a5a5a;
 				background-color:#4e4e4e;
 			}
+			.timeSigSwap{
+				color: #313131;
+			}
+			.timeSigSwap:hover{
+				color: black;
+			}
+			.items2{
+				background:#4e4e4e;
+				float: left;
+				margin-bottom: 10px;
+				width: 35px;
+				height: 71px;
+				font-size: 60px;
+    			text-align: center;
+    			color: white;
+    			border-right:solid 1px #d1f8fb00;
+    			box-shadow: inset -4px -4px 4px #5f5f5f75, inset 4px 4px 4px #2323236b;
+			}
+			.items2:active{
+				background: linear-gradient(145deg, #464646, #535353);
+			}
+			.drumpad2{
+				padding: 2px;
+				font-size: 12px;
+				text-align:center;
+				box-shadow: 4px 4px 8px #424242,-4px -4px 8px #5a5a5a;
+				color: #989898ed;
+				width: 25px;
+				height: 52px;
+				padding-top: 10px;
+    			border: none; 
+    			overflow: hidden;
+    			float:left;
+    			border-radius: 10px;
+    			margin:3px;
+			}
+			.drumpad2:active{
+				box-shadow: inset 4px 4px 8px #383838f7,inset -4px -4px 8px #5a5a5a !important;
+			}
 		</style>
 	</head>
 
@@ -238,26 +288,10 @@
 
 				<p style="margin: 24px;"></p> 
 
-				
-
-			<div style="background: linear-gradient(145deg, #424242cf, #2e795a96);" draggable="true" ondragstart="drag(event)" id="1" class="drumpad" style="top: 220px;left: 70%;" onclick="playBeat(clap)">clap</div>
-			<div style="background: linear-gradient(145deg, #424242cf, #2e797996);" draggable="true" ondragstart="drag(event)" id="2" class="drumpad" style="top: 220px;left: 50%;" onclick="playBeat(kick)">kick</div>
-			<div style="background: linear-gradient(145deg, #424242cf, #792e7496);" draggable="true" ondragstart="drag(event)" id="3" class="drumpad" style="top: 220px;left: 30%;" onclick="playBeat(snare)">snare</div>
-			<div style="background: linear-gradient(145deg, #424242cf, #792e6296);" draggable="true" ondragstart="drag(event)" id="4" class="drumpad" style="top: 220px;left: 10%;" onclick="playBeat(crash)">crash</div>
-			<div style="background: linear-gradient(145deg, #424242cf, #792e2e96);" draggable="true" ondragstart="drag(event)" id="5" class="drumpad" style="top: 135px;left: 50%;" onclick="playBeat(hiHat)">hiHat</div>
-			<div style="background: linear-gradient(145deg, #424242cf, #75792e96);" draggable="true" ondragstart="drag(event)" id="6" class="drumpad" style="top: 135px;left: 30%;" onclick="playBeat(ride)">ride</div>
-			<div style="background: linear-gradient(145deg, #424242cf, #4b792e96);" draggable="true" ondragstart="drag(event)" id="7" class="drumpad" style="top: 135px;left: 10%;" onclick="playBeat(splash)">splash</div>
-			<div style="background: linear-gradient(145deg, #424242cf, #512e7996);" draggable="true" ondragstart="drag(event)" id="8" class="drumpad" style="top: 135px;left: 70%;" onclick="playBeat(block)">block</div>
-			<div style="background: linear-gradient(145deg, #424242cf, #2e457996);" draggable="true" ondragstart="drag(event)" id="9" class="drumpad" style="top: 305px;left: 50%;" onclick="playBeat(cowbell)">cowbell</div>
-			<div style="background: linear-gradient(145deg, #424242cf, #79542e96);" draggable="true" ondragstart="drag(event)" id="10" class="drumpad" style="top: 305px;left: 30%;" onclick="playBeat(eggShaker)">eggShaker</div>
-			<div style="background: linear-gradient(145deg, #424242cf, #2e617996);" draggable="true" ondragstart="drag(event)" id="11" class="drumpad" style="top: 305px;left: 10%;" onclick="playBeat(sleighBells)">sleighBells</div>
-			<div style="background: linear-gradient(145deg, #424242cf, #616161);" draggable="true" ondragstart="drag(event)" id="12" class="drumpad" style="top: 305px;left: 70%;" onclick="playBeat(stickHits)">stickHits</div>
-			<div style="background: linear-gradient(145deg, #424242cf, #793f2e96);" draggable="true" ondragstart="drag(event)" id="13" class="drumpad" style="top: 50px;left: 50%;" onclick="playBeat(floorTom)">floorTom</div>
-			<div style="background: linear-gradient(145deg, #424242cf, #792e4096);" draggable="true" ondragstart="drag(event)" id="14" class="drumpad" style="top: 50px;left: 30%;" onclick="playBeat(highTom)">highTom</div>
-			<div style="background: linear-gradient(145deg, #424242cf, #2e794596);" draggable="true" ondragstart="drag(event)" id="15" class="drumpad" style="top: 50px;left: 10%;" onclick="playBeat(midTom)">midTom</div>
+			<div style="background: linear-gradient(145deg, #424242cf, #2e795a96);" data-beat="clap" draggable="true" ondragstart="drag(event)" id="1" class="drumpad" style="top: 220px;left: 70%;" onclick="playBeat(clap);highlight(this)">Clap</div><div style="background: linear-gradient(145deg, #424242cf, #2e797996);" data-beat="kick" draggable="true" ondragstart="drag(event)" id="2" class="drumpad" style="top: 220px;left: 50%;" onclick="playBeat(kick);highlight(this)">Kick</div><div style="background: linear-gradient(145deg, #424242cf, #792e7496);" data-beat="snare" draggable="true" ondragstart="drag(event)" id="3" class="drumpad" style="top: 220px;left: 30%;" onclick="playBeat(snare);highlight(this)">Snare</div><div style="background: linear-gradient(145deg, #424242cf, #792e6296);" data-beat="crash" draggable="true" ondragstart="drag(event)" id="4" class="drumpad" style="top: 220px;left: 10%;" onclick="playBeat(crash);highlight(this)">Crash</div><div style="background: linear-gradient(145deg, #424242cf, #792e2e96);" data-beat="hiHat" draggable="true" ondragstart="drag(event)" id="5" class="drumpad" style="top: 135px;left: 50%;" onclick="playBeat(hiHat);highlight(this)">Hi Hat</div><div style="background: linear-gradient(145deg, #424242cf, #75792e96);" data-beat="ride" draggable="true" ondragstart="drag(event)" id="6" class="drumpad" style="top: 135px;left: 30%;" onclick="playBeat(ride);highlight(this)">Ride</div><div style="background: linear-gradient(145deg, #424242cf, #4b792e96);" data-beat="splash" draggable="true" ondragstart="drag(event)" id="7" class="drumpad" style="top: 135px;left: 10%;" onclick="playBeat(splash);highlight(this)">Splash</div><div style="background: linear-gradient(145deg, #424242cf, #512e7996);" data-beat="block" draggable="true" ondragstart="drag(event)" id="8" class="drumpad" style="top: 135px;left: 70%;" onclick="playBeat(block);highlight(this)">Block</div><div style="background: linear-gradient(145deg, #424242cf, #2e457996);" data-beat="cowbell" draggable="true" ondragstart="drag(event)" id="9" class="drumpad" style="top: 305px;left: 50%;" onclick="playBeat(cowbell);highlight(this)">Cow Bell</div><div style="background: linear-gradient(145deg, #424242cf, #79542e96);" data-beat="eggShaker" draggable="true" ondragstart="drag(event)" id="10" class="drumpad" style="top: 305px;left: 30%;" onclick="playBeat(eggShaker);highlight(this)">Egg Shaker</div><div style="background: linear-gradient(145deg, #424242cf, #2e617996);" data-beat="sleighBells" draggable="true" ondragstart="drag(event)" id="11" class="drumpad" style="top: 305px;left: 10%;" onclick="playBeat(sleighBells);highlight(this)">Sleigh Bells</div><div style="background: linear-gradient(145deg, #424242cf, #616161);" data-beat="stickHits" draggable="true" ondragstart="drag(event)" id="12" class="drumpad" style="top: 305px;left: 70%;" onclick="playBeat(stickHits);highlight(this)">Stick Hits</div><div style="background: linear-gradient(145deg, #424242cf, #793f2e96);" data-beat="floorTom" draggable="true" ondragstart="drag(event)" id="13" class="drumpad" style="top: 50px;left: 50%;" onclick="playBeat(floorTom);highlight(this)">Floor Tom</div><div style="background: linear-gradient(145deg, #424242cf, #792e4096);" data-beat="highTom" draggable="true" ondragstart="drag(event)" id="14" class="drumpad" style="top: 50px;left: 30%;" onclick="playBeat(highTom);highlight(this)">High Tom</div><div style="background: linear-gradient(145deg, #424242cf, #2e794596);" data-beat="midTom" draggable="true" ondragstart="drag(event)" id="15" class="drumpad" style="top: 50px;left: 10%;" onclick="playBeat(midTom);highlight(this)">Mid Tom</div><div style="opacity: 0;">fin</div>
 		
 			<div style="position: absolute;bottom: 15px; right: 35px; color: #313131;">
-				<i><a>4/2</a> | <a href="2" style="color: black;">4/4</a></i>
+				<i><a id="sigSwap1" class="timeSigSwap" style="color: black;text-decoration: underline;" onclick="twofour()">2/4</a> | <a id="sigSwap2" class="timeSigSwap" onclick="fourfour()">4/4</a></i>
 			</div>
 		</div>
 
@@ -266,7 +300,7 @@
 		<div class="grouped">
 			<br>
 
-			<ul>
+			<ul id="ulContainer">
 				<p><span>Beat </span> <span id="score">Looper</span> 
 					<button id="gostop" onclick="prebeat(this)" style="background: linear-gradient(145deg, rgba(121, 46, 46, 0.59), rgba(66, 66, 66, 0.81));width: 78px;">Stop</button>
 					<span style="margin-left:20px;"> BPM:</span>
@@ -333,14 +367,14 @@
 			</ul>
 			<p></p>
 
-			<button id="save1" style="margin-left: 40px; background: linear-gradient(145deg, #656565, #404040ed);" onclick="opens(1)">1</button>
-			<button id="save2" style="margin-left: 10px; background: linear-gradient(145deg, #656565, #404040ed);" onclick="opens(2)">2</button>
-			<button id="save3" style="margin-left: 10px; background: linear-gradient(145deg, #656565, #404040ed);" onclick="opens(3)">3</button>
+			<button id="save1" style="margin-left: 40px; background: linear-gradient(145deg, #656565, #404040ed);" onclick="opens(1);highlightNum('save1');">1</button>
+			<button id="save2" style="margin-left: 10px; background: linear-gradient(145deg, #656565, #404040ed);" onclick="opens(2);highlightNum('save2');">2</button>
+			<button id="save3" style="margin-left: 10px; background: linear-gradient(145deg, #656565, #404040ed);" onclick="opens(3);highlightNum('save3');">3</button>
 
 
-			<button style="margin-left: 84px; background: linear-gradient(145deg, #5c485d, #3b5664ed);" onclick="save(1, this)">Set 1</button>
-			<button style="margin-left: 10px; background: linear-gradient(145deg, #485d5a, #3b4764ed);" onclick="save(2, this)">Set 2</button>
-			<button style="margin-left: 10px; background: linear-gradient(145deg, #0cefef2e, #4a613c);" onclick="save(3, this)">Set 3</button>
+			<button style="margin-left: 84px; background: linear-gradient(145deg, #5c485d, #3b5664ed);" onclick="save(1, this);highlightNum('save1');">Set 1</button>
+			<button style="margin-left: 10px; background: linear-gradient(145deg, #485d5a, #3b4764ed);" onclick="save(2, this);highlightNum('save2');">Set 2</button>
+			<button style="margin-left: 10px; background: linear-gradient(145deg, #0cefef2e, #4a613c);" onclick="save(3, this);highlightNum('save3');">Set 3</button>
 			
 			<!-- Save to internal storage, create load function-->
 
@@ -420,60 +454,68 @@
 		switch (evt.key) {
 			case "1"://1
 		    	opens(1);
-		    break;
+		    	highlightNum('save1');
+		    	break;
 		    case "2": //2
 		    	opens(2);
-		    break;
+		    	highlightNum('save2');
+		    	break;
 		    case "3"://3
 		    	opens(3);
-		    break;
+		    	highlightNum('save3');
+		    	break;
 		    case "q"://q
 		    	playBeat(splash);
-		    break;
+		    	break;
 		    case "w": //w
 		    	playBeat(ride);
 		    break;
-		    case "e"://e
+		    	case "e"://e
 		    	playBeat(hiHat);
-		    break;
+		    	break;
 		    case "r": //r
 		    	playBeat(block);
-		    break;
+		    	break;
 		    case "t"://a
 		    	playBeat(crash);
-		    break;
+		    	break;
 		    case "a": //s
 		    	playBeat(snare);
-		    break;
+		    	break;
 		    case "s"://d
 		    	playBeat(kick);
-		    break;
+		    	break;
 		    case "d": //f
 		    	playBeat(clap);
-		    break;
+		    	break;
 		    case "f"://z
 		    	playBeat(sleighBells);
-		    break;
+		    	break;
 		    case "g": //x
 		    	playBeat(eggShaker);
-		    break;
+		    	break;
 		    case "z"://c
 		    	playBeat(cowbell);
-		    break;
+		    	break;
 		    case "x": //b
 		    	playBeat(stickHits);
-		    break;
+		    	break;
 		    case "c"://1
 		    	playBeat(midTom);
-		    break;
+		    	break;
 		    case "v": //2
 		    	playBeat(highTom);
-		    break;
+		    	break;
 		    case "b"://3
 		    	playBeat(floorTom);
-		    break;
+		    	break;
 		    case "Shift":
 		    	ShiftHeld=true;
+		    	break;
+		    case "Backspace":
+		    case "Delete":
+		    	removeSelected();
+		    	break;
 		    }
 	}
 	var realSpeed=100; 
@@ -492,6 +534,7 @@
 			beatGo = true;
 			that.innerHTML = "Stop";
 			that.style.background="linear-gradient(145deg, #792e2e96,#424242cf)";
+			wipeHighlight();
 		}
 	}
 
@@ -530,21 +573,22 @@
 	var blockplaying=1000;
 	var numset=50;
 	function beat(){
-		for (var i = numset; i < 98; i=i+8) {
+		for (var i = numset; i < newNum1; i=i+newNum2) {
 			//console.log(document.getElementById(i).childNodes[0]);
 				blockplaying=i; //console.log(i);
 				if(i>50){document.getElementById(i-1).style.background=null}else{
-					document.getElementById(97).style.background=null;
+					document.getElementById(newNum3).style.background=null;
 				}
 				document.getElementById(i).style.background="#545454";
 
 			if (document.getElementById(i).firstChild) {
 				//console.log(document.getElementById(i).childNodes[0].innerHTML);
-				playBeat(eval(document.getElementById(i).childNodes[0].innerHTML), true);
+				//playBeat(eval(document.getElementById(i).childNodes[0].innerHTML), true);
+				playBeat(eval(document.getElementById(i).childNodes[0].dataset.beat), true);
 			} 
 		}
 		counterPlaying=counterPlaying+1; //console.log(counterPlaying);
-		numset=numset+1; if (numset==58) {numset=50;counterPlaying=0;}
+		numset=numset+1; if (numset==newNum4) {numset=50;counterPlaying=0;}
 	}
 
 	function playBeat(beat, presser){ //play audio
@@ -552,17 +596,17 @@
 		if(presser==true){
 			if(blockplaying<50) {
 			beat.volume=1;
-			}else if(blockplaying<=57) {
+			}else if(blockplaying<=newNum5) {
 				beat.volume=volumeINT1;
-			}else if(blockplaying<=65) {
+			}else if(blockplaying<=newNum6) {
 				beat.volume=volumeINT2;
-			}else if(blockplaying<=73) {
+			}else if(blockplaying<=newNum7) {
 				beat.volume=volumeINT3;
-			}else if(blockplaying<=81) {
+			}else if(blockplaying<=newNum8) {
 				beat.volume=volumeINT4;
-			}else if(blockplaying<=89) {
+			}else if(blockplaying<=newNum9) {
 				beat.volume=volumeINT5;
-			}else if(blockplaying<=97) {
+			}else if(blockplaying<=newNum3) {
 				beat.volume=volumeINT6;
 			}
 		}else{beat.volume=1;}
@@ -615,7 +659,7 @@
 			}
 
 			function clearAll(){
-				for (var i = 50; i < 98; i++) {
+				for (var i = 50; i < newNum1; i++) {
 					if (document.getElementById(i).childNodes[0] !== undefined && document.getElementById(i).childNodes[0] !== null) {
 						document.getElementById(i).childNodes[0].remove(); 
 					}
@@ -646,7 +690,7 @@
 						storeCount=0;
 						storeData.length = 0;
 						storeData2.length = 0;
-					for (var i = 50; i < 98; i++) {
+					for (var i = 50; i < newNum1; i++) {
 						if (document.getElementById(i).childNodes[0] !== undefined && document.getElementById(i).childNodes[0] !== null) { 
 							storeCount=storeCount+1;
 							storeData[storeCount]=(/*i+*/document.getElementById(i).childNodes[0]/*.innerHTML*/);
@@ -660,7 +704,7 @@
 						storeCountB=0;
 						storeDataB.length = 0;
 						storeData2B.length = 0;
-					for (var i = 50; i < 98; i++) {
+					for (var i = 50; i < newNum1; i++) {
 						if (document.getElementById(i).childNodes[0] !== undefined && document.getElementById(i).childNodes[0] !== null) { 
 							storeCountB=storeCountB+1;
 							storeDataB[storeCountB]=(/*i+*/document.getElementById(i).childNodes[0]/*.innerHTML*/);
@@ -674,7 +718,7 @@
 						storeCountC=0;
 						storeDataC.length = 0;
 						storeData2C.length = 0;
-					for (var i = 50; i < 98; i++) {
+					for (var i = 50; i < newNum1; i++) {
 						if (document.getElementById(i).childNodes[0] !== undefined && document.getElementById(i).childNodes[0] !== null) { 
 							storeCountC=storeCountC+1;
 							storeDataC[storeCountC]=(/*i+*/document.getElementById(i).childNodes[0]/*.innerHTML*/);
@@ -688,7 +732,16 @@
 				clearAll();
 				if (nums==1) {
 					for (var i = 0; i < storeCount; i++) {
-							document.getElementById(storeData2[i+1]).appendChild(storeData[i+1]);
+							if(storeData2[i+1]<=newNum3){
+								document.getElementById(storeData2[i+1]).appendChild(storeData[i+1]);
+								if (timeSignature==24 && storeData[i+1].className=="drumpad2") {
+									storeData[i+1].classList.remove('drumpad2');
+									storeData[i+1].classList.add('drumpad');
+								}else if (timeSignature==44 && storeData[i+1].className=="drumpad"){
+									storeData[i+1].classList.remove('drumpad');
+									storeData[i+1].classList.add('drumpad2');
+								}
+							}
 					}
 					for (var i = 1; i < 7; i++) {
 							document.getElementById("myRange"+i).value=volumeData[i-1]*100;
@@ -699,7 +752,16 @@
 				}
 				if (nums==2) {
 					for (var i = 0; i < storeCountB; i++) {
+						if(storeData2B[i+1]<=newNum3){
 							document.getElementById(storeData2B[i+1]).appendChild(storeDataB[i+1]);
+								if (timeSignature==24 && storeDataB[i+1].className=="drumpad2") {
+									storeDataB[i+1].classList.remove('drumpad2');
+									storeDataB[i+1].classList.add('drumpad');
+								}else if (timeSignature==44 && storeDataB[i+1].className=="drumpad"){
+									storeDataB[i+1].classList.remove('drumpad');
+									storeDataB[i+1].classList.add('drumpad2');
+								}
+						}
 					}
 					for (var i = 1; i < 7; i++) {
 							document.getElementById("myRange"+i).value=volumeData2[i-1]*100;
@@ -710,7 +772,16 @@
 				}
 				if (nums==3) {
 					for (var i = 0; i < storeCountC; i++) {
+						if(storeData2C[i+1]<=newNum3){
 							document.getElementById(storeData2C[i+1]).appendChild(storeDataC[i+1]);
+								if (timeSignature==24 && storeDataC[i+1].className=="drumpad2") {
+									storeDataC[i+1].classList.remove('drumpad2');
+									storeDataC[i+1].classList.add('drumpad');
+								}else if (timeSignature==44 && storeDataC[i+1].className=="drumpad"){
+									storeDataC[i+1].classList.remove('drumpad');
+									storeDataC[i+1].classList.add('drumpad2');
+								}
+						}
 					}
 					for (var i = 1; i < 7; i++) {
 							document.getElementById("myRange"+i).value=volumeData3[i-1]*100;
@@ -721,6 +792,7 @@
 				}
 			}
 
+			//Need to reset box playing music
 			function soundChange(){
 				if (document.getElementById("soundPacks").value=="Standard") {
 					 clap = new Audio('clap.wav');
@@ -756,6 +828,162 @@
 					 highTom = new Audio('edm/highTom.wav');
 					 midTom = new Audio('edm/midTom.wav');
 				}
+			}
+			var timeSignature=24;
+			var newNum1 = 98; 	//98 	146
+			var newNum2 = 8; 	//8 	16
+			var newNum3 = 97;	//97	145
+			var newNum4 = 58;	//58	66
+			var newNum5 = 57;	//57	65
+			var newNum6 = 65;	//65	81
+			var newNum7 = 73;	//73	97
+			var newNum8 = 81;	//81	113
+			var newNum9 = 89;	//89	129
+
+			function fourfour(){ 
+				if(timeSignature==24){
+					
+					document.getElementById("sigSwap1").style.color=null;
+					document.getElementById("sigSwap2").style.color="black";
+					document.getElementById("sigSwap1").style.textDecoration=null;
+					document.getElementById("sigSwap2").style.textDecoration="underline";
+
+					wipeHighlight();
+					timeSignature=44;
+
+					for (var i = 9; i < 24; i++) { //music notes
+						document.getElementById("div1").childNodes[i].classList.remove('drumpad');
+						document.getElementById("div1").childNodes[i].classList.add('drumpad2');
+						//i++;
+					}
+					for (var i = 50; i < 98; i++) { //boxes
+						document.getElementById(i).classList.remove('items');
+						document.getElementById(i).classList.add('items2');
+						if (document.getElementById(i).firstChild) {
+							document.getElementById(i).firstChild.classList.remove('drumpad');
+							document.getElementById(i).firstChild.classList.add('drumpad2');
+						}
+					}
+
+					for (var i = 98; i < 146; i++) { //add next 50 boxes
+						var addItems = document.createElement("li");
+						addItems.className = "items2";
+						addItems.id=i;
+						addItems.setAttribute("ondrop", "drop(event)");    
+						addItems.setAttribute("ondragover", "allowDrop(event)");
+
+						document.getElementById("ulContainer").appendChild(addItems);
+					}
+
+					for (var i = 145; i > 51; i--){ //it keeps pushing it down until it can't go any further down // needed to go in reverse order
+						if (document.getElementById(i).firstChild) {
+							var num = ((i-50)+1);
+							var ans = (num + (8 * (Math.floor((num-1)/8)))); 
+							document.getElementById(((ans)+50)-1).appendChild(document.getElementById(i).firstChild);
+						}
+					}
+
+					//nums
+					newNum1 = 146; 	//98 	146
+					newNum2 = 16; 	//8 	16
+					newNum3 = 145;	//97	145
+					newNum4 = 66;	//58	66
+					newNum5 = 65;	//57	65
+					newNum6 = 81;	//65	81
+					newNum7 = 97;	//73	97
+					newNum8 = 113;	//81	113
+					newNum9 = 129;	//89	129
+				}
+			}
+			function twofour(){
+				if(timeSignature==44){
+
+					document.getElementById("sigSwap2").style.color=null;
+					document.getElementById("sigSwap1").style.color="black";
+					document.getElementById("sigSwap2").style.textDecoration=null;
+					document.getElementById("sigSwap1").style.textDecoration="underline";
+
+					wipeHighlight();
+					timeSignature=24;
+
+					//test----------------------------
+					for (var i = 58; i < 145; i++){
+						if (document.getElementById(i).firstChild) {
+							var num = ((i-50));
+							var ans = (num - (8 * (Math.floor((num-1)/16)))); 
+							
+							if(num%16==0){
+								document.getElementById(((ans)+42)).appendChild(document.getElementById(i).firstChild);
+							}else if(num%16<8){
+								document.getElementById(((ans)+50)).appendChild(document.getElementById(i).firstChild);
+							}else{
+								document.getElementById(i).firstChild.remove();
+							}
+						}
+					}
+					//test----------------------------
+
+
+					for (var i = 9; i < 24; i++) { //music notes
+						document.getElementById("div1").childNodes[i].classList.remove('drumpad2');
+						document.getElementById("div1").childNodes[i].classList.add('drumpad');
+						//i++;
+					}
+					for (var i = 50; i < 98; i++) { //boxes
+						document.getElementById(i).classList.remove('items2');
+						document.getElementById(i).classList.add('items');
+						if (document.getElementById(i).firstChild) {
+							document.getElementById(i).firstChild.classList.remove('drumpad2');
+							document.getElementById(i).firstChild.classList.add('drumpad');
+						}
+					}
+
+					for (var i = 98; i < 146; i++) { //add next 50 boxes
+						document.getElementById(i).remove();
+					}
+
+					newNum1 = 98; 	//98 	146
+					newNum2 = 8; 	//8 	16
+					newNum3 = 97;	//97	145
+					newNum4 = 58;	//58	66
+					newNum5 = 57;	//57	65
+					newNum6 = 65;	//65	81
+					newNum7 = 73;	//73	97
+					newNum8 = 81;	//81	113
+					newNum9 = 89;	//89	129
+				}
+			}
+			function wipeHighlight(){
+				numset=50;
+				for (var i = 50; i < newNum1; i++){
+					document.getElementById(i).style=null;
+				}
+			}
+			var previous;
+			function highlight(that){
+				//if parent = board
+				//that.style.border="inset 1px solid #ffffff30";
+				if(that.parentElement.id!="div1"){
+					if (previous) {
+						previous.style.boxShadow="";
+					}
+					that.style.boxShadow="4px 4px 8px #424242, -4px -4px 8px #5a5a5a, inset 0px 0px 0px 1px #ffffff30";
+					previous = that;
+				}
+			}
+			function removeSelected(){
+				if (previous){
+					previous.remove();
+				}
+			}
+			var previousNum;
+			function highlightNum(that){ //for 1,2,3 buttons
+				var thatSave = document.getElementById(that);
+				if (previousNum) {
+						previousNum.style.boxShadow="";
+					}
+					thatSave.style.boxShadow="inset 4px 4px 8px #424242, inset -4px -4px 8px #5a5a5a";
+					previousNum = thatSave;
 			}
 		</script>
 	</body>

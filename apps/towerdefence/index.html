@@ -146,6 +146,8 @@
 					type 5 towers spawn bullets
 					bullets move and follow rotation
 					tower rotation is animated 
+				- 1.3:
+					remove bullet if out of bounds
 
 			*/
 		</style>
@@ -542,11 +544,12 @@
 						if ((event.clientX-(window.innerWidth/2-190)<=510) && (event.clientY-115<541)) {
 							if ((event.clientX-(window.innerWidth/2-190)>=0) && (event.clientY-115>=0)) {	
 							  var newthing = document.createElement("div");    
-							  newthing.innerHTML = selected;
+							  newthing.innerHTML = selected+"\n";
 							  newthing.style.width="50px";
 							  newthing.style.height="50px";
 							  newthing.style.zIndex="10";
 							  newthing.className="tower";
+							  newthing.style.whiteSpace="pre";
 							  newthing.style.transition="all 0.2s";
 							
 							  var stats = getBoxInfo(selected);
@@ -730,6 +733,7 @@
 					}
 				}
 				towerShoot();
+				bulletBounds();
 			}
 
 			function hit(){ //player loses a life
@@ -864,6 +868,7 @@
 						revenue=revenue-amount; //todo: get exact price
 						tempID.dataset.cost=parseInt(tempID.dataset.cost)+amount;
 						tempID.dataset.spd=parseInt(tempID.dataset.spd)+1;
+						tempID.innerHTML=tempID.innerHTML+"^";
 					}
 
 				}else if (that==2) { //is rng upgrade too expensive or at max?
@@ -872,6 +877,7 @@
 							revenue=revenue-amount; //todo: get exact price
 							tempID.dataset.cost=parseInt(tempID.dataset.cost)+amount;
 							tempID.dataset.rng=parseInt(tempID.dataset.rng)+2;
+							tempID.innerHTML=tempID.innerHTML+">";
 					}
 				}
 				updateStats2(tempID);
@@ -1398,6 +1404,21 @@
 				}
 			}
 			
+			function bulletBounds(){
+				var x = document.getElementById("bulletContainer").querySelectorAll(".bullet");
+				for (var i = x.length - 1; i >= 0; i--) {
+					if (
+							(parseInt(x[i].style.left)<=560) 
+						&& 	(parseInt(x[i].style.top)<=595) 
+						&& 	(parseInt(x[i].style.left)>=-10)
+						&& 	(parseInt(x[i].style.top) >=-10)
+						) {
+							//bullet is in bounds
+					}else{
+						x[i].remove();
+					}
+				}
+			}
 
 			//list dmg type in enemy
 			//list dmg of all 4 in tower
