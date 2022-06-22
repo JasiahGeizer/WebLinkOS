@@ -1,0 +1,273 @@
+
+<!DOCTYPE html>
+<html>
+<title>Game Of Life</title>
+	<head>
+		<style type="text/css">
+			html, body {
+				height: 99%;
+				user-select: none;
+				-moz-user-select: none;
+				background-color: lightsteelblue;
+				font-family: monospace;
+				font-size: 14px;
+			}			
+			.items{
+				float: left;
+				margin:1px;
+			}
+			.grouped{
+				position: relative;
+				background-color: #404040;
+				width: 711px;
+				height: 700px;
+				top: 100px;
+				margin: 0 auto;
+				border-radius: 20px;
+				box-shadow: 0px 2px 13px #545454;	
+				color: lightgrey;		
+			}
+			ul {
+			    margin: 0 auto;
+			    padding-top: 10px;
+			    list-style-type: none;
+			    display:block;
+			}	
+			p{
+				height: 100px;
+			}		
+			li {
+				height: 30px;
+				width:  30px;
+				overflow: hidden;
+				background-color: white;
+				border-radius: 1px;
+				box-shadow: 0px 1px 3px black;	
+			}
+			li:hover{
+				box-shadow: inset 0px 0px 0px 3px red;	
+			}
+			span{
+				padding: 5px;
+			}
+			button{
+				margin-left: 2px;
+			}
+			a {
+				color: black;
+			}
+			.button{ 
+				margin-top:20px;
+				margin-left: 60px; 
+				width:  120px;
+				padding: 10px;
+				background-color: white;
+				border-radius: 5px;
+				border-width: 0px;
+				box-shadow: 0px 1px 3px black;	
+				display: inline-block;
+				text-align: center;
+				color: black;
+			}
+			.button:hover{
+				background-color: lightgrey !important;
+			}
+			.button:active{
+				background-color: grey !important; 
+			}
+			#start{background-color: #9dff99;}
+		</style>
+	</head>
+	
+	<body>
+		<a href="https://www.jasiah.dev/">Jasiah.dev</a> / Apps
+		<div class="grouped">
+			<br>
+			<a style="padding-left: 40px; color: white;">Conway's Game Of Life</a>
+			<ul id="new">		
+				<br>										
+			</ul>
+			<div>
+				<div id="start" class="button" onclick="toggleInterval()">Start</div>
+				<div class="button" onclick="nextIteration()">Next</div>
+				<div class="button" onclick="clearAllSquares()">Clear</div>
+			</div>
+			
+		</div>
+	</body>
+
+	<script type="text/javascript">
+
+		//BOARD SETUP ----------------------------------------------
+		
+		const boardSize = 320; 
+		const timerInterval = 100;
+		const up = -20;
+		const down = 20;
+		const left = -1;
+		const right = 1;
+
+		setBoardSize(boardSize);
+
+		function setBoardSize(size){
+			for (let i = 0; i < size; i++) {
+				addBoardSquare(i);
+			}
+		}
+		
+		function addBoardSquare(count) {
+		   var tag = document.createElement("li");
+		   tag.classList.add('items');
+		   tag.addEventListener("mousedown", toggleSquareColor);
+		   tag.id = count;
+		   var element = document.getElementById("new");
+		   element.appendChild(tag);
+		}
+
+		//UI & BUTTONS ----------------------------------------------
+
+		function toggleSquareColor(){
+			if(this.style.backgroundColor=="red"){
+				this.style.backgroundColor = "White";	
+			}else{
+				this.style.backgroundColor = "Red";
+			}
+		}
+
+		function clearAllSquares(){
+			for (let i = 0; i < boardSize; i++) {
+				setSquareClear(i);
+			}
+		}
+
+		var timer;
+		function toggleInterval(){
+			if(document.getElementById("start").innerHTML == "Start"){
+				timer = setInterval(nextIteration, timerInterval);
+				document.getElementById("start").innerHTML = "Stop";
+				document.getElementById("start").style.backgroundColor = "#ff9999";
+			}else{
+				clearInterval(timer);
+				document.getElementById("start").innerHTML = "Start";
+				document.getElementById("start").style.backgroundColor = "#9dff99";
+			}
+		}
+
+		//SQUARE COLOR LOGIC  ----------------------------------------------
+
+		function nextIteration(){
+
+			//count and save the amount of nearby active squares for each square
+			for (let currentSqr = 0; currentSqr < boardSize; currentSqr++) {
+
+				//count [nearby active squares]
+				var squaresNearbyCount = countNearbyActiveSquares(currentSqr);
+
+				//save [the count of nearby active squares]
+				saveNearbySquares(currentSqr, squaresNearbyCount);
+			}
+
+			//set each squares new color from save
+			setNewColor();
+		}
+
+		function countNearbyActiveSquares(currentSqr){
+			var nearbyCount = 0;
+			if(isNearby(currentSqr+up)){nearbyCount++};
+			if(isNearby(currentSqr+down)){nearbyCount++};
+
+			if(currentSqr % 20 != 0){	//if currentSqr is not on the left border 
+				if(isNearby(currentSqr+left)){nearbyCount++};
+				if(isNearby(currentSqr+up+left)){nearbyCount++};
+				if(isNearby(currentSqr+down+left)){nearbyCount++};
+			}else{	//correct the looping position to same row
+				if(isNearby(down+currentSqr+left)){nearbyCount++};
+				if(isNearby(down+currentSqr+up+left)){nearbyCount++};
+				if(isNearby(down+currentSqr+down+left)){nearbyCount++};
+			}
+
+			if(currentSqr % 20 != 19){	//if currentSqr is not on the right border
+				if(isNearby(currentSqr+right)){nearbyCount++};
+				if(isNearby(currentSqr+up+right)){nearbyCount++};
+				if(isNearby(currentSqr+down+right)){nearbyCount++};
+			}else{	//correct the looping position to same row
+				if(isNearby(up+currentSqr+right)){nearbyCount++};
+				if(isNearby(up+currentSqr+up+right)){nearbyCount++};
+				if(isNearby(up+currentSqr+down+right)){nearbyCount++};
+			}
+			return nearbyCount;
+		}
+
+		function isNearby(direction){
+			if(direction<boardSize && direction>0){
+				if(isSquareActive(direction)){
+					return true;
+				}
+			}else if(direction<0){ 	//if direction is offscreen upwards, loop to bottom
+				return isNearby(direction+boardSize);
+
+			}else if(direction>boardSize){	//if direction is offscreen downwards, loop to top
+				return isNearby(direction-boardSize);
+			}
+			return false;
+		}
+
+		function saveNearbySquares(i, nearbyCount){
+			if(checkNearbyCount(i, nearbyCount)){
+				setSquareSavedColor(i, "red");
+			}else{
+				setSquareSavedColor(i, "white");
+			}
+		}
+
+		function checkNearbyCount(current, nearby){
+			if(isSquareActive(current)){
+					if(nearby > 1 && nearby < 4){
+						return true; //stay alive
+					}else{
+						return false; //die
+					}
+				}else{
+					if(nearby == 3){
+						return true; //spawn
+					}else{
+						return false; //stay dead
+					}
+				}
+			return false;
+		}
+
+		function setNewColor(){
+			for (let currentSqr = 0; currentSqr < boardSize; currentSqr++) {
+				if(getSquareSavedColor(currentSqr)=="red") {
+					setSquareRed(currentSqr);
+				}else{
+					setSquareClear(currentSqr);
+				}
+			}
+		}
+
+
+		function setSquareSavedColor(square, color){
+			document.getElementById(square).setAttribute('data', color);
+		}
+		function getSquareSavedColor(square){
+			return document.getElementById(square).getAttribute('data');
+		}
+
+
+		function setSquareRed(square){
+			document.getElementById(square).style.backgroundColor="red";
+		}
+		function setSquareClear(square){
+			document.getElementById(square).style.backgroundColor="white";
+		}
+		function isSquareActive(currentSqr){
+			if(document.getElementById(currentSqr).style.backgroundColor=="red"){
+				return true;
+			}
+			return false;
+		}
+
+	</script>
+</html>
